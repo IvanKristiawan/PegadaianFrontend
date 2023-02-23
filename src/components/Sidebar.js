@@ -1,4 +1,6 @@
-import { Link, NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 import {
   ProSidebar,
   Menu,
@@ -9,16 +11,14 @@ import {
   SidebarContent
 } from "react-pro-sidebar";
 import {
-  FaUser,
   FaAngleDoubleLeft,
   FaAngleDoubleRight,
   FaTachometerAlt,
   FaGem,
-  FaList,
-  FaRegLaughWink,
-  FaHeart
+  FaBook,
+  FaUserCog,
+  FaSignOutAlt
 } from "react-icons/fa";
-import sidebarBg from "../assets/bg1.jpg";
 
 const Sidebar = ({
   image,
@@ -27,9 +27,17 @@ const Sidebar = ({
   handleToggleSidebar,
   handleCollapsedChange
 }) => {
+  const { user, dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const logoutButtonHandler = async (e) => {
+    e.preventDefault();
+    dispatch({ type: "LOGOUT" });
+    navigate("/");
+  };
+
   return (
     <ProSidebar
-      image={image ? sidebarBg : false}
       collapsed={collapsed}
       toggled={toggled}
       onToggle={handleToggleSidebar}
@@ -57,7 +65,7 @@ const Sidebar = ({
                   letterSpacing: "1px"
                 }}
               >
-                Sidebar TechKu
+                Gadai TechKu
               </div>
             </MenuItem>
           )}
@@ -66,6 +74,51 @@ const Sidebar = ({
       {/* Content */}
       <SidebarContent>
         <Menu iconShape="circle">
+          <SubMenu title={"Master"} icon={<FaBook />}>
+            {user.akses.jaminan === true && (
+              <SubMenu title={"Jaminan"}>
+                <MenuItem>
+                  Kategori <NavLink to="/kategoriJaminan" />
+                </MenuItem>
+                <MenuItem>
+                  Jenis Jaminan <NavLink to="/jenisJaminan" />
+                </MenuItem>
+              </SubMenu>
+            )}
+            <MenuItem>
+              Marketing <NavLink to="/marketing" />
+            </MenuItem>
+            <SubMenu title={"Buku Besar"}>
+              <MenuItem>
+                Kelompok COA <NavLink to="/kelompokCoa" />
+              </MenuItem>
+              <MenuItem>
+                Group COA <NavLink to="/groupCoa" />
+              </MenuItem>
+              <MenuItem>
+                SubGroup COA <NavLink to="/subGroupCoa" />
+              </MenuItem>
+              <MenuItem>
+                COA <NavLink to="/coa" />
+              </MenuItem>
+            </SubMenu>
+          </SubMenu>
+          <SubMenu title={"Utility"} icon={<FaUserCog />}>
+            <MenuItem>
+              Profil User <NavLink to="/profilUser" />
+            </MenuItem>
+            <MenuItem>
+              Daftar User <NavLink to="/daftarUser" />
+            </MenuItem>
+            <MenuItem>
+              Tutup Periode
+              <NavLink to="/tutupPeriode" />
+            </MenuItem>
+            <MenuItem>
+              Ganti Periode <NavLink to="/gantiPeriode" />
+            </MenuItem>
+          </SubMenu>
+
           <MenuItem
             icon={<FaTachometerAlt />}
             suffix={<span className="badge red">NEW</span>}
@@ -73,48 +126,22 @@ const Sidebar = ({
             Form Input
             <NavLink to="/formInput" />
           </MenuItem>
-          {/* <MenuItem icon={<FaGem />}>Components </MenuItem> */}
           <MenuItem icon={<FaGem />}>
             Login <Link to="/login" />
           </MenuItem>
-          <SubMenu
-            suffix={<span className="badge yellow">3</span>}
-            title={"With Suffix"}
-            icon={<FaRegLaughWink />}
-          >
-            <MenuItem>Submenu 1</MenuItem>
-            <MenuItem>Submenu 2</MenuItem>
-            <MenuItem>Submenu 3</MenuItem>
-          </SubMenu>
-          <SubMenu
-            prefix={<span className="badge gray">3</span>}
-            title={"With Prefix"}
-            icon={<FaHeart />}
-          >
-            <MenuItem>Submenu 1</MenuItem>
-            <MenuItem>Submenu 2</MenuItem>
-            <MenuItem>Submenu 3</MenuItem>
-          </SubMenu>
-          <SubMenu title={"Multi Level"} icon={<FaList />}>
-            <MenuItem>Submenu 1 </MenuItem>
-            <MenuItem>Submenu 2 </MenuItem>
-            <SubMenu title={"Submenu 3"}>
-              <MenuItem>Submenu 3.1 </MenuItem>
-              <MenuItem>Submenu 3.2 </MenuItem>
-            </SubMenu>
-          </SubMenu>
         </Menu>
       </SidebarContent>
       {/* Footer */}
       <SidebarFooter style={{ textAlign: "center" }}>
-        <div className="sidebar-btn-wrapper" style={{ padding: "16px" }}>
+        <div className="sidebar-btn-wrapper" style={{ padding: "20px" }}>
           <Link
             className="sidebar-btn"
             style={{ cursor: "pointer" }}
-            to="/profile"
+            to="/"
+            onClick={logoutButtonHandler}
           >
-            <FaUser />
-            <span>My Account</span>
+            <span style={{ marginRight: "6px" }}>Logout</span>
+            <FaSignOutAlt />
           </Link>
         </div>
       </SidebarFooter>

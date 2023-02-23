@@ -6,34 +6,80 @@ import { FaBars } from "react-icons/fa";
 import Sidebar from "./components/Sidebar";
 import Footer from "./components/Footer";
 import FormInput from "./pages/FormInput";
-import Login from "./pages/Login";
+// import Login from "./pages/Login/Login";
 import "./styles.scss";
 // import { Link } from "react-router-dom";
 // import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 // import { ErrorBoundary } from "react-error-boundary";
 // import { Colors } from "./constants/styles";
-// import { AuthContext } from "./contexts/AuthContext";
+import { AuthContext } from "./contexts/AuthContext";
 import { useStateContext } from "./contexts/ContextProvider";
+import { Login } from "./pages/index";
 
 const App = () => {
   const { screenSize, setScreenSize } = useStateContext();
   // const { collapseSidebar } = useProSidebar();
-  // const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   // const [open, setOpen] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
-  const [image, setImage] = useState(false);
   const [toggled, setToggled] = useState(false);
 
   const handleCollapsedChange = () => {
     setCollapsed(!collapsed);
   };
 
-  const handleImageChange = (checked) => {
-    setImage(checked);
-  };
-
   const handleToggleSidebar = (value) => {
     setToggled(value);
+  };
+
+  const USERRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user) {
+      return children;
+    }
+
+    return <Navigate to="/login" />;
+  };
+
+  const KATEGORIJAMINANRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.kategoriJaminan) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const JENISJAMINANRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.jenisJaminan) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const MARKETINGRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.marketing) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const BUKUBESARRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.bukuBesar) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
   };
 
   useEffect(() => {
@@ -48,13 +94,14 @@ const App = () => {
 
   return (
     <div className={`app ${toggled ? "toggled" : ""}`}>
-      <Sidebar
-        image={image}
-        collapsed={collapsed}
-        toggled={toggled}
-        handleToggleSidebar={handleToggleSidebar}
-        handleCollapsedChange={handleCollapsedChange}
-      />
+      {user && (
+        <Sidebar
+          collapsed={collapsed}
+          toggled={toggled}
+          handleToggleSidebar={handleToggleSidebar}
+          handleCollapsedChange={handleCollapsedChange}
+        />
+      )}
 
       <main>
         <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
@@ -63,7 +110,15 @@ const App = () => {
         {/* <BrowserRouter> */}
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/formInput" element={<FormInput />} />
+          <Route
+            path="/formInput"
+            element={
+              <USERRoute>
+                <FormInput />
+              </USERRoute>
+            }
+          />
+          {/* <Route path="/formInput" element={<FormInput />} /> */}
           <Route path="/login" element={<Login />} />
         </Routes>
         {/* </BrowserRouter> */}
