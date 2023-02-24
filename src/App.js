@@ -14,7 +14,7 @@ import "./styles.scss";
 // import { Colors } from "./constants/styles";
 import { AuthContext } from "./contexts/AuthContext";
 import { useStateContext } from "./contexts/ContextProvider";
-import { Login } from "./pages/index";
+import { Login, ProfilUser, UbahProfilUser } from "./pages/index";
 
 const App = () => {
   const { screenSize, setScreenSize } = useStateContext();
@@ -42,20 +42,10 @@ const App = () => {
     return <Navigate to="/login" />;
   };
 
-  const KATEGORIJAMINANRoute = ({ children }) => {
+  const JAMINANRoute = ({ children }) => {
     const { user } = useContext(AuthContext);
 
-    if (user.akses.kategoriJaminan) {
-      return children;
-    }
-
-    return <Navigate to="/unauthorized" />;
-  };
-
-  const JENISJAMINANRoute = ({ children }) => {
-    const { user } = useContext(AuthContext);
-
-    if (user.akses.jenisJaminan) {
+    if (user.akses.jaminan) {
       return children;
     }
 
@@ -76,6 +66,56 @@ const App = () => {
     const { user } = useContext(AuthContext);
 
     if (user.akses.bukuBesar) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const CABANGRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.cabang) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const PROFILUSERRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.profilUser) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const DAFTARUSERRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.daftarUser) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const TUTUPPERIODERoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.tutupPeriode) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const GANTIPERIODERoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.gantiPeriode) {
       return children;
     }
 
@@ -118,19 +158,24 @@ const App = () => {
               </USERRoute>
             }
           />
-          {/* <Route path="/formInput" element={<FormInput />} /> */}
+          <Route
+            path="/profilUser"
+            element={
+              <PROFILUSERRoute>
+                <ProfilUser />
+              </PROFILUSERRoute>
+            }
+          />
+          <Route
+            path="/profilUser/:id/edit"
+            element={
+              <PROFILUSERRoute>
+                <UbahProfilUser />
+              </PROFILUSERRoute>
+            }
+          />
           <Route path="/login" element={<Login />} />
         </Routes>
-        {/* </BrowserRouter> */}
-        {/* <Switch>
-          <Route path="/components" component={Components} />
-          <Route path="/profile" component={Profile} />
-          <Route path="/not-found" component={NotFound} />
-          <Route path="/" exact>
-            <Home image={image} handleImageChange={handleImageChange} />
-          </Route>
-          <Redirect to="/not-found" />
-        </Switch> */}
         <Footer />
       </main>
     </div>

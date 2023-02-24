@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useStateContext, tempUrl } from "../../contexts/ContextProvider";
 import { AuthContext } from "../../contexts/AuthContext";
 import { Container, Card, Button, Form } from "react-bootstrap";
+import { Snackbar, Alert } from "@mui/material";
 
 function Login() {
   const { screenSize } = useStateContext();
@@ -108,7 +109,7 @@ function Login() {
                     onChange={(e) => setPassword(e.target.value.toUpperCase())}
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button x type="submit">
                   Login
                 </Button>
               </Form>
@@ -116,6 +117,13 @@ function Login() {
           </Card>
         </Card.Body>
       </Card>
+      {error && (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error" sx={alertBox}>
+            Username atau Password salah!
+          </Alert>
+        </Snackbar>
+      )}
     </Container>
   );
 }
@@ -135,4 +143,8 @@ const headerDetail = {
   fontSize: 12,
   fontWeight: 500,
   color: "gray"
+};
+
+const alertBox = {
+  width: "100%"
 };
