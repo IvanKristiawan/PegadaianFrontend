@@ -41,8 +41,10 @@ function Login() {
       });
       const findSetting = await axios.post(`${tempUrl}/lastSetting`, {
         _id: res.data.details.id,
-        token: res.data.details.token
+        token: res.data.details.token,
+        kodeCabang: res.data.details.cabangId
       });
+      alert(findSetting.data);
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: res.data.details,

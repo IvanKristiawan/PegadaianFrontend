@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { useStateContext } from "../../../contexts/ContextProvider";
 import { Container, Button, Form, Row, Col } from "react-bootstrap";
-import { FaEdit } from "react-icons/fa";
 import EditIcon from "@mui/icons-material/Edit";
 
 const ProfilUser = () => {
@@ -26,7 +25,7 @@ const ProfilUser = () => {
             navigate(`/profilUser/${user.id}/edit`);
           }}
         >
-          <EditIcon /> Ubah Password
+          <EditIcon style={iconButtonStyle} /> Ubah Password
         </Button>
       </Container>
       <hr />
@@ -115,3 +114,9 @@ const ProfilUser = () => {
 };
 
 export default ProfilUser;
+
+const iconButtonStyle = {
+  fontSize: 18,
+  marginTop: -4,
+  marginRight: 6
+};

@@ -2,19 +2,18 @@
 import React, { useContext, useState, useEffect } from "react";
 // import { Route, Switch, Redirect } from 'react-router-dom';
 import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
-import { FaBars } from "react-icons/fa";
-import Sidebar from "./components/Sidebar";
-import Footer from "./components/Footer";
 import FormInput from "./pages/FormInput";
 // import Login from "./pages/Login/Login";
 import "./styles.scss";
+import { Sidebar, Footer, ScrollToTop } from "./components";
 // import { Link } from "react-router-dom";
 // import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 // import { ErrorBoundary } from "react-error-boundary";
 // import { Colors } from "./constants/styles";
 import { AuthContext } from "./contexts/AuthContext";
 import { useStateContext } from "./contexts/ContextProvider";
-import { Login, ProfilUser, UbahProfilUser } from "./pages/index";
+import { Login, ProfilUser, UbahProfilUser, DaftarUser } from "./pages/index";
+import { FaBars } from "react-icons/fa";
 
 const App = () => {
   const { screenSize, setScreenSize } = useStateContext();
@@ -147,9 +146,10 @@ const App = () => {
         <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
           <FaBars />
         </div>
-        {/* <BrowserRouter> */}
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route
             path="/formInput"
             element={
@@ -174,7 +174,23 @@ const App = () => {
               </PROFILUSERRoute>
             }
           />
-          <Route path="/login" element={<Login />} />
+          {/* Daftar User */}
+          <Route
+            path="/daftarUser"
+            element={
+              <DAFTARUSERRoute>
+                <DaftarUser />
+              </DAFTARUSERRoute>
+            }
+          />
+          <Route
+            path="/daftarUser/:id"
+            element={
+              <DAFTARUSERRoute>
+                <DaftarUser />
+              </DAFTARUSERRoute>
+            }
+          />
         </Routes>
         <Footer />
       </main>
