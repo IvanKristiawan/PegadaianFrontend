@@ -1,24 +1,23 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../../contexts/ContextProvider";
 import { Loader } from "../../../../components";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
-import { Box, Button, Snackbar, Alert } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import { Box, Alert, Button, Snackbar } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
 
-const UbahKategoriJaminan = () => {
+const TambahJenisCOA = () => {
   const { screenSize } = useStateContext();
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [validated, setValidated] = useState(false);
-  const [namaKategori, setNamaKategori] = useState("");
-  const [bungaPerBulanKategori, setBungaPerBulanKategori] = useState("");
+  const [kodeJenisCOA, setKodeJenisCOA] = useState("");
+  const [namaJenisCOA, setNamaJenisCOA] = useState("");
 
   const [error, setError] = useState(false);
   const navigate = useNavigate();
-  const { id } = useParams();
   const [loading, setLoading] = useState(false);
 
   const handleClose = (event, reason) => {
@@ -29,21 +28,19 @@ const UbahKategoriJaminan = () => {
   };
 
   useEffect(() => {
-    getKategoriJaminanById();
+    getJenisCOANextKode();
   }, []);
 
-  const getKategoriJaminanById = async () => {
-    setLoading(true);
-    const response = await axios.post(`${tempUrl}/kategoriJaminans/${id}`, {
+  const getJenisCOANextKode = async () => {
+    const response = await axios.post(`${tempUrl}/jenisCOAsNextKode`, {
       _id: user.id,
-      token: user.token
+      token: user.token,
+      kodeCabang: user.cabang.id
     });
-    setNamaKategori(response.data.namaKategori);
-    setBungaPerBulanKategori(response.data.bungaPerBulanKategori);
-    setLoading(false);
+    setKodeJenisCOA(response.data);
   };
 
-  const updateKategoriJaminan = async (e) => {
+  const saveJenisCOA = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const form = e.currentTarget;
@@ -51,22 +48,16 @@ const UbahKategoriJaminan = () => {
       setLoading(true);
       try {
         setLoading(true);
-        try {
-          setLoading(true);
-          await axios.post(`${tempUrl}/updateKategoriJaminan/${id}`, {
-            namaKategori,
-            bungaPerBulanKategori,
-            _id: user.id,
-            token: user.token
-          });
-          setLoading(false);
-          navigate(`/kategoriJaminan/${id}`);
-        } catch (err) {
-          console.log(err);
-        }
+        await axios.post(`${tempUrl}/saveJenisCOA`, {
+          kodeJenisCOA,
+          namaJenisCOA,
+          _id: user.id,
+          token: user.token
+        });
         setLoading(false);
-      } catch (error) {
-        alert(error);
+        navigate("/jenisCoa");
+      } catch (err) {
+        console.log(err);
       }
       setLoading(false);
     } else {
@@ -76,27 +67,23 @@ const UbahKategoriJaminan = () => {
     setValidated(true);
   };
 
-  const textRight = {
-    textAlign: screenSize >= 650 && "right"
-  };
-
   if (loading) {
     return <Loader />;
   }
 
+  const textRight = {
+    textAlign: screenSize >= 650 && "right"
+  };
+
   return (
     <Container>
-      <h3>Jaminan</h3>
-      <h5 style={{ fontWeight: 400 }}>Ubah Kategori Jaminan</h5>
+      <h3>Buku Besar</h3>
+      <h5 style={{ fontWeight: 400 }}>Tambah Kategori COA</h5>
       <hr />
       <Card>
-        <Card.Header>Kategori Jaminan</Card.Header>
+        <Card.Header>Kategori COA</Card.Header>
         <Card.Body>
-          <Form
-            noValidate
-            validated={validated}
-            onSubmit={updateKategoriJaminan}
-          >
+          <Form noValidate validated={validated} onSubmit={saveJenisCOA}>
             <Row>
               <Col sm={6}>
                 <Form.Group
@@ -110,10 +97,9 @@ const UbahKategoriJaminan = () => {
                   <Col sm="9">
                     <Form.Control
                       required
-                      value={namaKategori}
-                      onChange={(e) =>
-                        setNamaKategori(e.target.value.toUpperCase())
-                      }
+                      value={kodeJenisCOA}
+                      disabled
+                      readOnly
                     />
                   </Col>
                 </Form.Group>
@@ -125,36 +111,35 @@ const UbahKategoriJaminan = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Bunga / Bulan
+                    Nama
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
                       required
-                      type="number"
-                      value={bungaPerBulanKategori}
+                      value={namaJenisCOA}
                       onChange={(e) =>
-                        setBungaPerBulanKategori(e.target.value.toUpperCase())
+                        setNamaJenisCOA(e.target.value.toUpperCase())
                       }
                     />
                   </Col>
                 </Form.Group>
               </Col>
             </Row>
-            <Box>
+            <Box sx={spacingTop}>
               <Button
                 variant="outlined"
                 color="secondary"
-                onClick={() => navigate("/kategoriJaminan")}
+                onClick={() => navigate("/jenisCoa")}
                 sx={{ marginRight: 2 }}
               >
                 {"< Kembali"}
               </Button>
               <Button
                 variant="contained"
-                startIcon={<EditIcon />}
+                startIcon={<SaveIcon />}
                 type="submit"
               >
-                Edit
+                Simpan
               </Button>
             </Box>
           </Form>
@@ -171,7 +156,11 @@ const UbahKategoriJaminan = () => {
   );
 };
 
-export default UbahKategoriJaminan;
+export default TambahJenisCOA;
+
+const spacingTop = {
+  mt: 4
+};
 
 const alertBox = {
   width: "100%"

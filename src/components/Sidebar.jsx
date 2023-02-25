@@ -90,7 +90,7 @@ const Sidebar = ({
             </MenuItem>
             <SubMenu title={"Buku Besar"}>
               <MenuItem>
-                Kelompok COA <NavLink to="/kelompokCoa" />
+                Kelompok COA <NavLink to="/jenisCoa" />
               </MenuItem>
               <MenuItem>
                 Group COA <NavLink to="/groupCoa" />

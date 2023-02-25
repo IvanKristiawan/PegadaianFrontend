@@ -310,3 +310,60 @@ export function ShowTableMarketing({ currentPosts, searchTerm }) {
     </TableContainer>
   );
 }
+
+export function ShowTableJenisCOA({ currentPosts, searchTerm }) {
+  let navigate = useNavigate();
+  const classes = useStyles();
+  return (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead className={classes.root}>
+          <TableRow>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Kode
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Nama</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts
+            .filter((val) => {
+              if (searchTerm === "") {
+                return val;
+              } else if (
+                val.kodeJenisCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.namaJenisCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase())
+              ) {
+                return val;
+              }
+            })
+            .map((user, index) => (
+              <TableRow
+                key={user.id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { bgcolor: Colors.grey300 },
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  navigate(`/jenisCoa/${user.id}`);
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.kodeJenisCOA}
+                </TableCell>
+                <TableCell>{user.namaJenisCOA}</TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}

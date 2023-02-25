@@ -27,7 +27,10 @@ import {
   UbahJenisJaminan,
   TampilMarketing,
   TambahMarketing,
-  UbahMarketing
+  UbahMarketing,
+  TampilJenisCOA,
+  TambahJenisCOA,
+  UbahJenisCOA
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -320,6 +323,39 @@ const App = () => {
               <MARKETINGRoute>
                 <UbahMarketing />
               </MARKETINGRoute>
+            }
+          />
+          {/* Jenis COA */}
+          <Route
+            path="/jenisCoa"
+            element={
+              <BUKUBESARRoute>
+                <TampilJenisCOA />
+              </BUKUBESARRoute>
+            }
+          />
+          <Route
+            path="/jenisCoa/:id"
+            element={
+              <BUKUBESARRoute>
+                <TampilJenisCOA />
+              </BUKUBESARRoute>
+            }
+          />
+          <Route
+            path="/jenisCoa/:id/edit"
+            element={
+              <BUKUBESARRoute>
+                <UbahJenisCOA />
+              </BUKUBESARRoute>
+            }
+          />
+          <Route
+            path="/jenisCoa/tambahJenisCoa"
+            element={
+              <BUKUBESARRoute>
+                <TambahJenisCOA />
+              </BUKUBESARRoute>
             }
           />
         </Routes>

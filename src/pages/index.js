@@ -14,7 +14,11 @@ export { default as UbahKategoriJaminan } from "./Master/Jaminan/KategoriJaminan
 export { default as TampilJenisJaminan } from "./Master/Jaminan/JenisJaminan/TampilJenisJaminan";
 export { default as TambahJenisJaminan } from "./Master/Jaminan/JenisJaminan/TambahJenisJaminan";
 export { default as UbahJenisJaminan } from "./Master/Jaminan/JenisJaminan/UbahJenisJaminan";
-// Marketing page
+// Marketing Page
 export { default as TampilMarketing } from "./Master/Marketing/TampilMarketing";
 export { default as TambahMarketing } from "./Master/Marketing/TambahMarketing";
 export { default as UbahMarketing } from "./Master/Marketing/UbahMarketing";
+// Buku Besar Page
+export { default as TampilJenisCOA } from "./Master/BukuBesar/JenisCOA/TampilJenisCOA";
+export { default as TambahJenisCOA } from "./Master/BukuBesar/JenisCOA/TambahJenisCOA";
+export { default as UbahJenisCOA } from "./Master/BukuBesar/JenisCOA/UbahJenisCOA";
