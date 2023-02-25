@@ -16,6 +16,7 @@ const UbahSubGroupCOA = () => {
   const [kodeSubGroupCOA, setKodeSubGroupCOA] = useState("");
   const [namaSubGroupCOA, setNamaSubGroupCOA] = useState("");
   const [kodeGroupCOA, setKodeGroupCOA] = useState("");
+  const [kodeJenisCOA, setKodeJenisCOA] = useState("");
 
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -43,6 +44,9 @@ const UbahSubGroupCOA = () => {
     setNamaSubGroupCOA(response.data.namaSubGroupCOA);
     setKodeGroupCOA(
       `${response.data.groupcoa.kodeGroupCOA} - ${response.data.groupcoa.namaGroupCOA}`
+    );
+    setKodeJenisCOA(
+      `${response.data.jeniscoa.kodeJenisCOA} - ${response.data.jeniscoa.namaJenisCOA}`
     );
     setLoading(false);
   };
@@ -104,6 +108,25 @@ const UbahSubGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
+                    Jenis COA
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control
+                      required
+                      value={kodeJenisCOA}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRight}>
                     Group COA
                   </Form.Label>
                   <Col sm="9">
@@ -116,6 +139,8 @@ const UbahSubGroupCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -135,8 +160,6 @@ const UbahSubGroupCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}

@@ -16,6 +16,7 @@ const TambahSubGroupCOA = () => {
   const [kodeSubGroupCOA, setKodeSubGroupCOA] = useState("");
   const [namaSubGroupCOA, setNamaSubGroupCOA] = useState("");
   const [kodeGroupCOA, setKodeGroupCOA] = useState("");
+  const [kodeJenisCOA, setKodeJenisCOA] = useState("");
 
   const [groupCOAs, setGroupCOAs] = useState([]);
   const [error, setError] = useState(false);
@@ -41,6 +42,9 @@ const TambahSubGroupCOA = () => {
     });
     setGroupCOAs(response.data);
     setKodeGroupCOA(response.data[0].kodeGroupCOA);
+    setKodeJenisCOA(
+      `${response.data[0].jeniscoa.kodeJenisCOA} - ${response.data[0].jeniscoa.namaJenisCOA}`
+    );
     const groupCOANextKode = await axios.post(
       `${tempUrl}/subGroupCOAsNextKode`,
       {
@@ -59,6 +63,14 @@ const TambahSubGroupCOA = () => {
       token: user.token
     });
     setKodeSubGroupCOA(response.data);
+    const findGroupCOA = await axios.post(`${tempUrl}/groupCOAByKode`, {
+      kodeGroupCOA,
+      _id: user.id,
+      token: user.token
+    });
+    setKodeJenisCOA(
+      `${findGroupCOA.data.jeniscoa.kodeJenisCOA} - ${findGroupCOA.data.jeniscoa.namaJenisCOA}`
+    );
   };
 
   const saveSubGroupCOA = async (e) => {
@@ -114,6 +126,25 @@ const TambahSubGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
+                    Jenis COA
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control
+                      required
+                      value={kodeJenisCOA}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRight}>
                     Group COA
                   </Form.Label>
                   <Col sm="9">
@@ -134,6 +165,8 @@ const TambahSubGroupCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -153,8 +186,6 @@ const TambahSubGroupCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}

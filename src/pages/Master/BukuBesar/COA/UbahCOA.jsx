@@ -17,6 +17,8 @@ const UbahCOA = () => {
   const [namaCOA, setNamaCOA] = useState("");
   const [jenisSaldo, setJenisSaldo] = useState("");
   const [kasBank, setKasBank] = useState("");
+  const [kodeJenisCOA, setKodeJenisCOA] = useState("");
+  const [kodeGroupCOA, setKodeGroupCOA] = useState("");
   const [kodeSubGroupCOA, setKodeSubGroupCOA] = useState("");
 
   const [error, setError] = useState(false);
@@ -50,6 +52,12 @@ const UbahCOA = () => {
     setKasBank(response.data.kasBank);
     setKodeSubGroupCOA(
       `${response.data.subgroupcoa.kodeSubGroupCOA} - ${response.data.subgroupcoa.namaSubGroupCOA}`
+    );
+    setKodeJenisCOA(
+      `${response.data.jeniscoa.kodeJenisCOA} - ${response.data.jeniscoa.namaJenisCOA}`
+    );
+    setKodeGroupCOA(
+      `${response.data.groupcoa.kodeGroupCOA} - ${response.data.groupcoa.namaGroupCOA}`
     );
     setLoading(false);
   };
@@ -113,9 +121,49 @@ const UbahCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Sub Group COA
+                    Jenis COA
                   </Form.Label>
                   <Col sm="9">
+                    <Form.Control
+                      required
+                      value={kodeJenisCOA}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRight}>
+                    Group COA
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control
+                      required
+                      value={kodeGroupCOA}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Sub Group COA
+                  </Form.Label>
+                  <Col sm="8">
                     <Form.Control
                       required
                       value={kodeSubGroupCOA}
@@ -125,6 +173,8 @@ const UbahCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -139,8 +189,6 @@ const UbahCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -159,6 +207,8 @@ const UbahCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -183,8 +233,6 @@ const UbahCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}

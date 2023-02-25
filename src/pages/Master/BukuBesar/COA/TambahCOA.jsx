@@ -17,6 +17,8 @@ const TambahCOA = () => {
   const [namaCOA, setNamaCOA] = useState("");
   const [jenisSaldo, setJenisSaldo] = useState("");
   const [kasBank, setKasBank] = useState("");
+  const [kodeJenisCOA, setKodeJenisCOA] = useState("");
+  const [kodeGroupCOA, setKodeGroupCOA] = useState("");
   const [kodeSubGroupCOA, setKodeSubGroupCOA] = useState("");
 
   const [subGroupCOAs, setSubGroupCOAs] = useState([]);
@@ -46,6 +48,12 @@ const TambahCOA = () => {
     });
     setSubGroupCOAs(response.data);
     setKodeSubGroupCOA(response.data[0].kodeSubGroupCOA);
+    setKodeJenisCOA(
+      `${response.data[0].jeniscoa.kodeJenisCOA} - ${response.data[0].jeniscoa.namaJenisCOA}`
+    );
+    setKodeGroupCOA(
+      `${response.data[0].groupcoa.kodeGroupCOA} - ${response.data[0].groupcoa.namaGroupCOA}`
+    );
     const COANextKode = await axios.post(`${tempUrl}/COAsNextKode`, {
       kodeSubGroupCOA: response.data[0].kodeSubGroupCOA,
       _id: user.id,
@@ -63,6 +71,17 @@ const TambahCOA = () => {
       token: user.token
     });
     setKodeCOA(response.data);
+    const findSubGroupCOA = await axios.post(`${tempUrl}/subGroupCOAByKode`, {
+      kodeSubGroupCOA,
+      _id: user.id,
+      token: user.token
+    });
+    setKodeJenisCOA(
+      `${findSubGroupCOA.data.jeniscoa.kodeJenisCOA} - ${findSubGroupCOA.data.jeniscoa.namaJenisCOA}`
+    );
+    setKodeGroupCOA(
+      `${findSubGroupCOA.data.groupcoa.kodeGroupCOA} - ${findSubGroupCOA.data.groupcoa.namaGroupCOA}`
+    );
   };
 
   const saveCOA = async (e) => {
@@ -119,6 +138,46 @@ const TambahCOA = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
+                  <Form.Label column sm="3" style={textRight}>
+                    Jenis COA
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control
+                      required
+                      value={kodeJenisCOA}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRight}>
+                    Group COA
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control
+                      required
+                      value={kodeGroupCOA}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
                   <Form.Label column sm="4" style={textRight}>
                     Sub Group COA
                   </Form.Label>
@@ -141,6 +200,8 @@ const TambahCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -155,8 +216,6 @@ const TambahCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -175,6 +234,8 @@ const TambahCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -199,8 +260,6 @@ const TambahCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}

@@ -124,7 +124,7 @@ const TambahGroupCOA = () => {
                     >
                       {jenisCOAs.map((jenisCOA, index) => (
                         <option value={jenisCOA.kodeJenisCOA}>
-                          {jenisCOA.kodeJenisCOA}
+                          {jenisCOA.kodeJenisCOA} - {jenisCOA.namaJenisCOA}
                         </option>
                       ))}
                     </Form.Select>
