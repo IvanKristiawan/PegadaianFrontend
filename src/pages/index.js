@@ -26,3 +26,7 @@ export { default as UbahJenisCOA } from "./Master/BukuBesar/JenisCOA/UbahJenisCO
 export { default as TampilGroupCOA } from "./Master/BukuBesar/GroupCOA/TampilGroupCOA";
 export { default as TambahGroupCOA } from "./Master/BukuBesar/GroupCOA/TambahGroupCOA";
 export { default as UbahGroupCOA } from "./Master/BukuBesar/GroupCOA/UbahGroupCOA";
+// Sub Group COA Page
+export { default as TampilSubGroupCOA } from "./Master/BukuBesar/SubGroupCOA/TampilSubGroupCOA";
+export { default as TambahSubGroupCOA } from "./Master/BukuBesar/SubGroupCOA/TambahSubGroupCOA";
+export { default as UbahSubGroupCOA } from "./Master/BukuBesar/SubGroupCOA/UbahSubGroupCOA";

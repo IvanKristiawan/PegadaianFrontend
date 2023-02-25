@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../../contexts/ContextProvider";
-import { ShowTableGroupCOA } from "../../../../components/ShowTable";
+import { ShowTableSubGroupCOA } from "../../../../components/ShowTable";
 import { FetchErrorHandling } from "../../../../components/FetchErrorHandling";
 import { SearchBar, Loader, usePagination } from "../../../../components";
 import { Container, Form, Row, Col } from "react-bootstrap";
@@ -28,7 +28,7 @@ import { useDownloadExcel } from "react-export-table-to-excel";
 import DownloadIcon from "@mui/icons-material/Download";
 import PrintIcon from "@mui/icons-material/Print";
 
-const TampilGroupCOA = () => {
+const TampilSubGroupCOA = () => {
   const tableRef = useRef(null);
   const { user, setting } = useContext(AuthContext);
   const location = useLocation();
@@ -36,14 +36,15 @@ const TampilGroupCOA = () => {
   const { screenSize } = useStateContext();
 
   const [isFetchError, setIsFetchError] = useState(false);
-  const [kodeGroupCOA, setKodeGroupCOA] = useState("");
-  const [namaGroupCOA, setNamaGroupCOA] = useState("");
+  const [kodeSubGroupCOA, setKodeSubGroupCOA] = useState("");
+  const [namaSubGroupCOA, setNamaSubGroupCOA] = useState("");
   const [kodeJenisCOA, setKodeJenisCOA] = useState("");
+  const [kodeGroupCOA, setKodeGroupCOA] = useState("");
 
   const [previewPdf, setPreviewPdf] = useState(false);
   const [previewExcel, setPreviewExcel] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [groupCOAs, setGroupCOAs] = useState([]);
+  const [subGroupCOAs, setSubGroupCOAs] = useState([]);
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -63,16 +64,22 @@ const TampilGroupCOA = () => {
   // Get current posts
   const indexOfLastPost = page * PER_PAGE;
   const indexOfFirstPost = indexOfLastPost - PER_PAGE;
-  const tempPosts = groupCOAs.filter((val) => {
+  const tempPosts = subGroupCOAs.filter((val) => {
     if (searchTerm === "") {
       return val;
     } else if (
-      val.kodeGroupCOA.toUpperCase().includes(searchTerm.toUpperCase()) ||
-      val.namaGroupCOA.toUpperCase().includes(searchTerm.toUpperCase()) ||
+      val.kodeSubGroupCOA.toUpperCase().includes(searchTerm.toUpperCase()) ||
+      val.namaSubGroupCOA.toUpperCase().includes(searchTerm.toUpperCase()) ||
       val.jeniscoa.kodeJenisCOA
         .toUpperCase()
         .includes(searchTerm.toUpperCase()) ||
-      val.jeniscoa.namaJenisCOA.toUpperCase().includes(searchTerm.toUpperCase())
+      val.jeniscoa.namaJenisCOA
+        .toUpperCase()
+        .includes(searchTerm.toUpperCase()) ||
+      val.groupcoa.kodeGroupCOA
+        .toUpperCase()
+        .includes(searchTerm.toUpperCase()) ||
+      val.groupcoa.namaGroupCOA.toUpperCase().includes(searchTerm.toUpperCase())
     ) {
       return val;
     }
@@ -80,7 +87,7 @@ const TampilGroupCOA = () => {
   const currentPosts = tempPosts.slice(indexOfFirstPost, indexOfLastPost);
 
   const count = Math.ceil(tempPosts.length / PER_PAGE);
-  const _DATA = usePagination(groupCOAs, PER_PAGE);
+  const _DATA = usePagination(subGroupCOAs, PER_PAGE);
 
   const handleChange = (e, p) => {
     setPage(p);
@@ -88,51 +95,54 @@ const TampilGroupCOA = () => {
   };
 
   useEffect(() => {
-    getGroupCOAs();
-    id && getGroupCOAById();
+    getSubGroupCOAs();
+    id && getSubGroupCOAById();
   }, [id]);
 
-  const getGroupCOAs = async () => {
+  const getSubGroupCOAs = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${tempUrl}/groupCOAs`, {
+      const response = await axios.post(`${tempUrl}/subGroupCOAs`, {
         _id: user.id,
         token: user.token
       });
-      setGroupCOAs(response.data);
+      setSubGroupCOAs(response.data);
     } catch (err) {
       setIsFetchError(true);
     }
     setLoading(false);
   };
 
-  const getGroupCOAById = async () => {
+  const getSubGroupCOAById = async () => {
     if (id) {
-      const response = await axios.post(`${tempUrl}/groupCOAs/${id}`, {
+      const response = await axios.post(`${tempUrl}/subGroupCOAs/${id}`, {
         _id: user.id,
         token: user.token
       });
-      setKodeGroupCOA(response.data.kodeGroupCOA);
-      setNamaGroupCOA(response.data.namaGroupCOA);
+      setKodeSubGroupCOA(response.data.kodeSubGroupCOA);
+      setNamaSubGroupCOA(response.data.namaSubGroupCOA);
       setKodeJenisCOA(
         `${response.data.jeniscoa.kodeJenisCOA} - ${response.data.jeniscoa.namaJenisCOA}`
+      );
+      setKodeGroupCOA(
+        `${response.data.groupcoa.kodeGroupCOA} - ${response.data.groupcoa.namaGroupCOA}`
       );
     }
   };
 
-  const deleteJaminan = async (id) => {
+  const deleteGroupCOA = async (id) => {
     try {
       setLoading(true);
-      await axios.post(`${tempUrl}/deleteGroupCOA/${id}`, {
+      await axios.post(`${tempUrl}/deleteSubGroupCOA/${id}`, {
         _id: user.id,
         token: user.token
       });
-      getGroupCOAs();
-      setNamaGroupCOA("");
+      getSubGroupCOAs();
+      setNamaSubGroupCOA("");
+      setKodeSubGroupCOA("");
       setKodeGroupCOA("");
-      setKodeJenisCOA("");
       setLoading(false);
-      navigate("/groupCoa");
+      navigate("/subGroupCoa");
     } catch (error) {
       console.log(error);
     }
@@ -172,10 +182,10 @@ const TampilGroupCOA = () => {
     doc.text(`${setting.namaPerusahaan} - ${setting.kotaPerusahaan}`, 15, 10);
     doc.text(`${setting.lokasiPerusahaan}`, 15, 15);
     doc.setFontSize(16);
-    doc.text(`Daftar Group COA`, 80, 30);
+    doc.text(`Daftar Group Sub COA`, 85, 30);
     doc.setFontSize(10);
     doc.text(
-      `Dicetak Oleh: ${user.namaGroupCOA} | Tanggal : ${current_date} | Jam : ${current_time}`,
+      `Dicetak Oleh: ${user.namaSubGroupCOA} | Tanggal : ${current_date} | Jam : ${current_time}`,
       15,
       290
     );
@@ -187,13 +197,13 @@ const TampilGroupCOA = () => {
         color: [0, 0, 0]
       }
     });
-    doc.save("daftarGroupCoa.pdf");
+    doc.save("daftarSubGroupCoa.pdf");
   };
 
   const { onDownload } = useDownloadExcel({
     currentTableRef: tableRef.current,
-    filename: "GroupCoa",
-    sheet: "DaftarGroupCoa"
+    filename: "SubGroupCoa",
+    sheet: "DaftarSubGroupCoa"
   });
 
   const textRight = {
@@ -211,7 +221,7 @@ const TampilGroupCOA = () => {
   return (
     <Container>
       <h3>Buku Besar</h3>
-      <h5 style={{ fontWeight: 400 }}>Daftar Group COA</h5>
+      <h5 style={{ fontWeight: 400 }}>Daftar Sub Group COA</h5>
       <Box sx={downloadButtons}>
         <ButtonGroup variant="outlined" color="secondary">
           <Button
@@ -251,15 +261,19 @@ const TampilGroupCOA = () => {
                 <th>Kode</th>
                 <th>Nama</th>
                 <th>Jenis COA</th>
+                <th>Group COA</th>
               </tr>
             </thead>
             <tbody>
-              {groupCOAs.map((user, index) => (
+              {subGroupCOAs.map((user, index) => (
                 <tr key={user.id}>
-                  <td>{user.kodeGroupCOA}</td>
-                  <td>{user.namaGroupCOA}</td>
+                  <td>{user.kodeSubGroupCOA}</td>
+                  <td>{user.namaSubGroupCOA}</td>
                   <td>
                     {user.jeniscoa.kodeJenisCOA} - {user.jeniscoa.namaJenisCOA}
+                  </td>
+                  <td>
+                    {user.groupcoa.kodeGroupCOA} - {user.groupcoa.namaGroupCOA}
                   </td>
                 </tr>
               ))}
@@ -284,13 +298,17 @@ const TampilGroupCOA = () => {
                 <th>Kode</th>
                 <th>Nama</th>
                 <th>Jenis COA</th>
+                <th>Group COA</th>
               </tr>
-              {groupCOAs.map((user, index) => (
+              {subGroupCOAs.map((user, index) => (
                 <tr key={user.id}>
-                  <td>{user.kodeGroupCOA}</td>
-                  <td>{user.namaGroupCOA}</td>
+                  <td>{user.kodeSubGroupCOA}</td>
+                  <td>{user.namaSubGroupCOA}</td>
                   <td>
                     {user.jeniscoa.kodeJenisCOA} - {user.jeniscoa.namaJenisCOA}
+                  </td>
+                  <td>
+                    {user.groupcoa.kodeGroupCOA} - {user.groupcoa.namaGroupCOA}
                   </td>
                 </tr>
               ))}
@@ -306,7 +324,7 @@ const TampilGroupCOA = () => {
           startIcon={<AddCircleOutlineIcon />}
           size="small"
           onClick={() => {
-            navigate(`/groupCoa/tambahGroupCoa`);
+            navigate(`/subGroupCoa/tambahSubGroupCoa`);
           }}
         >
           Tambah
@@ -319,7 +337,7 @@ const TampilGroupCOA = () => {
                 startIcon={<EditIcon />}
                 sx={{ textTransform: "none" }}
                 onClick={() => {
-                  navigate(`/groupCoa/${id}/edit`);
+                  navigate(`/subGroupCoa/${id}/edit`);
                 }}
               >
                 Ubah
@@ -342,11 +360,11 @@ const TampilGroupCOA = () => {
               <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">
-                  {`Yakin ingin menghapus data ${kodeGroupCOA}?`}
+                  {`Yakin ingin menghapus data ${kodeSubGroupCOA}?`}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => deleteJaminan(id)}>Ok</Button>
+                <Button onClick={() => deleteGroupCOA(id)}>Ok</Button>
                 <Button onClick={handleClose}>Cancel</Button>
               </DialogActions>
             </Dialog>
@@ -368,7 +386,7 @@ const TampilGroupCOA = () => {
                     Kode
                   </Form.Label>
                   <Col sm="9">
-                    <Form.Control value={kodeGroupCOA} disabled readOnly />
+                    <Form.Control value={kodeSubGroupCOA} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -382,7 +400,7 @@ const TampilGroupCOA = () => {
                     Nama
                   </Form.Label>
                   <Col sm="9">
-                    <Form.Control value={namaGroupCOA} disabled readOnly />
+                    <Form.Control value={namaSubGroupCOA} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -395,10 +413,24 @@ const TampilGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Jenis
+                    Jenis COA
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={kodeJenisCOA} disabled readOnly />
+                  </Col>
+                </Form.Group>
+              </Col>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRight}>
+                    Group COA
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control value={kodeGroupCOA} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -411,7 +443,7 @@ const TampilGroupCOA = () => {
         <SearchBar setSearchTerm={setSearchTerm} />
       </Box>
       <Box sx={tableContainer}>
-        <ShowTableGroupCOA
+        <ShowTableSubGroupCOA
           currentPosts={currentPosts}
           searchTerm={searchTerm}
         />
@@ -429,7 +461,7 @@ const TampilGroupCOA = () => {
   );
 };
 
-export default TampilGroupCOA;
+export default TampilSubGroupCOA;
 
 const buttonModifierContainer = {
   mt: 4,

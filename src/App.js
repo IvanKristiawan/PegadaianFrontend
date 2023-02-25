@@ -33,7 +33,10 @@ import {
   UbahJenisCOA,
   TampilGroupCOA,
   TambahGroupCOA,
-  UbahGroupCOA
+  UbahGroupCOA,
+  TampilSubGroupCOA,
+  TambahSubGroupCOA,
+  UbahSubGroupCOA
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -391,6 +394,39 @@ const App = () => {
             element={
               <BUKUBESARRoute>
                 <TambahGroupCOA />
+              </BUKUBESARRoute>
+            }
+          />
+          {/* Sub Group COA */}
+          <Route
+            path="/subGroupCoa"
+            element={
+              <BUKUBESARRoute>
+                <TampilSubGroupCOA />
+              </BUKUBESARRoute>
+            }
+          />
+          <Route
+            path="/subGroupCoa/:id"
+            element={
+              <BUKUBESARRoute>
+                <TampilSubGroupCOA />
+              </BUKUBESARRoute>
+            }
+          />
+          <Route
+            path="/subGroupCoa/:id/edit"
+            element={
+              <BUKUBESARRoute>
+                <UbahSubGroupCOA />
+              </BUKUBESARRoute>
+            }
+          />
+          <Route
+            path="/subGroupCoa/tambahSubGroupCoa"
+            element={
+              <BUKUBESARRoute>
+                <TambahSubGroupCOA />
               </BUKUBESARRoute>
             }
           />

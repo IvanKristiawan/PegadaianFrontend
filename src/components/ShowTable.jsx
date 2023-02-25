@@ -439,3 +439,90 @@ export function ShowTableGroupCOA({ currentPosts, searchTerm }) {
     </TableContainer>
   );
 }
+
+export function ShowTableSubGroupCOA({ currentPosts, searchTerm }) {
+  let navigate = useNavigate();
+  const classes = useStyles();
+  return (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead className={classes.root}>
+          <TableRow>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Kode
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Nama
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Jenis COA
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Group COA</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts
+            .filter((val) => {
+              if (searchTerm === "") {
+                return val;
+              } else if (
+                val.kodeSubGroupCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.namaSubGroupCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.jeniscoa.kodeJenisCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.jeniscoa.namaJenisCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.groupcoa.kodeGroupCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.groupcoa.namaGroupCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase())
+              ) {
+                return val;
+              }
+            })
+            .map((user, index) => (
+              <TableRow
+                key={user.id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { bgcolor: Colors.grey300 },
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  navigate(`/subGroupCoa/${user.id}`);
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.kodeSubGroupCOA}
+                </TableCell>
+                <TableCell>{user.namaSubGroupCOA}</TableCell>
+                <TableCell>
+                  {user.jeniscoa.kodeJenisCOA} - {user.jeniscoa.namaJenisCOA}
+                </TableCell>
+                <TableCell>
+                  {user.groupcoa.kodeGroupCOA} - {user.groupcoa.namaGroupCOA}
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}

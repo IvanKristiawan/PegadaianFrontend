@@ -1,25 +1,25 @@
-import { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../../contexts/ContextProvider";
 import { Loader } from "../../../../components";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
-import { Box, Alert, Button, Snackbar } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
+import { Box, Button, Snackbar, Alert } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 
-const TambahGroupCOA = () => {
+const UbahSubGroupCOA = () => {
   const { screenSize } = useStateContext();
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [kodeSubGroupCOA, setKodeSubGroupCOA] = useState("");
+  const [namaSubGroupCOA, setNamaSubGroupCOA] = useState("");
   const [kodeGroupCOA, setKodeGroupCOA] = useState("");
-  const [namaGroupCOA, setNamaGroupCOA] = useState("");
-  const [kodeJenisCOA, setKodeJenisCOA] = useState("");
 
-  const [jenisCOAs, setJenisCOAs] = useState([]);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
 
   const handleClose = (event, reason) => {
@@ -30,35 +30,24 @@ const TambahGroupCOA = () => {
   };
 
   useEffect(() => {
-    getJenisCOAData();
+    getSubGroupCOAById();
   }, []);
 
-  const getJenisCOAData = async () => {
-    setKodeJenisCOA("");
-    const response = await axios.post(`${tempUrl}/jenisCOAs`, {
+  const getSubGroupCOAById = async () => {
+    setLoading(true);
+    const response = await axios.post(`${tempUrl}/subGroupCOAs/${id}`, {
       _id: user.id,
       token: user.token
     });
-    setJenisCOAs(response.data);
-    setKodeJenisCOA(response.data[0].kodeJenisCOA);
-    const groupCOANextKode = await axios.post(`${tempUrl}/groupCOAsNextKode`, {
-      kodeJenisCOA: response.data[0].kodeJenisCOA,
-      _id: user.id,
-      token: user.token
-    });
-    setKodeGroupCOA(groupCOANextKode.data);
+    setKodeSubGroupCOA(response.data.kodeSubGroupCOA);
+    setNamaSubGroupCOA(response.data.namaSubGroupCOA);
+    setKodeGroupCOA(
+      `${response.data.groupcoa.kodeGroupCOA} - ${response.data.groupcoa.namaGroupCOA}`
+    );
+    setLoading(false);
   };
 
-  const getGroupCOANextKode = async (kodeJenisCOA) => {
-    const response = await axios.post(`${tempUrl}/groupCOAsNextKode`, {
-      kodeJenisCOA,
-      _id: user.id,
-      token: user.token
-    });
-    setKodeGroupCOA(response.data);
-  };
-
-  const saveGroupCOA = async (e) => {
+  const updateSubGroupCOA = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const form = e.currentTarget;
@@ -66,17 +55,21 @@ const TambahGroupCOA = () => {
       setLoading(true);
       try {
         setLoading(true);
-        await axios.post(`${tempUrl}/saveGroupCOA`, {
-          kodeGroupCOA,
-          namaGroupCOA,
-          kodeJenisCOA,
-          _id: user.id,
-          token: user.token
-        });
+        try {
+          setLoading(true);
+          await axios.post(`${tempUrl}/updateSubGroupCOA/${id}`, {
+            namaSubGroupCOA,
+            _id: user.id,
+            token: user.token
+          });
+          setLoading(false);
+          navigate(`/subGroupCoa/${id}`);
+        } catch (err) {
+          console.log(err);
+        }
         setLoading(false);
-        navigate("/groupCoa");
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        alert(error);
       }
       setLoading(false);
     } else {
@@ -86,23 +79,23 @@ const TambahGroupCOA = () => {
     setValidated(true);
   };
 
-  if (loading) {
-    return <Loader />;
-  }
-
   const textRight = {
     textAlign: screenSize >= 650 && "right"
   };
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <Container>
       <h3>Buku Besar</h3>
-      <h5 style={{ fontWeight: 400 }}>Tambah Group COA</h5>
+      <h5 style={{ fontWeight: 400 }}>Ubah Sub Group COA</h5>
       <hr />
       <Card>
-        <Card.Header>Group COA</Card.Header>
+        <Card.Header>Sub Group COA</Card.Header>
         <Card.Body>
-          <Form noValidate validated={validated} onSubmit={saveGroupCOA}>
+          <Form noValidate validated={validated} onSubmit={updateSubGroupCOA}>
             <Row>
               <Col sm={6}>
                 <Form.Group
@@ -111,23 +104,15 @@ const TambahGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Jenis COA
+                    Group COA
                   </Form.Label>
                   <Col sm="9">
-                    <Form.Select
+                    <Form.Control
                       required
-                      value={kodeJenisCOA}
-                      onChange={(e) => {
-                        setKodeJenisCOA(e.target.value);
-                        getGroupCOANextKode(e.target.value);
-                      }}
-                    >
-                      {jenisCOAs.map((jenisCOA, index) => (
-                        <option value={jenisCOA.kodeJenisCOA}>
-                          {jenisCOA.kodeJenisCOA}
-                        </option>
-                      ))}
-                    </Form.Select>
+                      value={kodeGroupCOA}
+                      disabled
+                      readOnly
+                    />
                   </Col>
                 </Form.Group>
               </Col>
@@ -143,7 +128,7 @@ const TambahGroupCOA = () => {
                   <Col sm="9">
                     <Form.Control
                       required
-                      value={kodeGroupCOA}
+                      value={kodeSubGroupCOA}
                       disabled
                       readOnly
                     />
@@ -164,30 +149,30 @@ const TambahGroupCOA = () => {
                   <Col sm="9">
                     <Form.Control
                       required
-                      value={namaGroupCOA}
+                      value={namaSubGroupCOA}
                       onChange={(e) =>
-                        setNamaGroupCOA(e.target.value.toUpperCase())
+                        setNamaSubGroupCOA(e.target.value.toUpperCase())
                       }
                     />
                   </Col>
                 </Form.Group>
               </Col>
             </Row>
-            <Box sx={spacingTop}>
+            <Box>
               <Button
                 variant="outlined"
                 color="secondary"
-                onClick={() => navigate("/groupCOA")}
+                onClick={() => navigate("/subGroupCoa")}
                 sx={{ marginRight: 2 }}
               >
                 {"< Kembali"}
               </Button>
               <Button
                 variant="contained"
-                startIcon={<SaveIcon />}
+                startIcon={<EditIcon />}
                 type="submit"
               >
-                Simpan
+                Edit
               </Button>
             </Box>
           </Form>
@@ -204,11 +189,7 @@ const TambahGroupCOA = () => {
   );
 };
 
-export default TambahGroupCOA;
-
-const spacingTop = {
-  mt: 4
-};
+export default UbahSubGroupCOA;
 
 const alertBox = {
   width: "100%"
