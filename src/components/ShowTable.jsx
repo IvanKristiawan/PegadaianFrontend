@@ -526,3 +526,114 @@ export function ShowTableSubGroupCOA({ currentPosts, searchTerm }) {
     </TableContainer>
   );
 }
+
+export function ShowTableCOA({ currentPosts, searchTerm }) {
+  let navigate = useNavigate();
+  const classes = useStyles();
+  return (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead className={classes.root}>
+          <TableRow>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Kode
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Nama
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Jenis Saldo
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Kas Bank
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Kelompok COA
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Group COA
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Sub Group COA</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts
+            .filter((val) => {
+              if (searchTerm === "") {
+                return val;
+              } else if (
+                val.kodeCOA.toUpperCase().includes(searchTerm.toUpperCase()) ||
+                val.namaCOA.toUpperCase().includes(searchTerm.toUpperCase()) ||
+                val.jeniscoa.kodeJenisCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.jeniscoa.namaJenisCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.groupcoa.kodeGroupCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.groupcoa.namaGroupCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.coa.kodeCOA
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.coa.namaCOA.toUpperCase().includes(searchTerm.toUpperCase())
+              ) {
+                return val;
+              }
+            })
+            .map((user, index) => (
+              <TableRow
+                key={user.id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { bgcolor: Colors.grey300 },
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  navigate(`/coa/${user.id}`);
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.kodeCOA}
+                </TableCell>
+                <TableCell>{user.namaCOA}</TableCell>
+                <TableCell>{user.jenisSaldo}</TableCell>
+                <TableCell>{user.kasBank}</TableCell>
+                <TableCell>
+                  {user.jeniscoa.kodeJenisCOA} - {user.jeniscoa.namaJenisCOA}
+                </TableCell>
+                <TableCell>
+                  {user.groupcoa.kodeGroupCOA} - {user.groupcoa.namaGroupCOA}
+                </TableCell>
+                <TableCell>
+                  {user.subgroupcoa.kodeSubGroupCOA} -{" "}
+                  {user.subgroupcoa.namaSubGroupCOA}
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
