@@ -55,7 +55,7 @@ function Login() {
           setting: findSetting.data
         });
 
-        navigate("/formInput");
+        navigate("/admin");
       } catch (err) {
         setOpen(true);
         dispatch({ type: "LOGIN_FAILURE", payload: err });

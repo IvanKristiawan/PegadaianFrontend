@@ -21,7 +21,10 @@ import {
   UbahUser,
   TampilKategoriJaminan,
   TambahKategoriJaminan,
-  UbahKategoriJaminan
+  UbahKategoriJaminan,
+  TampilJenisJaminan,
+  TambahJenisJaminan,
+  UbahJenisJaminan
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -247,6 +250,39 @@ const App = () => {
             element={
               <JAMINANRoute>
                 <TambahKategoriJaminan />
+              </JAMINANRoute>
+            }
+          />
+          {/* Jenis Jaminan */}
+          <Route
+            path="/jenisJaminan"
+            element={
+              <JAMINANRoute>
+                <TampilJenisJaminan />
+              </JAMINANRoute>
+            }
+          />
+          <Route
+            path="/jenisJaminan/:id"
+            element={
+              <JAMINANRoute>
+                <TampilJenisJaminan />
+              </JAMINANRoute>
+            }
+          />
+          <Route
+            path="/jenisJaminan/tambahJenisJaminan"
+            element={
+              <JAMINANRoute>
+                <TambahJenisJaminan />
+              </JAMINANRoute>
+            }
+          />
+          <Route
+            path="/jenisJaminan/:id/edit"
+            element={
+              <JAMINANRoute>
+                <UbahJenisJaminan />
               </JAMINANRoute>
             }
           />

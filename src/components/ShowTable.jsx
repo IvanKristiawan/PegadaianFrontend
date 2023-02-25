@@ -178,3 +178,68 @@ export function ShowTableKategoriJaminan({ currentPosts, searchTerm }) {
     </TableContainer>
   );
 }
+
+export function ShowTableJenisJaminan({ currentPosts, searchTerm }) {
+  let navigate = useNavigate();
+  const classes = useStyles();
+  return (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead className={classes.root}>
+          <TableRow>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Nama
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Bunga/Bulan
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Kategori</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts
+            .filter((val) => {
+              if (searchTerm === "") {
+                return val;
+              } else if (
+                val.namaJenis
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.kategorijaminan.namaKategori
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.bungaPerBulanJenis == searchTerm
+              ) {
+                return val;
+              }
+            })
+            .map((user, index) => (
+              <TableRow
+                key={user.id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { bgcolor: Colors.grey300 },
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  navigate(`/jenisJaminan/${user.id}`);
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.namaJenis}
+                </TableCell>
+                <TableCell>{user.bungaPerBulanJenis}</TableCell>
+                <TableCell>{user.kategorijaminan.namaKategori}</TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}

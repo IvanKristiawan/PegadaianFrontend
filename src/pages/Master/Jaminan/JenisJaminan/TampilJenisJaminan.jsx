@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../../contexts/ContextProvider";
-import { ShowTableKategoriJaminan } from "../../../../components/ShowTable";
+import { ShowTableJenisJaminan } from "../../../../components/ShowTable";
 import { FetchErrorHandling } from "../../../../components/FetchErrorHandling";
 import { SearchBar, Loader, usePagination } from "../../../../components";
 import { Container, Form, Row, Col } from "react-bootstrap";
@@ -28,7 +28,7 @@ import { useDownloadExcel } from "react-export-table-to-excel";
 import DownloadIcon from "@mui/icons-material/Download";
 import PrintIcon from "@mui/icons-material/Print";
 
-const TampilKategoriJaminan = () => {
+const TampilJenisJaminan = () => {
   const tableRef = useRef(null);
   const { user, setting } = useContext(AuthContext);
   const location = useLocation();
@@ -36,13 +36,14 @@ const TampilKategoriJaminan = () => {
   const { screenSize } = useStateContext();
 
   const [isFetchError, setIsFetchError] = useState(false);
+  const [namaJenis, setNamaJenis] = useState("");
+  const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
   const [namaKategori, setNamaKategori] = useState("");
-  const [bungaPerBulanKategori, setBungaPerBulanKategori] = useState("");
 
   const [previewPdf, setPreviewPdf] = useState(false);
   const [previewExcel, setPreviewExcel] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [jaminans, setKategoriJaminan] = useState([]);
+  const [jaminans, setJenisJaminan] = useState([]);
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -66,8 +67,11 @@ const TampilKategoriJaminan = () => {
     if (searchTerm === "") {
       return val;
     } else if (
-      val.namaKategori.toUpperCase().includes(searchTerm.toUpperCase()) ||
-      val.bungaPerBulanKategori == searchTerm
+      val.namaJenis.toUpperCase().includes(searchTerm.toUpperCase()) ||
+      val.kategorijaminan.namaKategori
+        .toUpperCase()
+        .includes(searchTerm.toUpperCase()) ||
+      val.bungaPerBulanJenis == searchTerm
     ) {
       return val;
     }
@@ -90,11 +94,11 @@ const TampilKategoriJaminan = () => {
   const getJaminans = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${tempUrl}/kategoriJaminans`, {
+      const response = await axios.post(`${tempUrl}/jenisJaminans`, {
         _id: user.id,
         token: user.token
       });
-      setKategoriJaminan(response.data);
+      setJenisJaminan(response.data);
     } catch (err) {
       setIsFetchError(true);
     }
@@ -103,27 +107,29 @@ const TampilKategoriJaminan = () => {
 
   const getJaminanById = async () => {
     if (id) {
-      const response = await axios.post(`${tempUrl}/kategoriJaminans/${id}`, {
+      const response = await axios.post(`${tempUrl}/jenisJaminans/${id}`, {
         _id: user.id,
         token: user.token
       });
-      setNamaKategori(response.data.namaKategori);
-      setBungaPerBulanKategori(response.data.bungaPerBulanKategori);
+      setNamaJenis(response.data.namaJenis);
+      setBungaPerBulanJenis(response.data.bungaPerBulanJenis);
+      setNamaKategori(response.data.kategorijaminan.namaKategori);
     }
   };
 
   const deleteJaminan = async (id) => {
     try {
       setLoading(true);
-      await axios.post(`${tempUrl}/deleteKategoriJaminan/${id}`, {
+      await axios.post(`${tempUrl}/deleteJenisJaminan/${id}`, {
         _id: user.id,
         token: user.token
       });
       getJaminans();
-      setBungaPerBulanKategori("");
+      setBungaPerBulanJenis("");
+      setNamaJenis("");
       setNamaKategori("");
       setLoading(false);
-      navigate("/kategoriJaminan");
+      navigate("/jenisJaminan");
     } catch (error) {
       console.log(error);
     }
@@ -163,10 +169,10 @@ const TampilKategoriJaminan = () => {
     doc.text(`${setting.namaPerusahaan} - ${setting.kotaPerusahaan}`, 15, 10);
     doc.text(`${setting.lokasiPerusahaan}`, 15, 15);
     doc.setFontSize(16);
-    doc.text(`Daftar Kategori jaminan`, 80, 30);
+    doc.text(`Daftar Jenis jaminan`, 80, 30);
     doc.setFontSize(10);
     doc.text(
-      `Dicetak Oleh: ${user.bungaPerBulanKategori} | Tanggal : ${current_date} | Jam : ${current_time}`,
+      `Dicetak Oleh: ${user.bungaPerBulanJenis} | Tanggal : ${current_date} | Jam : ${current_time}`,
       15,
       290
     );
@@ -178,13 +184,13 @@ const TampilKategoriJaminan = () => {
         color: [0, 0, 0]
       }
     });
-    doc.save("daftarKategoriJaminan.pdf");
+    doc.save("daftarJenisJaminan.pdf");
   };
 
   const { onDownload } = useDownloadExcel({
     currentTableRef: tableRef.current,
-    filename: "KategoriJaminan",
-    sheet: "DaftarKategoriJaminan"
+    filename: "JenisJaminan",
+    sheet: "DaftarJenisJaminan"
   });
 
   const textRight = {
@@ -202,7 +208,7 @@ const TampilKategoriJaminan = () => {
   return (
     <Container>
       <h3>Jaminan</h3>
-      <h5 style={{ fontWeight: 400 }}>Daftar Kategori Jaminan</h5>
+      <h5 style={{ fontWeight: 400 }}>Daftar Jenis Jaminan</h5>
       <Box sx={downloadButtons}>
         <ButtonGroup variant="outlined" color="secondary">
           <Button
@@ -241,13 +247,15 @@ const TampilKategoriJaminan = () => {
               <tr>
                 <th>Nama</th>
                 <th>Bunga/Bulan</th>
+                <th>Kategori</th>
               </tr>
             </thead>
             <tbody>
               {jaminans.map((user, index) => (
                 <tr key={user.id}>
-                  <td>{user.namaKategori}</td>
-                  <td>{user.bungaPerBulanKategori}</td>
+                  <td>{user.namaJenis}</td>
+                  <td>{user.bungaPerBulanJenis}</td>
+                  <td>{user.kategorijaminan.namaKategori}</td>
                 </tr>
               ))}
             </tbody>
@@ -270,11 +278,13 @@ const TampilKategoriJaminan = () => {
               <tr>
                 <th>Nama</th>
                 <th>Bunga/Bulan</th>
+                <th>Kategori</th>
               </tr>
               {jaminans.map((user, index) => (
                 <tr key={user.id}>
-                  <td>{user.namaKategori}</td>
-                  <td>{user.bungaPerBulanKategori}</td>
+                  <td>{user.namaJenis}</td>
+                  <td>{user.bungaPerBulanJenis}</td>
+                  <td>{user.kategorijaminan.namaKategori}</td>
                 </tr>
               ))}
             </tbody>
@@ -289,7 +299,7 @@ const TampilKategoriJaminan = () => {
           startIcon={<AddCircleOutlineIcon />}
           size="small"
           onClick={() => {
-            navigate(`/kategoriJaminan/tambahKategoriJaminan`);
+            navigate(`/jenisJaminan/tambahJenisJaminan`);
           }}
         >
           Tambah
@@ -302,7 +312,7 @@ const TampilKategoriJaminan = () => {
                 startIcon={<EditIcon />}
                 sx={{ textTransform: "none" }}
                 onClick={() => {
-                  navigate(`/kategoriJaminan/${id}/edit`);
+                  navigate(`/jenisJaminan/${id}/edit`);
                 }}
               >
                 Ubah
@@ -325,7 +335,7 @@ const TampilKategoriJaminan = () => {
               <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">
-                  {`Yakin ingin menghapus data ${namaKategori}?`}
+                  {`Yakin ingin menghapus data ${namaJenis}?`}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -348,10 +358,10 @@ const TampilKategoriJaminan = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Username
+                    Nama
                   </Form.Label>
                   <Col sm="9">
-                    <Form.Control value={namaKategori} disabled readOnly />
+                    <Form.Control value={namaJenis} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -362,14 +372,30 @@ const TampilKategoriJaminan = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode Kwitansi
+                    Bunga / Bulan
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
-                      value={bungaPerBulanKategori}
+                      value={bungaPerBulanJenis}
                       disabled
                       readOnly
                     />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRight}>
+                    Kategori
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control value={namaKategori} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -382,7 +408,7 @@ const TampilKategoriJaminan = () => {
         <SearchBar setSearchTerm={setSearchTerm} />
       </Box>
       <Box sx={tableContainer}>
-        <ShowTableKategoriJaminan
+        <ShowTableJenisJaminan
           currentPosts={currentPosts}
           searchTerm={searchTerm}
         />
@@ -400,7 +426,7 @@ const TampilKategoriJaminan = () => {
   );
 };
 
-export default TampilKategoriJaminan;
+export default TampilJenisJaminan;
 
 const buttonModifierContainer = {
   mt: 4,

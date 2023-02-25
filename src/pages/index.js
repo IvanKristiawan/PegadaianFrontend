@@ -10,3 +10,7 @@ export { default as UbahUser } from "./Utility/DaftarUser/UbahUser";
 export { default as TampilKategoriJaminan } from "./Master/Jaminan/KategoriJaminan/TampilKategoriJaminan";
 export { default as TambahKategoriJaminan } from "./Master/Jaminan/KategoriJaminan/TambahKategoriJaminan";
 export { default as UbahKategoriJaminan } from "./Master/Jaminan/KategoriJaminan/UbahKategoriJaminan";
+// Jenis Jaminan Page
+export { default as TampilJenisJaminan } from "./Master/Jaminan/JenisJaminan/TampilJenisJaminan";
+export { default as TambahJenisJaminan } from "./Master/Jaminan/JenisJaminan/TambahJenisJaminan";
+export { default as UbahJenisJaminan } from "./Master/Jaminan/JenisJaminan/UbahJenisJaminan";
