@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../contexts/ContextProvider";
-import { Colors } from "../../../constants/styles";
 import { Loader } from "../../../components";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
 import {

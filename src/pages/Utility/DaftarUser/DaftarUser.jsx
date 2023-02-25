@@ -208,8 +208,6 @@ const DaftarUser = () => {
       });
     const doc = new jsPDF();
     doc.setFontSize(12);
-    let x = 10;
-    let y = 10;
     doc.text(`${setting.namaPerusahaan} - ${setting.kotaPerusahaan}`, 15, 10);
     doc.text(`${setting.lokasiPerusahaan}`, 15, 15);
     doc.setFontSize(16);
@@ -521,7 +519,7 @@ const DaftarUser = () => {
               </Col>
             </Row>
           </Form>
-          {user.tipeUser === "MANAGER" && (
+          {user.tipeUser !== "ADMIN" && (
             <Container style={{ marginTop: 30 }}>
               <h4>Hak Akses User</h4>
               <Box sx={showDataContainer}>

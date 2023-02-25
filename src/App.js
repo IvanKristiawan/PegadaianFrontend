@@ -1,7 +1,7 @@
 // import "./styles.css";
 import React, { useContext, useState, useEffect } from "react";
 // import { Route, Switch, Redirect } from 'react-router-dom';
-import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import FormInput from "./pages/FormInput";
 // import Login from "./pages/Login/Login";
 import "./styles.scss";
@@ -18,7 +18,10 @@ import {
   UbahProfilUser,
   DaftarUser,
   TambahUser,
-  UbahUser
+  UbahUser,
+  TampilKategoriJaminan,
+  TambahKategoriJaminan,
+  UbahKategoriJaminan
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -212,6 +215,39 @@ const App = () => {
               <DAFTARUSERRoute>
                 <TambahUser />
               </DAFTARUSERRoute>
+            }
+          />
+          {/* Kategori Jaminan */}
+          <Route
+            path="/kategoriJaminan"
+            element={
+              <JAMINANRoute>
+                <TampilKategoriJaminan />
+              </JAMINANRoute>
+            }
+          />
+          <Route
+            path="/kategoriJaminan/:id"
+            element={
+              <JAMINANRoute>
+                <TampilKategoriJaminan />
+              </JAMINANRoute>
+            }
+          />
+          <Route
+            path="/kategoriJaminan/:id/edit"
+            element={
+              <JAMINANRoute>
+                <UbahKategoriJaminan />
+              </JAMINANRoute>
+            }
+          />
+          <Route
+            path="/kategoriJaminan/tambahKategoriJaminan"
+            element={
+              <JAMINANRoute>
+                <TambahKategoriJaminan />
+              </JAMINANRoute>
             }
           />
         </Routes>
