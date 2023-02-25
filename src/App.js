@@ -12,7 +12,13 @@ import { Sidebar, Footer, ScrollToTop } from "./components";
 // import { Colors } from "./constants/styles";
 import { AuthContext } from "./contexts/AuthContext";
 import { useStateContext } from "./contexts/ContextProvider";
-import { Login, ProfilUser, UbahProfilUser, DaftarUser } from "./pages/index";
+import {
+  Login,
+  ProfilUser,
+  UbahProfilUser,
+  DaftarUser,
+  TambahUser
+} from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
 const App = () => {
@@ -188,6 +194,14 @@ const App = () => {
             element={
               <DAFTARUSERRoute>
                 <DaftarUser />
+              </DAFTARUSERRoute>
+            }
+          />
+          <Route
+            path="/daftarUser/tambahUser"
+            element={
+              <DAFTARUSERRoute>
+                <TambahUser />
               </DAFTARUSERRoute>
             }
           />

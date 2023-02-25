@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { useStateContext } from "../../../contexts/ContextProvider";
-import { Container, Button, Form, Row, Col } from "react-bootstrap";
+import { Container, Form, Row, Col } from "react-bootstrap";
+import { Button, ButtonGroup } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 
 const ProfilUser = () => {
@@ -19,14 +20,18 @@ const ProfilUser = () => {
       <h3>Utility</h3>
       <h5 style={{ fontWeight: 400 }}>Profil User</h5>
       <Container className="d-flex justify-content-center">
-        <Button
-          variant="primary"
-          onClick={() => {
-            navigate(`/profilUser/${user.id}/edit`);
-          }}
-        >
-          <EditIcon style={iconButtonStyle} /> Ubah Password
-        </Button>
+        <ButtonGroup variant="contained">
+          <Button
+            color="primary"
+            startIcon={<EditIcon />}
+            sx={{ textTransform: "none" }}
+            onClick={() => {
+              navigate(`/profilUser/${user.id}/edit`);
+            }}
+          >
+            Ubah Password
+          </Button>
+        </ButtonGroup>
       </Container>
       <hr />
       <Container>
@@ -114,9 +119,3 @@ const ProfilUser = () => {
 };
 
 export default ProfilUser;
-
-const iconButtonStyle = {
-  fontSize: 18,
-  marginTop: -4,
-  marginRight: 6
-};

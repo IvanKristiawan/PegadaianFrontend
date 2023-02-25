@@ -15,6 +15,7 @@ function Login() {
     formState: { errors }
   } = useForm();
   const [open, setOpen] = useState(false);
+  const [validated, setValidated] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -33,35 +34,39 @@ function Login() {
   };
 
   const handleClick = async (e) => {
-    dispatch({ type: "LOGIN_START" });
-    try {
-      const res = await axios.post(`${tempUrl}/auth/login`, {
-        username,
-        password
-      });
-      const findSetting = await axios.post(`${tempUrl}/lastSetting`, {
-        _id: res.data.details.id,
-        token: res.data.details.token,
-        kodeCabang: res.data.details.cabangId
-      });
-      alert(findSetting.data);
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: res.data.details,
-        setting: findSetting.data
-      });
+    e.preventDefault();
+    e.stopPropagation();
+    const form = e.currentTarget;
+    if (form.checkValidity()) {
+      dispatch({ type: "LOGIN_START" });
+      try {
+        const res = await axios.post(`${tempUrl}/auth/login`, {
+          username,
+          password
+        });
+        const findSetting = await axios.post(`${tempUrl}/lastSetting`, {
+          _id: res.data.details.id,
+          token: res.data.details.token,
+          kodeCabang: res.data.details.cabangId
+        });
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: res.data.details,
+          setting: findSetting.data
+        });
 
-      navigate("/formInput");
-    } catch (err) {
-      setOpen(true);
-      dispatch({ type: "LOGIN_FAILURE", payload: err });
+        navigate("/formInput");
+      } catch (err) {
+        setOpen(true);
+        dispatch({ type: "LOGIN_FAILURE", payload: err });
+      }
     }
+    setValidated(true);
   };
 
   return (
     <Container
       style={{
-        border: "1px solid black",
         display: "flex",
         justifyContent: "center"
       }}
@@ -77,43 +82,31 @@ function Login() {
             <Card.Header style={headerDetail}>Login Pengguna</Card.Header>
             <Card.Body>
               <Form
+                noValidate
+                validated={validated}
                 className="d-flex flex-column"
-                onSubmit={handleSubmit(handleClick)}
+                onSubmit={handleClick}
               >
                 <Form.Group
                   className="mb-3"
                   controlId="exampleForm.ControlInput1"
                 >
                   <Form.Control
+                    required
                     placeholder="Username"
                     className="mb-3"
                     value={username}
-                    {...register("username", {
-                      required: "Username harus diisi!"
-                    })}
-                    error={!!errors?.username}
-                    helperText={
-                      errors?.username ? errors.username.message : null
-                    }
                     onChange={(e) => setUsername(e.target.value.toUpperCase())}
                   />
                   <Form.Control
+                    required
                     type="password"
                     placeholder="Password"
                     value={password}
-                    {...register("password", {
-                      required: "Password harus diisi!"
-                    })}
-                    error={!!errors?.password}
-                    helperText={
-                      errors?.password ? errors.password.message : null
-                    }
                     onChange={(e) => setPassword(e.target.value.toUpperCase())}
                   />
                 </Form.Group>
-                <Button x type="submit">
-                  Login
-                </Button>
+                <Button type="submit">Login</Button>
               </Form>
             </Card.Body>
           </Card>

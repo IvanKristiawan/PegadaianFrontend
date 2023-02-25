@@ -9,7 +9,6 @@ import { SearchBar, Loader, usePagination } from "../../../components";
 import { Container, Form, Row, Col } from "react-bootstrap";
 import {
   Box,
-  Typography,
   Pagination,
   Button,
   ButtonGroup,
@@ -25,16 +24,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-// import * as XLSX from "xlsx";
+import { useDownloadExcel } from "react-export-table-to-excel";
 import DownloadIcon from "@mui/icons-material/Download";
 import PrintIcon from "@mui/icons-material/Print";
 
 const DaftarUser = () => {
+  const tableRef = useRef(null);
   const { user, setting } = useContext(AuthContext);
   const location = useLocation();
   const id = location.pathname.split("/")[2];
   const { screenSize } = useStateContext();
-  const reportTemplateRef = useRef(null);
 
   const [isFetchError, setIsFetchError] = useState(false);
   const [kodeCabang, setKodeCabang] = useState("");
@@ -58,11 +57,10 @@ const DaftarUser = () => {
   const [gantiPeriode, setGantiPeriode] = useState(false);
 
   const [previewPdf, setPreviewPdf] = useState(false);
+  const [previewExcel, setPreviewExcel] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUser] = useState([]);
-  const [usersForDoc, setUsersForDoc] = useState([]);
   const navigate = useNavigate();
-  let isUserExist = username.length !== 0;
 
   const [open, setOpen] = useState(false);
 
@@ -210,11 +208,34 @@ const DaftarUser = () => {
       });
     const doc = new jsPDF();
     doc.setFontSize(12);
-    doc.autoTable({ html: "#table" });
-    doc.save("doc.pdf");
+    let x = 10;
+    let y = 10;
+    doc.text(`${setting.namaPerusahaan} - ${setting.kotaPerusahaan}`, 15, 10);
+    doc.text(`${setting.lokasiPerusahaan}`, 15, 15);
+    doc.setFontSize(16);
+    doc.text(`Daftar User`, 90, 30);
+    doc.setFontSize(10);
+    doc.text(
+      `Dicetak Oleh: ${user.username} | Tanggal : ${current_date} | Jam : ${current_time}`,
+      15,
+      290
+    );
+    doc.autoTable({
+      html: "#table",
+      startY: doc.pageCount > 1 ? doc.autoTableEndPosY() + 20 : 45,
+      headStyles: {
+        fillColor: [117, 117, 117],
+        color: [0, 0, 0]
+      }
+    });
+    doc.save("daftarUser.pdf");
   };
 
-  const downloadExcel = () => {};
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: "Daftar User",
+    sheet: "DaftarUser"
+  });
 
   const textRight = {
     textAlign: screenSize >= 650 && "right"
@@ -235,13 +256,24 @@ const DaftarUser = () => {
       <Box sx={downloadButtons}>
         <ButtonGroup variant="outlined" color="secondary">
           <Button
+            color="primary"
             startIcon={<SearchIcon />}
-            onClick={() => setPreviewPdf(!previewPdf)}
+            onClick={() => {
+              setPreviewPdf(!previewPdf);
+              setPreviewExcel(false);
+            }}
           >
-            PREVIEW PDF
+            PDF
           </Button>
-          <Button startIcon={<DownloadIcon />} onClick={() => downloadExcel()}>
-            EXCEL
+          <Button
+            color="secondary"
+            startIcon={<SearchIcon />}
+            onClick={() => {
+              setPreviewExcel(!previewExcel);
+              setPreviewPdf(false);
+            }}
+          >
+            Excel
           </Button>
         </ButtonGroup>
       </Box>
@@ -254,7 +286,7 @@ const DaftarUser = () => {
           >
             CETAK
           </Button>
-          <table className="table" id="table">
+          <table class="table" id="table">
             <thead>
               <tr>
                 <th>Username</th>
@@ -282,6 +314,43 @@ const DaftarUser = () => {
           </table>
         </div>
       )}
+      <div>
+        {previewExcel && (
+          <Button
+            variant="outlined"
+            startIcon={<DownloadIcon />}
+            onClick={onDownload}
+          >
+            EXCEL
+          </Button>
+        )}
+        <table ref={tableRef}>
+          {previewExcel && (
+            <tbody>
+              <tr>
+                <th>Username</th>
+                <th>Tipe User</th>
+                <th>Periode</th>
+                <th>Kode Kwitansi</th>
+                <th>No Terakhir</th>
+                <th>Cabang</th>
+              </tr>
+              {users.map((user, index) => (
+                <tr key={user.id}>
+                  <td>{user.username}</td>
+                  <td>{user.tipeUser}</td>
+                  <td>{user.tutupPeriode.namaPeriode}</td>
+                  <td>{user.kodeKwitansi}</td>
+                  <td>{user.noTerakhir}</td>
+                  <td>
+                    {user.cabang.id} - {user.cabang.namaCabang}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
+        </table>
+      </div>
       <Box sx={buttonModifierContainer}>
         <Button
           variant="contained"
@@ -423,7 +492,7 @@ const DaftarUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    COA Kasie
+                    COA Kasir
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={coaKasir} disabled readOnly />
@@ -553,15 +622,6 @@ const downloadButtons = {
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "center"
-};
-
-const labelInput = {
-  fontWeight: "600",
-  marginLeft: 1
-};
-
-const spacingTop = {
-  mt: 4
 };
 
 const showDataContainer = {

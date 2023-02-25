@@ -4,9 +4,10 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { tempUrl } from "../../../contexts/ContextProvider";
 import { Loader } from "../../../components";
-import EditIcon from "@mui/icons-material/Edit";
 import { useStateContext } from "../../../contexts/ContextProvider";
-import { Container, Card, Button, Form, Row, Col } from "react-bootstrap";
+import { Container, Card, Form, Row, Col } from "react-bootstrap";
+import { Box, Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 
 const UbahProfilUser = () => {
   const { screenSize } = useStateContext();
@@ -80,7 +81,7 @@ const UbahProfilUser = () => {
       <h5 style={{ fontWeight: 400 }}>Ubah Password User</h5>
       <hr />
       <Card>
-        <Card.Header>Input Sample</Card.Header>
+        <Card.Header>User</Card.Header>
         <Card.Body>
           <Form>
             <Row>
@@ -199,19 +200,23 @@ const UbahProfilUser = () => {
               </Col>
             </Row>
           </Form>
-          <Container>
+          <Box sx={spacingTop}>
             <Button
-              variant="outline-secondary"
+              variant="outlined"
+              color="secondary"
               onClick={() => navigate("/profilUser")}
-              style={{ marginRight: 10 }}
+              sx={{ marginRight: 2 }}
             >
               {"< Kembali"}
             </Button>
-            <Button color="primary" onClick={updateUser}>
-              <EditIcon style={iconButtonStyle} />
+            <Button
+              variant="contained"
+              startIcon={<EditIcon />}
+              onClick={updateUser}
+            >
               Ubah
             </Button>
-          </Container>
+          </Box>
         </Card.Body>
       </Card>
     </Container>
@@ -220,8 +225,6 @@ const UbahProfilUser = () => {
 
 export default UbahProfilUser;
 
-const iconButtonStyle = {
-  fontSize: 18,
-  marginTop: -4,
-  marginRight: 6
+const spacingTop = {
+  mt: 4
 };
