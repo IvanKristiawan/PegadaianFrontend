@@ -18,7 +18,11 @@ export { default as UbahJenisJaminan } from "./Master/Jaminan/JenisJaminan/UbahJ
 export { default as TampilMarketing } from "./Master/Marketing/TampilMarketing";
 export { default as TambahMarketing } from "./Master/Marketing/TambahMarketing";
 export { default as UbahMarketing } from "./Master/Marketing/UbahMarketing";
-// Buku Besar Page
+// Jenis COA Page
 export { default as TampilJenisCOA } from "./Master/BukuBesar/JenisCOA/TampilJenisCOA";
 export { default as TambahJenisCOA } from "./Master/BukuBesar/JenisCOA/TambahJenisCOA";
 export { default as UbahJenisCOA } from "./Master/BukuBesar/JenisCOA/UbahJenisCOA";
+// Group COA Page
+export { default as TampilGroupCOA } from "./Master/BukuBesar/GroupCOA/TampilGroupCOA";
+export { default as TambahGroupCOA } from "./Master/BukuBesar/GroupCOA/TambahGroupCOA";
+export { default as UbahGroupCOA } from "./Master/BukuBesar/GroupCOA/UbahGroupCOA";
