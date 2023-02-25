@@ -637,3 +637,86 @@ export function ShowTableCOA({ currentPosts, searchTerm }) {
     </TableContainer>
   );
 }
+
+export function ShowTableCabang({ currentPosts, searchTerm }) {
+  let navigate = useNavigate();
+  const classes = useStyles();
+  return (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead className={classes.root}>
+          <TableRow>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Kode
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Nama
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Alamat
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Telepon
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>PIC</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts
+            .filter((val) => {
+              if (searchTerm === "") {
+                return val;
+              } else if (
+                val.id.toUpperCase().includes(searchTerm.toUpperCase()) ||
+                val.namaCabang
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.alamatCabang
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.teleponCabang
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.picCabang.toUpperCase().includes(searchTerm.toUpperCase())
+              ) {
+                return val;
+              }
+            })
+            .map((user, index) => (
+              <TableRow
+                key={user.id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { bgcolor: Colors.grey300 },
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  navigate(`/cabang/${user.id}`);
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.id}
+                </TableCell>
+                <TableCell>{user.namaCabang}</TableCell>
+                <TableCell>{user.alamatCabang}</TableCell>
+                <TableCell>{user.teleponCabang}</TableCell>
+                <TableCell>{user.picCabang}</TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}

@@ -102,6 +102,9 @@ const Sidebar = ({
                 COA <NavLink to="/coa" />
               </MenuItem>
             </SubMenu>
+            <MenuItem>
+              Cabang <NavLink to="/cabang" />
+            </MenuItem>
           </SubMenu>
           <SubMenu title={"Utility"} icon={<FaUserCog />}>
             <MenuItem>

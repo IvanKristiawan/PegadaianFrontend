@@ -34,3 +34,7 @@ export { default as UbahSubGroupCOA } from "./Master/BukuBesar/SubGroupCOA/UbahS
 export { default as TampilCOA } from "./Master/BukuBesar/COA/TampilCOA";
 export { default as TambahCOA } from "./Master/BukuBesar/COA/TambahCOA";
 export { default as UbahCOA } from "./Master/BukuBesar/COA/UbahCOA";
+// Cabang Page
+export { default as TampilCabang } from "./Master/Cabang/TampilCabang";
+export { default as TambahCabang } from "./Master/Cabang/TambahCabang";
+export { default as UbahCabang } from "./Master/Cabang/UbahCabang";
