@@ -1,31 +1,33 @@
-import { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../contexts/ContextProvider";
+import { Colors } from "../../../constants/styles";
 import { Loader } from "../../../components";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
 import {
   Box,
-  Alert,
   Button,
   Snackbar,
+  Alert,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions
 } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
 
-const TambahUser = () => {
+const UbahUser = () => {
   const { screenSize } = useStateContext();
-  const { user, setting } = useContext(AuthContext);
+  const { user, setting, dispatch } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [validated, setValidated] = useState(false);
   const [kodeCabang, setKodeCabang] = useState("");
   const [namaPeriode, setNamaPeriode] = useState("");
   const [username, setUsername] = useState("");
+  const [usernameLama, setUsernameLama] = useState("");
   const [tipeUser, setTipeUser] = useState("");
   const [kodeKwitansi, setKodeKwitansi] = useState("");
   const [coaKasir, setCoaKasir] = useState("");
@@ -48,27 +50,16 @@ const TambahUser = () => {
   const [periodesData, setPeriodesData] = useState([]);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
-  const [openAlertUsername, setOpenAlertUsername] = useState(false);
-  const [
-    openAlertKodeKwitansiCabang,
-    setOpenAlertKodeKwitansiCabang
-  ] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
 
-  const handleClickOpenAlertUsername = () => {
-    setOpenAlertUsername(true);
+  const handleClickOpenAlert = () => {
+    setOpenAlert(true);
   };
 
-  const handleCloseAlertUsername = () => {
-    setOpenAlertUsername(false);
-  };
-
-  const handleClickOpenAlertKodeKwitansiCabang = () => {
-    setOpenAlertKodeKwitansiCabang(true);
-  };
-
-  const handleCloseAlertKodeKwitansiCabang = () => {
-    setOpenAlertKodeKwitansiCabang(false);
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
   };
 
   const tipeUserOption = ["MANAGER", "ADMIN"];
@@ -85,6 +76,7 @@ const TambahUser = () => {
     getPeriodesData();
     getCabangsData();
     getCoaSubTunai();
+    getUserById();
   }, []);
 
   const getPeriodesData = async () => {
@@ -96,12 +88,6 @@ const TambahUser = () => {
         kodeCabang: user.cabangId
       });
       setPeriodesData(allPeriode.data);
-      if (user.tipeUser === "OWN") {
-        setTipeUser(tipeUserOption[0]);
-      } else {
-        setTipeUser(tipeUserOptionOwner[0]);
-      }
-      setNamaPeriode(allPeriode.data[0].namaPeriode);
     } catch (err) {
       alert(err);
     }
@@ -115,7 +101,6 @@ const TambahUser = () => {
       token: user.token
     });
     setCabangs(response.data);
-    setKodeCabang(response.data[0].id);
   };
 
   const getCoaSubTunai = async (kodeUnit) => {
@@ -126,10 +111,37 @@ const TambahUser = () => {
       kodeSubGroupCOA: setting.subGroupCoaKas
     });
     setCoaSubTunais(response.data);
-    setCoaKasir(response.data[0].kodeCOA);
   };
 
-  const saveUser = async (e) => {
+  const getUserById = async () => {
+    setLoading(true);
+    const response = await axios.post(`${tempUrl}/findUser/${id}`, {
+      tipeAdmin: user.tipeUser,
+      _id: user.id,
+      token: user.token
+    });
+    setUsername(response.data.username);
+    setUsernameLama(response.data.username);
+    setTipeUser(response.data.tipeUser);
+    setNamaPeriode(response.data.tutupPeriode.namaPeriode);
+    setKodeKwitansi(response.data.kodeKwitansi);
+    setCoaKasir(response.data.coaKasir);
+    setKodeCabang(response.data.cabang.id);
+
+    // Akses Master
+    setJaminan(response.data.akses.jaminan);
+    setMarketing(response.data.akses.marketing);
+    setBukuBesar(response.data.akses.bukuBesar);
+    setCabang(response.data.akses.cabang);
+
+    // Akses Utility
+    setProfilUser(response.data.akses.profilUser);
+    setDaftarUser(response.data.akses.daftarUser);
+    setTutupPeriode(response.data.akses.tutupPeriode);
+    setGantiPeriode(response.data.akses.gantiPeriode);
+  };
+
+  const updateUser = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const form = e.currentTarget;
@@ -139,78 +151,25 @@ const TambahUser = () => {
         let tempUsername = await axios.post(`${tempUrl}/getUsername`, {
           username,
           _id: user.id,
-          token: user.token
-        });
-        let tempKodeKwitansi = await axios.post(`${tempUrl}/getKodeKwitansi`, {
-          kodeKwitansi,
-          _id: user.id,
           token: user.token,
-          kodeCabang
+          kodeCabang: user.cabang.id
         });
-        const pickedPeriode = await axios.post(
-          `${tempUrl}/tutupPeriodeByNamaPeriode`,
-          {
-            namaPeriode,
-            _id: user.id,
-            token: user.token,
-            kodeCabang: user.cabang.id
-          }
-        );
-        let tempPeriode = await axios.post(`${tempUrl}/tutupPeriodes`, {
-          _id: user.id,
-          token: user.token,
-          kodeCabang: kodeCabang
-        });
-
-        if (tempPeriode.data.length === 0) {
-          // Create Periode and Neraca Saldo
-          await axios.post(`${tempUrl}/saveTutupPeriode`, {
-            dariTanggal: pickedPeriode.data.dariTanggal,
-            sampaiTanggal: pickedPeriode.data.sampaiTanggal,
-            namaPeriode: pickedPeriode.data.namaPeriode,
-            _id: user.id,
-            token: user.token,
-            cabangId: kodeCabang
-          });
-          function subtractMonths(date, months) {
-            date.setMonth(date.getMonth() - months);
-            return date;
-          }
-
-          const newBulan = new Date(pickedPeriode.data.dariTanggal);
-
-          const minOneBulan = subtractMonths(newBulan, 1);
-
-          // Save 2 months
-          await axios.post(`${tempUrl}/saveNeracaSaldo`, {
-            bulan: minOneBulan,
-            _id: user.id,
-            token: user.token,
-            cabangId: kodeCabang
-          });
-          await axios.post(`${tempUrl}/saveNeracaSaldo`, {
-            bulan: newBulan,
-            _id: user.id,
-            token: user.token,
-            cabangId: kodeCabang
-          });
-        }
-
-        let isUsernameAlreadyExist = tempUsername.data.length > 0;
-        let isKodeKwitansiCabangAlreadyExist = tempKodeKwitansi.data.length > 0;
-        if (isUsernameAlreadyExist) {
-          handleClickOpenAlertUsername();
-        } else if (isKodeKwitansiCabangAlreadyExist) {
-          handleClickOpenAlertKodeKwitansiCabang();
+        let isUsernameNotValid =
+          tempUsername.data.length > 0 && username !== usernameLama;
+        if (isUsernameNotValid) {
+          handleClickOpenAlert();
         } else {
           setLoading(true);
-          await axios.post(`${tempUrl}/auth/register`, {
+          if (password.length === 0) {
+            setPassword(user.password);
+          }
+          await axios.post(`${tempUrl}/users/${id}`, {
             username,
-            password,
             tipeUser,
             namaPeriode,
-            kodeKwitansi,
             coaKasir,
+            password,
+            tipeAdmin: user.tipeUser,
             akses: {
               jaminan,
               marketing,
@@ -226,10 +185,16 @@ const TambahUser = () => {
             token: user.token
           });
           setLoading(false);
-          navigate("/daftarUser");
+
+          if (user.id === id) {
+            dispatch({ type: "LOGOUT" });
+            navigate("/");
+          } else {
+            navigate("/daftarUser");
+          }
         }
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        alert(error);
       }
       setLoading(false);
     } else {
@@ -239,21 +204,21 @@ const TambahUser = () => {
     setValidated(true);
   };
 
-  if (loading) {
-    return <Loader />;
-  }
-
   const textRight = {
     textAlign: screenSize >= 650 && "right"
   };
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <Container>
       <h3>User</h3>
-      <h5 style={{ fontWeight: 400 }}>Tambah User</h5>
+      <h5 style={{ fontWeight: 400 }}>Ubah User</h5>
       <Dialog
-        open={openAlertUsername}
-        onClose={handleCloseAlertUsername}
+        open={openAlert}
+        onClose={handleCloseAlert}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -264,32 +229,14 @@ const TambahUser = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAlertUsername}>Ok</Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={openAlertKodeKwitansiCabang}
-        onClose={handleCloseAlertKodeKwitansiCabang}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{`Data Kode Kwitansi Sama`}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            {`Kode Kwitansi ${kodeKwitansi} di Cabang ${
-              kodeCabang.split(" ", 1)[0]
-            } sudah ada, ganti Kode Kwitansi!`}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseAlertKodeKwitansiCabang}>Ok</Button>
+          <Button onClick={handleCloseAlert}>Ok</Button>
         </DialogActions>
       </Dialog>
       <hr />
       <Card>
         <Card.Header>User</Card.Header>
         <Card.Body>
-          <Form noValidate validated={validated} onSubmit={saveUser}>
+          <Form noValidate validated={validated} onSubmit={updateUser}>
             <Row>
               <Col sm={6}>
                 <Form.Group
@@ -426,7 +373,6 @@ const TambahUser = () => {
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
-                      required
                       value={password}
                       onChange={(e) =>
                         setPassword(e.target.value.toUpperCase())
@@ -538,10 +484,10 @@ const TambahUser = () => {
               </Button>
               <Button
                 variant="contained"
-                startIcon={<SaveIcon />}
+                startIcon={<EditIcon />}
                 type="submit"
               >
-                Simpan
+                Edit
               </Button>
             </Box>
           </Form>
@@ -558,15 +504,7 @@ const TambahUser = () => {
   );
 };
 
-export default TambahUser;
-
-const spacingTop = {
-  mt: 4
-};
-
-const alertBox = {
-  width: "100%"
-};
+export default UbahUser;
 
 const showDataContainer = {
   mt: 4,
@@ -584,6 +522,14 @@ const showDataWrapper = {
   maxWidth: {
     md: "40vw"
   }
+};
+
+const spacingTop = {
+  mt: 4
+};
+
+const alertBox = {
+  width: "100%"
 };
 
 const secondWrapper = {

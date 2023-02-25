@@ -17,7 +17,8 @@ import {
   ProfilUser,
   UbahProfilUser,
   DaftarUser,
-  TambahUser
+  TambahUser,
+  UbahUser
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -194,6 +195,14 @@ const App = () => {
             element={
               <DAFTARUSERRoute>
                 <DaftarUser />
+              </DAFTARUSERRoute>
+            }
+          />
+          <Route
+            path="/daftarUser/:id/edit"
+            element={
+              <DAFTARUSERRoute>
+                <UbahUser />
               </DAFTARUSERRoute>
             }
           />
