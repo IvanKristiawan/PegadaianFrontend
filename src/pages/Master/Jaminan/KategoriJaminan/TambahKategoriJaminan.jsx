@@ -38,6 +38,7 @@ const TambahKategoriJaminan = () => {
         await axios.post(`${tempUrl}/saveKategoriJaminan`, {
           namaKategori,
           bungaPerBulanKategori,
+          userIdInput: user.id,
           _id: user.id,
           token: user.token
         });

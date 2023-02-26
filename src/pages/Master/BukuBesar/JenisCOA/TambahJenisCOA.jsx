@@ -51,6 +51,7 @@ const TambahJenisCOA = () => {
         await axios.post(`${tempUrl}/saveJenisCOA`, {
           kodeJenisCOA,
           namaJenisCOA,
+          userIdInput: user.id,
           _id: user.id,
           token: user.token
         });

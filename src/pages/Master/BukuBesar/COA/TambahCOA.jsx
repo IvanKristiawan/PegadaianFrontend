@@ -98,6 +98,7 @@ const TambahCOA = () => {
           jenisSaldo,
           kasBank,
           kodeSubGroupCOA,
+          userIdInput: user.id,
           _id: user.id,
           token: user.token
         });

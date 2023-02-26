@@ -85,6 +85,7 @@ const TambahSubGroupCOA = () => {
           kodeSubGroupCOA,
           namaSubGroupCOA,
           kodeGroupCOA,
+          userIdInput: user.id,
           _id: user.id,
           token: user.token
         });

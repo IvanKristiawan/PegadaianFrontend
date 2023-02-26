@@ -76,6 +76,7 @@ const UbahCOA = () => {
             namaCOA,
             jenisSaldo,
             kasBank,
+            userIdUpdate: user.id,
             _id: user.id,
             token: user.token
           });

@@ -59,6 +59,7 @@ const UbahGroupCOA = () => {
           setLoading(true);
           await axios.post(`${tempUrl}/updateGroupCOA/${id}`, {
             namaGroupCOA,
+            userIdUpdate: user.id,
             _id: user.id,
             token: user.token
           });

@@ -70,6 +70,7 @@ const TambahGroupCOA = () => {
           kodeGroupCOA,
           namaGroupCOA,
           kodeJenisCOA,
+          userIdInput: user.id,
           _id: user.id,
           token: user.token
         });

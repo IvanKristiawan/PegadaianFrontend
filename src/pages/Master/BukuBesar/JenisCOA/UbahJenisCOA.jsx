@@ -56,6 +56,7 @@ const UbahJenisCOA = () => {
           await axios.post(`${tempUrl}/updateJenisCOA/${id}`, {
             kodeJenisCOA,
             namaJenisCOA,
+            userIdUpdate: user.id,
             _id: user.id,
             token: user.token
           });

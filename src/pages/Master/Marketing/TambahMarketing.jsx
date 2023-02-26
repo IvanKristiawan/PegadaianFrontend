@@ -67,6 +67,7 @@ const TambahMarketing = () => {
           namaMarketing,
           teleponMarketing,
           kodeCabang,
+          userIdInput: user.id,
           _id: user.id,
           token: user.token
         });

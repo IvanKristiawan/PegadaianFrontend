@@ -72,6 +72,7 @@ const UbahMarketing = () => {
             namaMarketing,
             teleponMarketing,
             kodeCabang,
+            userIdUpdate: user.id,
             _id: user.id,
             token: user.token
           });

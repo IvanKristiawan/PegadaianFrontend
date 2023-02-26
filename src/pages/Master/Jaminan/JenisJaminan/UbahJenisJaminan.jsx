@@ -69,6 +69,7 @@ const UbahJenisJaminan = () => {
             namaJenis,
             bungaPerBulanJenis,
             namaKategori,
+            userIdUpdate: user.id,
             _id: user.id,
             token: user.token
           });
