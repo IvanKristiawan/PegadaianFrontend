@@ -35,7 +35,7 @@ const UbahProfilUser = () => {
     });
     setUsername(response.data.username);
     setTipeUser(response.data.tipeUser);
-    setPeriode(response.data.periode);
+    setPeriode(response.data.tutupperiode.namaPeriode);
     setKodeKwitansi(response.data.kodeKwitansi);
     setNoTerakhir(response.data.noTerakhir);
     setKodeCabang(response.data.cabang);

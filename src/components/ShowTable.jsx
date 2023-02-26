@@ -75,7 +75,7 @@ export function ShowTableUser({ currentPosts, searchTerm }) {
               } else if (
                 val.username.toUpperCase().includes(searchTerm.toUpperCase()) ||
                 val.tipeUser.toUpperCase().includes(searchTerm.toUpperCase()) ||
-                val.tutupPeriode.namaPeriode
+                val.tutupperiode.namaPeriode
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
                 val.kodeKwitansi
@@ -110,7 +110,7 @@ export function ShowTableUser({ currentPosts, searchTerm }) {
                   {user.username}
                 </TableCell>
                 <TableCell>{user.tipeUser}</TableCell>
-                <TableCell>{user.tutupPeriode.namaPeriode}</TableCell>
+                <TableCell>{user.tutupperiode.namaPeriode}</TableCell>
                 <TableCell>{user.kodeKwitansi}</TableCell>
                 <TableCell>{user.noTerakhir}</TableCell>
                 <TableCell>

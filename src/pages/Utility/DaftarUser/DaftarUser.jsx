@@ -85,7 +85,7 @@ const DaftarUser = () => {
     } else if (
       val.username.toUpperCase().includes(searchTerm.toUpperCase()) ||
       val.tipeUser.toUpperCase().includes(searchTerm.toUpperCase()) ||
-      val.tutupPeriode.namaPeriode
+      val.tutupperiode.namaPeriode
         .toUpperCase()
         .includes(searchTerm.toUpperCase()) ||
       val.kodeKwitansi.toUpperCase().includes(searchTerm.toUpperCase()) ||
@@ -135,7 +135,7 @@ const DaftarUser = () => {
       });
       setUsername(response.data.username);
       setTipeUser(response.data.tipeUser);
-      setPeriode(response.data.tutupPeriode.namaPeriode);
+      setPeriode(response.data.tutupperiode.namaPeriode);
       setKodeKwitansi(response.data.kodeKwitansi);
       setNoTerakhir(response.data.noTerakhir);
       setKodeCabang(response.data.cabang);
@@ -300,7 +300,7 @@ const DaftarUser = () => {
                 <tr key={user.id}>
                   <td>{user.username}</td>
                   <td>{user.tipeUser}</td>
-                  <td>{user.tutupPeriode.namaPeriode}</td>
+                  <td>{user.tutupperiode.namaPeriode}</td>
                   <td>{user.kodeKwitansi}</td>
                   <td>{user.noTerakhir}</td>
                   <td>
@@ -337,7 +337,7 @@ const DaftarUser = () => {
                 <tr key={user.id}>
                   <td>{user.username}</td>
                   <td>{user.tipeUser}</td>
-                  <td>{user.tutupPeriode.namaPeriode}</td>
+                  <td>{user.tutupperiode.namaPeriode}</td>
                   <td>{user.kodeKwitansi}</td>
                   <td>{user.noTerakhir}</td>
                   <td>

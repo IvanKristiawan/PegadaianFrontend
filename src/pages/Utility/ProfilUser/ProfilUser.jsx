@@ -108,7 +108,7 @@ const ProfilUser = () => {
                 </Form.Label>
                 <Col sm="9">
                   <Form.Control
-                    value={user.tutupPeriode.namaPeriode}
+                    value={user.tutupperiode.namaPeriode}
                     disabled
                     readOnly
                   />

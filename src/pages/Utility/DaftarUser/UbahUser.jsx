@@ -122,7 +122,7 @@ const UbahUser = () => {
     setUsername(response.data.username);
     setUsernameLama(response.data.username);
     setTipeUser(response.data.tipeUser);
-    setNamaPeriode(response.data.tutupPeriode.namaPeriode);
+    setNamaPeriode(response.data.tutupperiode.namaPeriode);
     setKodeKwitansi(response.data.kodeKwitansi);
     setCoaKasir(response.data.coaKasir);
     setKodeCabang(response.data.cabang.id);
