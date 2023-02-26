@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useForm } from "react-hook-form";
 import { useStateContext, tempUrl } from "../../contexts/ContextProvider";
 import { AuthContext } from "../../contexts/AuthContext";
 import { Container, Card, Button, Form } from "react-bootstrap";
@@ -9,18 +8,13 @@ import { Snackbar, Alert } from "@mui/material";
 
 function Login() {
   const { screenSize } = useStateContext();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm();
   const [open, setOpen] = useState(false);
   const [validated, setValidated] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { loading, error, dispatch } = useContext(AuthContext);
+  const { error, dispatch } = useContext(AuthContext);
 
   const cardContainer = {
     width: screenSize >= 650 ? "23rem" : "18rem"

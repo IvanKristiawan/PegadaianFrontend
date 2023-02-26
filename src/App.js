@@ -2,7 +2,6 @@
 import React, { useContext, useState, useEffect } from "react";
 // import { Route, Switch, Redirect } from 'react-router-dom';
 import { Routes, Route, Navigate } from "react-router-dom";
-import FormInput from "./pages/FormInput";
 // import Login from "./pages/Login/Login";
 import "./styles.scss";
 import { Sidebar, Footer, ScrollToTop } from "./components";
@@ -19,6 +18,7 @@ import {
   DaftarUser,
   TambahUser,
   UbahUser,
+  TampilGantiPeriode,
   TampilKategoriJaminan,
   TambahKategoriJaminan,
   UbahKategoriJaminan,
@@ -182,14 +182,6 @@ const App = () => {
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route
-            path="/formInput"
-            element={
-              <USERRoute>
-                <FormInput />
-              </USERRoute>
-            }
-          />
-          <Route
             path="/profilUser"
             element={
               <PROFILUSERRoute>
@@ -236,6 +228,23 @@ const App = () => {
               <DAFTARUSERRoute>
                 <TambahUser />
               </DAFTARUSERRoute>
+            }
+          />
+          {/* Ganti Periode */}
+          <Route
+            path="/gantiPeriode"
+            element={
+              <GANTIPERIODERoute>
+                <TampilGantiPeriode />
+              </GANTIPERIODERoute>
+            }
+          />
+          <Route
+            path="/gantiPeriode/:id"
+            element={
+              <GANTIPERIODERoute>
+                <TampilGantiPeriode />
+              </GANTIPERIODERoute>
             }
           />
           {/* Kategori Jaminan */}

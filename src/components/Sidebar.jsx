@@ -85,58 +85,65 @@ const Sidebar = ({
                 </MenuItem>
               </SubMenu>
             )}
-            <MenuItem>
-              Marketing <NavLink to="/marketing" />
-            </MenuItem>
-            <SubMenu title={"Buku Besar"}>
+            {user.akses.marketing === true && (
               <MenuItem>
-                Kelompok COA <NavLink to="/jenisCoa" />
+                Marketing <NavLink to="/marketing" />
               </MenuItem>
+            )}
+            {user.akses.bukuBesar === true && (
+              <SubMenu title={"Buku Besar"}>
+                <MenuItem>
+                  Kelompok COA <NavLink to="/jenisCoa" />
+                </MenuItem>
+                <MenuItem>
+                  Group COA <NavLink to="/groupCoa" />
+                </MenuItem>
+                <MenuItem>
+                  SubGroup COA <NavLink to="/subGroupCoa" />
+                </MenuItem>
+                <MenuItem>
+                  COA <NavLink to="/coa" />
+                </MenuItem>
+              </SubMenu>
+            )}
+            {user.akses.cabang === true && (
               <MenuItem>
-                Group COA <NavLink to="/groupCoa" />
+                Cabang <NavLink to="/cabang" />
               </MenuItem>
-              <MenuItem>
-                SubGroup COA <NavLink to="/subGroupCoa" />
-              </MenuItem>
-              <MenuItem>
-                COA <NavLink to="/coa" />
-              </MenuItem>
-            </SubMenu>
-            <MenuItem>
-              Cabang <NavLink to="/cabang" />
-            </MenuItem>
+            )}
           </SubMenu>
           <SubMenu title={"Utility"} icon={<FaUserCog />}>
-            <MenuItem>
-              Profil User <NavLink to="/profilUser" />
-            </MenuItem>
-            <MenuItem>
-              Daftar User <NavLink to="/daftarUser" />
-            </MenuItem>
-            <MenuItem>
-              Tutup Periode
-              <NavLink to="/tutupPeriode" />
-            </MenuItem>
-            <MenuItem>
-              Ganti Periode <NavLink to="/gantiPeriode" />
-            </MenuItem>
+            {user.akses.profilUser === true && (
+              <MenuItem>
+                Profil User <NavLink to="/profilUser" />
+              </MenuItem>
+            )}
+            {user.akses.daftarUser === true && (
+              <MenuItem>
+                Daftar User <NavLink to="/daftarUser" />
+              </MenuItem>
+            )}
+            {user.akses.tutupPeriode === true && (
+              <MenuItem>
+                Tutup Periode
+                <NavLink to="/tutupPeriode" />
+              </MenuItem>
+            )}
+            {user.akses.gantiPeriode === true && (
+              <MenuItem>
+                Ganti Periode <NavLink to="/gantiPeriode" />
+              </MenuItem>
+            )}
           </SubMenu>
-
-          <MenuItem
-            icon={<FaTachometerAlt />}
-            suffix={<span className="badge red">NEW</span>}
-          >
-            Form Input
-            <NavLink to="/formInput" />
-          </MenuItem>
-          <MenuItem icon={<FaGem />}>
-            Login <Link to="/login" />
-          </MenuItem>
         </Menu>
       </SidebarContent>
       {/* Footer */}
       <SidebarFooter style={{ textAlign: "center" }}>
-        <div className="sidebar-btn-wrapper" style={{ padding: "20px" }}>
+        <p style={{ fontSize: "12px", marginTop: "10px" }}>{user.username}</p>
+        <p style={{ fontSize: "12px", marginTop: "-10px" }}>
+          Cabang : {user.cabang.namaCabang}
+        </p>
+        <div className="sidebar-btn-wrapper" style={{ paddingBottom: "10px" }}>
           <Link
             className="sidebar-btn"
             style={{ cursor: "pointer" }}
