@@ -118,8 +118,8 @@ const TampilJenisJaminan = () => {
   };
 
   const deleteJaminan = async (id) => {
+    setLoading(true);
     try {
-      setLoading(true);
       await axios.post(`${tempUrl}/deleteJenisJaminan/${id}`, {
         _id: user.id,
         token: user.token
@@ -128,11 +128,13 @@ const TampilJenisJaminan = () => {
       setBungaPerBulanJenis("");
       setNamaJenis("");
       setNamaKategori("");
-      setLoading(false);
       navigate("/jenisJaminan");
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message.includes("foreign key")) {
+        alert(`${namaJenis} tidak bisa dihapus karena sudah ada data!`);
+      }
     }
+    setLoading(false);
   };
 
   const downloadPdf = () => {

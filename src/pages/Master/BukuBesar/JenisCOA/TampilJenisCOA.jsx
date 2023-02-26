@@ -113,8 +113,8 @@ const TampilJenisCOA = () => {
   };
 
   const deleteJenisCOA = async (id) => {
+    setLoading(true);
     try {
-      setLoading(true);
       await axios.post(`${tempUrl}/deleteJenisCOA/${id}`, {
         _id: user.id,
         token: user.token
@@ -122,11 +122,13 @@ const TampilJenisCOA = () => {
       getJenisCOAs();
       setNamaJenisCOA("");
       setKodeJenisCOA("");
-      setLoading(false);
       navigate("/jenisCoa");
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message.includes("foreign key")) {
+        alert(`${namaJenisCOA} tidak bisa dihapus karena sudah ada data!`);
+      }
     }
+    setLoading(false);
   };
 
   const downloadPdf = () => {

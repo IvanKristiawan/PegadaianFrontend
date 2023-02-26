@@ -156,8 +156,8 @@ const DaftarUser = () => {
   };
 
   const deleteUser = async (id) => {
+    setLoading(true);
     try {
-      setLoading(true);
       await axios.post(`${tempUrl}/users/deleteUser/${id}`, {
         tipeAdmin: user.tipeUser,
         _id: user.id,
@@ -170,11 +170,14 @@ const DaftarUser = () => {
       setKodeKwitansi("");
       setNoTerakhir("");
       setKodeCabang("");
-      setLoading(false);
+
       navigate("/daftarUser");
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message.includes("foreign key")) {
+        alert(`${username} tidak bisa dihapus karena sudah ada data!`);
+      }
     }
+    setLoading(false);
   };
 
   const downloadPdf = () => {

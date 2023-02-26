@@ -122,8 +122,8 @@ const TampilCabang = () => {
   };
 
   const deleteCabang = async (id) => {
+    setLoading(true);
     try {
-      setLoading(true);
       await axios.post(`${tempUrl}/deleteCabang/${id}`, {
         _id: user.id,
         token: user.token
@@ -134,11 +134,13 @@ const TampilCabang = () => {
       setAlamatCabang("");
       setTeleponCabang("");
       setPicCabang("");
-      setLoading(false);
       navigate("/cabang");
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message.includes("foreign key")) {
+        alert(`${namaCabang} tidak bisa dihapus karena sudah ada data!`);
+      }
     }
+    setLoading(false);
   };
 
   const downloadPdf = () => {

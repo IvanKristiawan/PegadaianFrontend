@@ -143,8 +143,8 @@ const TampilCOA = () => {
   };
 
   const deleteCOA = async (id) => {
+    setLoading(true);
     try {
-      setLoading(true);
       await axios.post(`${tempUrl}/deleteCOA/${id}`, {
         _id: user.id,
         token: user.token
@@ -155,11 +155,14 @@ const TampilCOA = () => {
       setJenisSaldo("");
       setKasBank("");
       setKodeGroupCOA("");
-      setLoading(false);
+
       navigate("/coa");
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message.includes("foreign key")) {
+        alert(`${namaCOA} tidak bisa dihapus karena sudah ada data!`);
+      }
     }
+    setLoading(false);
   };
 
   const downloadPdf = () => {

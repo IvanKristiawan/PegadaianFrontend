@@ -131,8 +131,8 @@ const TampilSubGroupCOA = () => {
   };
 
   const deleteGroupCOA = async (id) => {
+    setLoading(true);
     try {
-      setLoading(true);
       await axios.post(`${tempUrl}/deleteSubGroupCOA/${id}`, {
         _id: user.id,
         token: user.token
@@ -141,11 +141,14 @@ const TampilSubGroupCOA = () => {
       setNamaSubGroupCOA("");
       setKodeSubGroupCOA("");
       setKodeGroupCOA("");
-      setLoading(false);
+
       navigate("/subGroupCoa");
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message.includes("foreign key")) {
+        alert(`${namaSubGroupCOA} tidak bisa dihapus karena sudah ada data!`);
+      }
     }
+    setLoading(false);
   };
 
   const downloadPdf = () => {

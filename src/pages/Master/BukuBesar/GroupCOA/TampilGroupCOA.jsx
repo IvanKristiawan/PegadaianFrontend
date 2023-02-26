@@ -121,8 +121,8 @@ const TampilGroupCOA = () => {
   };
 
   const deleteJaminan = async (id) => {
+    setLoading(true);
     try {
-      setLoading(true);
       await axios.post(`${tempUrl}/deleteGroupCOA/${id}`, {
         _id: user.id,
         token: user.token
@@ -131,11 +131,14 @@ const TampilGroupCOA = () => {
       setNamaGroupCOA("");
       setKodeGroupCOA("");
       setKodeJenisCOA("");
-      setLoading(false);
+
       navigate("/groupCoa");
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message.includes("foreign key")) {
+        alert(`${namaGroupCOA} tidak bisa dihapus karena sudah ada data!`);
+      }
     }
+    setLoading(false);
   };
 
   const downloadPdf = () => {

@@ -117,8 +117,8 @@ const TampilMarketing = () => {
   };
 
   const deleteMarketing = async (id) => {
+    setLoading(true);
     try {
-      setLoading(true);
       await axios.post(`${tempUrl}/deleteMarketing/${id}`, {
         _id: user.id,
         token: user.token
@@ -127,11 +127,13 @@ const TampilMarketing = () => {
       setNamaMarketing("");
       setKodeMarketing("");
       setTeleponMarketing("");
-      setLoading(false);
       navigate("/marketing");
     } catch (error) {
-      console.log(error);
+      if (error.response.data.message.includes("foreign key")) {
+        alert(`${namaMarketing} tidak bisa dihapus karena sudah ada data!`);
+      }
     }
+    setLoading(false);
   };
 
   const downloadPdf = () => {
