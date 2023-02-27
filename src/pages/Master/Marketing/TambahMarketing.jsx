@@ -42,7 +42,11 @@ const TambahMarketing = () => {
       token: user.token
     });
     setCabangs(response.data);
-    setKodeCabang(response.data[0].id);
+    if (user.tipeUser === "OWNER") {
+      setKodeCabang(response.data[0].id);
+    } else {
+      setKodeCabang(user.cabang.id);
+    }
   };
 
   const getMarketingNextKode = async () => {
@@ -178,19 +182,28 @@ const TambahMarketing = () => {
                     Cabang :
                   </Form.Label>
                   <Col sm="9">
-                    <Form.Select
-                      required
-                      value={kodeCabang}
-                      onChange={(e) => {
-                        setKodeCabang(e.target.value);
-                      }}
-                    >
-                      {cabangs.map((cabang, index) => (
-                        <option value={cabang.id}>
-                          {cabang.id} - {cabang.namaCabang}
-                        </option>
-                      ))}
-                    </Form.Select>
+                    {user.tipeUser === "OWNER" ? (
+                      <Form.Select
+                        required
+                        value={kodeCabang}
+                        onChange={(e) => {
+                          setKodeCabang(e.target.value);
+                        }}
+                      >
+                        {cabangs.map((cabang, index) => (
+                          <option value={cabang.id}>
+                            {cabang.id} - {cabang.namaCabang}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    ) : (
+                      <Form.Control
+                        required
+                        value={kodeCabang}
+                        disabled
+                        readOnly
+                      />
+                    )}
                   </Col>
                 </Form.Group>
               </Col>

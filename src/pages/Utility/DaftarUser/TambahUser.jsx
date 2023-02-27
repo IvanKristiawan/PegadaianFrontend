@@ -96,10 +96,10 @@ const TambahUser = () => {
         kodeCabang: user.cabangId
       });
       setPeriodesData(allPeriode.data);
-      if (user.tipeUser === "OWN") {
-        setTipeUser(tipeUserOption[0]);
-      } else {
+      if (user.tipeUser === "OWNER") {
         setTipeUser(tipeUserOptionOwner[0]);
+      } else {
+        setTipeUser(tipeUserOption[0]);
       }
       setNamaPeriode(allPeriode.data[0].namaPeriode);
     } catch (err) {
@@ -115,7 +115,11 @@ const TambahUser = () => {
       token: user.token
     });
     setCabangs(response.data);
-    setKodeCabang(response.data[0].id);
+    if (user.tipeUser === "OWNER") {
+      setKodeCabang(response.data[0].id);
+    } else {
+      setKodeCabang(user.cabang.id);
+    }
   };
 
   const getCoaSubTunai = async (kodeUnit) => {
@@ -452,19 +456,28 @@ const TambahUser = () => {
                     Cabang :
                   </Form.Label>
                   <Col sm="9">
-                    <Form.Select
-                      required
-                      value={kodeCabang}
-                      onChange={(e) => {
-                        setKodeCabang(e.target.value);
-                      }}
-                    >
-                      {cabangs.map((cabang, index) => (
-                        <option value={cabang.id}>
-                          {cabang.id} - {cabang.namaCabang}
-                        </option>
-                      ))}
-                    </Form.Select>
+                    {user.tipeUser === "OWNER" ? (
+                      <Form.Select
+                        required
+                        value={kodeCabang}
+                        onChange={(e) => {
+                          setKodeCabang(e.target.value);
+                        }}
+                      >
+                        {cabangs.map((cabang, index) => (
+                          <option value={cabang.id}>
+                            {cabang.id} - {cabang.namaCabang}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    ) : (
+                      <Form.Control
+                        required
+                        value={kodeCabang}
+                        disabled
+                        readOnly
+                      />
+                    )}
                   </Col>
                 </Form.Group>
               </Col>
