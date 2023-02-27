@@ -199,6 +199,11 @@ const TampilJenisJaminan = () => {
     textAlign: screenSize >= 650 && "right"
   };
 
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "14px"
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -360,7 +365,7 @@ const TampilJenisJaminan = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={namaJenis} disabled readOnly />
@@ -373,8 +378,8 @@ const TampilJenisJaminan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Bunga / Bulan
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Bunga / Bulan :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -394,7 +399,7 @@ const TampilJenisJaminan = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kategori
+                    Kategori :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={namaKategori} disabled readOnly />

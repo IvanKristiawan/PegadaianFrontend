@@ -242,6 +242,11 @@ const DaftarUser = () => {
     textAlign: screenSize >= 650 && "right"
   };
 
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "14px"
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -419,7 +424,7 @@ const DaftarUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Username
+                    Username :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={username} disabled readOnly />
@@ -432,8 +437,8 @@ const DaftarUser = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Kode Kwitansi
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Kode Kwitansi :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={kodeKwitansi} disabled readOnly />
@@ -449,7 +454,7 @@ const DaftarUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Tipe User
+                    Tipe User :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={tipeUser} disabled readOnly />
@@ -463,7 +468,7 @@ const DaftarUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    No Terakhir
+                    No Terakhir :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={noTerakhir} disabled readOnly />
@@ -479,7 +484,7 @@ const DaftarUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Periode
+                    Periode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={periode} disabled readOnly />
@@ -493,7 +498,7 @@ const DaftarUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    COA Kasir
+                    COA Kasir :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={coaKasir} disabled readOnly />
@@ -509,7 +514,7 @@ const DaftarUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Cabang
+                    Cabang :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control

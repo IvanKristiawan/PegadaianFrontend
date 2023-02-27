@@ -193,6 +193,11 @@ const TampilKategoriJaminan = () => {
     textAlign: screenSize >= 650 && "right"
   };
 
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "14px"
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -350,7 +355,7 @@ const TampilKategoriJaminan = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Username
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={namaKategori} disabled readOnly />
@@ -363,8 +368,8 @@ const TampilKategoriJaminan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Kode Kwitansi
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Bunga / Bulan :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control

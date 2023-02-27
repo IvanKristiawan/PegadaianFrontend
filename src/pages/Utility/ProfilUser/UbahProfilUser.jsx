@@ -75,6 +75,11 @@ const UbahProfilUser = () => {
     textAlign: screenSize >= 650 && "right"
   };
 
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "13px"
+  };
+
   return (
     <Container>
       <h3>User</h3>
@@ -92,7 +97,7 @@ const UbahProfilUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Username
+                    Username :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={username} disabled readOnly />
@@ -105,8 +110,8 @@ const UbahProfilUser = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Kode Kwitansi
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Kode Kwitansi :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={kodeKwitansi} disabled readOnly />
@@ -122,7 +127,7 @@ const UbahProfilUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Tipe User
+                    Tipe User :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={tipeUser} disabled readOnly />
@@ -136,7 +141,7 @@ const UbahProfilUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    No Terakhir
+                    No Terakhir :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={noTerakhir} disabled readOnly />
@@ -152,7 +157,7 @@ const UbahProfilUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Periode
+                    Periode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={periode} disabled readOnly />
@@ -165,10 +170,10 @@ const UbahProfilUser = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="4" style={textRight}>
-                    Password (baru)
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Password (baru) :
                   </Form.Label>
-                  <Col sm="8">
+                  <Col sm="9">
                     <Form.Control
                       value={password}
                       onChange={(e) =>
@@ -187,7 +192,7 @@ const UbahProfilUser = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Cabang
+                    Cabang :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control

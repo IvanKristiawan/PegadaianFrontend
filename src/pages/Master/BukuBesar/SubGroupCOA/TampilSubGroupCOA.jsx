@@ -386,7 +386,7 @@ const TampilSubGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={kodeSubGroupCOA} disabled readOnly />
@@ -400,7 +400,7 @@ const TampilSubGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={namaSubGroupCOA} disabled readOnly />
@@ -416,7 +416,7 @@ const TampilSubGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Jenis COA
+                    Jenis COA :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={kodeJenisCOA} disabled readOnly />
@@ -430,7 +430,7 @@ const TampilSubGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Group COA
+                    Group COA :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={kodeGroupCOA} disabled readOnly />

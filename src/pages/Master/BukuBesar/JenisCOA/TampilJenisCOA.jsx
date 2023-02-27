@@ -350,7 +350,7 @@ const TampilJenisCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={kodeJenisCOA} disabled readOnly />
@@ -364,7 +364,7 @@ const TampilJenisCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={namaJenisCOA} disabled readOnly />

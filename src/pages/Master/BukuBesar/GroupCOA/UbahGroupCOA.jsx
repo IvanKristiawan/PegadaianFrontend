@@ -105,7 +105,7 @@ const UbahGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Jenis COA
+                    Jenis COA :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -117,6 +117,8 @@ const UbahGroupCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -124,7 +126,7 @@ const UbahGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -145,7 +147,7 @@ const UbahGroupCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control

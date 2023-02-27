@@ -118,7 +118,7 @@ const UbahMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -130,6 +130,8 @@ const UbahMarketing = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -137,7 +139,7 @@ const UbahMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -159,7 +161,7 @@ const UbahMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Telepon
+                    Telepon :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -173,6 +175,8 @@ const UbahMarketing = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -180,7 +184,7 @@ const UbahMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Cabang
+                    Cabang :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Select

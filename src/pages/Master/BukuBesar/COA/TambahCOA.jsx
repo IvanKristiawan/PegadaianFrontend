@@ -123,6 +123,11 @@ const TambahCOA = () => {
     textAlign: screenSize >= 650 && "right"
   };
 
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "13px"
+  };
+
   return (
     <Container>
       <h3>Buku Besar</h3>
@@ -140,7 +145,7 @@ const TambahCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Jenis COA
+                    Jenis COA :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -161,7 +166,7 @@ const TambahCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Group COA
+                    Group COA :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -173,16 +178,18 @@ const TambahCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="4" style={textRight}>
-                    Sub Group COA
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Sub Group COA :
                   </Form.Label>
-                  <Col sm="8">
+                  <Col sm="9">
                     <Form.Select
                       required
                       value={kodeSubGroupCOA}
@@ -210,13 +217,15 @@ const TambahCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control required value={kodeCOA} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -224,7 +233,7 @@ const TambahCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -244,7 +253,7 @@ const TambahCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Jenis Saldo
+                    Jenis Saldo :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Select
@@ -261,6 +270,8 @@ const TambahCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -268,7 +279,7 @@ const TambahCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kas / Bank
+                    Kas / Bank :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Select

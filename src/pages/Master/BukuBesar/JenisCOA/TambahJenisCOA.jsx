@@ -93,7 +93,7 @@ const TambahJenisCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -105,6 +105,8 @@ const TambahJenisCOA = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -112,7 +114,7 @@ const TambahJenisCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control

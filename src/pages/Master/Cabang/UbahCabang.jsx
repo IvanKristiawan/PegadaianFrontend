@@ -110,13 +110,15 @@ const UbahCabang = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control required value={cabangId} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -124,7 +126,7 @@ const UbahCabang = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -146,7 +148,7 @@ const UbahCabang = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Alamat
+                    Alamat :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -159,6 +161,8 @@ const UbahCabang = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -166,7 +170,7 @@ const UbahCabang = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Telepon
+                    Telepon :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -189,7 +193,7 @@ const UbahCabang = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    PIC
+                    PIC :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control

@@ -8,11 +8,16 @@ import EditIcon from "@mui/icons-material/Edit";
 
 const ProfilUser = () => {
   const { screenSize } = useStateContext();
-  const { user, dispatch } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const textRight = {
     textAlign: screenSize >= 650 && "right"
+  };
+
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "14px"
   };
 
   return (
@@ -44,7 +49,7 @@ const ProfilUser = () => {
                 controlId="formPlaintextPassword"
               >
                 <Form.Label column sm="3" style={textRight}>
-                  Username
+                  Username :
                 </Form.Label>
                 <Col sm="9">
                   <Form.Control value={user.username} disabled readOnly />
@@ -57,8 +62,8 @@ const ProfilUser = () => {
                 className="mb-3"
                 controlId="formPlaintextPassword"
               >
-                <Form.Label column sm="3" style={textRight}>
-                  Kode Kwitansi
+                <Form.Label column sm="3" style={textRightSmall}>
+                  Kode Kwitansi :
                 </Form.Label>
                 <Col sm="9">
                   <Form.Control value={user.kodeKwitansi} disabled readOnly />
@@ -74,7 +79,7 @@ const ProfilUser = () => {
                 controlId="formPlaintextPassword"
               >
                 <Form.Label column sm="3" style={textRight}>
-                  Tipe User
+                  Tipe User :
                 </Form.Label>
                 <Col sm="9">
                   <Form.Control value={user.tipeUser} disabled readOnly />
@@ -88,7 +93,7 @@ const ProfilUser = () => {
                 controlId="formPlaintextPassword"
               >
                 <Form.Label column sm="3" style={textRight}>
-                  No Terakhir
+                  No Terakhir :
                 </Form.Label>
                 <Col sm="9">
                   <Form.Control value={user.noTerakhir} disabled readOnly />
@@ -104,7 +109,7 @@ const ProfilUser = () => {
                 controlId="formPlaintextPassword"
               >
                 <Form.Label column sm="3" style={textRight}>
-                  Periode
+                  Periode :
                 </Form.Label>
                 <Col sm="9">
                   <Form.Control

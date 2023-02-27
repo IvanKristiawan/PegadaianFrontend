@@ -63,6 +63,11 @@ const TambahKategoriJaminan = () => {
     textAlign: screenSize >= 650 && "right"
   };
 
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "14px"
+  };
+
   return (
     <Container>
       <h3>Jaminan</h3>
@@ -80,7 +85,7 @@ const TambahKategoriJaminan = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -93,14 +98,16 @@ const TambahKategoriJaminan = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Bunga / Bulan
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Bunga / Bulan :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control

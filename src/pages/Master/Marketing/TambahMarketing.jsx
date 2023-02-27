@@ -109,7 +109,7 @@ const TambahMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -121,6 +121,8 @@ const TambahMarketing = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -128,7 +130,7 @@ const TambahMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -150,7 +152,7 @@ const TambahMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Telepon
+                    Telepon :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -164,6 +166,8 @@ const TambahMarketing = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
@@ -171,7 +175,7 @@ const TambahMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Cabang
+                    Cabang :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Select

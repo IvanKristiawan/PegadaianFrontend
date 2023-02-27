@@ -359,7 +359,7 @@ const TampilMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={kodeMarketing} disabled readOnly />
@@ -373,7 +373,7 @@ const TampilMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={namaMarketing} disabled readOnly />
@@ -389,7 +389,7 @@ const TampilMarketing = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Telepon
+                    Telepon :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={teleponMarketing} disabled readOnly />

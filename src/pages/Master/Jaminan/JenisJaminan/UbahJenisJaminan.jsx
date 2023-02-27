@@ -94,6 +94,11 @@ const UbahJenisJaminan = () => {
     textAlign: screenSize >= 650 && "right"
   };
 
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "14px"
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -115,7 +120,7 @@ const UbahJenisJaminan = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -128,14 +133,16 @@ const UbahJenisJaminan = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Bungan / Bulan
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Bunga / Bulan :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -158,7 +165,7 @@ const UbahJenisJaminan = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kategori
+                    Kategori :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Select

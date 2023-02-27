@@ -374,7 +374,7 @@ const TampilCabang = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode Cabang
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={cabangId} disabled readOnly />
@@ -388,7 +388,7 @@ const TampilCabang = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={namaCabang} disabled readOnly />
@@ -404,7 +404,7 @@ const TampilCabang = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Alamat
+                    Alamat :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={alamatCabang} disabled readOnly />
@@ -418,7 +418,7 @@ const TampilCabang = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Telepon
+                    Telepon :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={teleponCabang} disabled readOnly />
@@ -432,7 +432,7 @@ const TampilCabang = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    PIC
+                    PIC :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={picCabang} disabled readOnly />

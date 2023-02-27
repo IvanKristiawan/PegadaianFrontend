@@ -181,6 +181,11 @@ const TampilGantiPeriode = () => {
     textAlign: screenSize >= 650 && "right"
   };
 
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "13px"
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -302,8 +307,8 @@ const TampilGantiPeriode = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Nama Periode
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Nama Periode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={namaPeriode} disabled readOnly />
@@ -316,8 +321,8 @@ const TampilGantiPeriode = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Dari Tanggal
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Dari Tanggal :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={dariTanggal} disabled readOnly />
@@ -332,8 +337,8 @@ const TampilGantiPeriode = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Sampai Tanggal
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Sampai Tanggal :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={sampaiTanggal} disabled readOnly />

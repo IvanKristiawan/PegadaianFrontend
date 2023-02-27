@@ -227,6 +227,11 @@ const TampilCOA = () => {
     textAlign: screenSize >= 650 && "right"
   };
 
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "13px"
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -418,7 +423,7 @@ const TampilCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode
+                    Kode :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={kodeCOA} disabled readOnly />
@@ -432,7 +437,7 @@ const TampilCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Nama
+                    Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={namaCOA} disabled readOnly />
@@ -448,7 +453,7 @@ const TampilCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Jenis Saldo
+                    Jenis Saldo :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={jenisSaldo} disabled readOnly />
@@ -462,7 +467,7 @@ const TampilCOA = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kas Bank
+                    Kas Bank :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control value={kasBank} disabled readOnly />
@@ -477,10 +482,10 @@ const TampilCOA = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="4" style={textRight}>
-                    Kelompok COA
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Kelompok COA :
                   </Form.Label>
-                  <Col sm="8">
+                  <Col sm="9">
                     <Form.Control value={kodeJenisCOA} disabled readOnly />
                   </Col>
                 </Form.Group>
@@ -491,10 +496,10 @@ const TampilCOA = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="4" style={textRight}>
-                    Group COA
+                  <Form.Label column sm="3" style={textRight}>
+                    Group COA :
                   </Form.Label>
-                  <Col sm="8">
+                  <Col sm="9">
                     <Form.Control value={kodeGroupCOA} disabled readOnly />
                   </Col>
                 </Form.Group>
@@ -507,10 +512,10 @@ const TampilCOA = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="4" style={textRight}>
-                    Sub Group COA
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Sub Group COA :
                   </Form.Label>
-                  <Col sm="8">
+                  <Col sm="9">
                     <Form.Control value={kodeSubGroupCOA} disabled readOnly />
                   </Col>
                 </Form.Group>
