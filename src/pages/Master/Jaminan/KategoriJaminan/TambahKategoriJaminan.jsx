@@ -44,8 +44,8 @@ const TambahKategoriJaminan = () => {
         });
         setLoading(false);
         navigate("/kategoriJaminan");
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        alert(error.response.data.message);
       }
       setLoading(false);
     } else {

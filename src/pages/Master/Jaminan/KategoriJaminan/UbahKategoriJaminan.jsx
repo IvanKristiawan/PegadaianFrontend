@@ -14,6 +14,7 @@ const UbahKategoriJaminan = () => {
   const [open, setOpen] = useState(false);
   const [validated, setValidated] = useState(false);
   const [namaKategori, setNamaKategori] = useState("");
+  const [namaKategoriLama, setNamaKategoriLama] = useState("");
   const [bungaPerBulanKategori, setBungaPerBulanKategori] = useState("");
 
   const [error, setError] = useState(false);
@@ -39,6 +40,7 @@ const UbahKategoriJaminan = () => {
       token: user.token
     });
     setNamaKategori(response.data.namaKategori);
+    setNamaKategoriLama(response.data.namaKategori);
     setBungaPerBulanKategori(response.data.bungaPerBulanKategori);
     setLoading(false);
   };
@@ -55,6 +57,7 @@ const UbahKategoriJaminan = () => {
           setLoading(true);
           await axios.post(`${tempUrl}/updateKategoriJaminan/${id}`, {
             namaKategori,
+            namaKategoriLama,
             bungaPerBulanKategori,
             userIdUpdate: user.id,
             _id: user.id,
@@ -62,8 +65,8 @@ const UbahKategoriJaminan = () => {
           });
           setLoading(false);
           navigate(`/kategoriJaminan/${id}`);
-        } catch (err) {
-          console.log(err);
+        } catch (error) {
+          alert(error.response.data.message);
         }
         setLoading(false);
       } catch (error) {

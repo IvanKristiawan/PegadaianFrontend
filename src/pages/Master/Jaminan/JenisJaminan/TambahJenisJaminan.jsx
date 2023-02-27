@@ -61,8 +61,8 @@ const TambahJenisJaminan = () => {
         });
         setLoading(false);
         navigate("/jenisJaminan");
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        alert(error.response.data.message);
       }
       setLoading(false);
     } else {

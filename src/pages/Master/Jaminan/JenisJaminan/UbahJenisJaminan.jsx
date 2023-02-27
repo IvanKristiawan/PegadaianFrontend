@@ -14,6 +14,7 @@ const UbahJenisJaminan = () => {
   const [open, setOpen] = useState(false);
   const [validated, setValidated] = useState(false);
   const [namaJenis, setNamaJenis] = useState("");
+  const [namaJenisLama, setNamaJenisLama] = useState("");
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
   const [namaKategori, setNamaKategori] = useState("");
 
@@ -42,6 +43,7 @@ const UbahJenisJaminan = () => {
       token: user.token
     });
     setNamaJenis(response.data.namaJenis);
+    setNamaJenisLama(response.data.namaJenis);
     setBungaPerBulanJenis(response.data.bungaPerBulanJenis);
     setNamaKategori(response.data.kategorijaminan.namaKategori);
     setLoading(false);
@@ -67,6 +69,7 @@ const UbahJenisJaminan = () => {
           setLoading(true);
           await axios.post(`${tempUrl}/updateJenisJaminan/${id}`, {
             namaJenis,
+            namaJenisLama,
             bungaPerBulanJenis,
             namaKategori,
             userIdUpdate: user.id,
@@ -75,8 +78,8 @@ const UbahJenisJaminan = () => {
           });
           setLoading(false);
           navigate(`/jenisJaminan/${id}`);
-        } catch (err) {
-          console.log(err);
+        } catch (error) {
+          alert(error.response.data.message);
         }
         setLoading(false);
       } catch (error) {
