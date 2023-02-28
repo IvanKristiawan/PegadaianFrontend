@@ -54,7 +54,9 @@ import {
   UbahKecamatan,
   TampilKelurahan,
   TambahKelurahan,
-  UbahKelurahan
+  UbahKelurahan,
+  TampilCustomer,
+  TambahCustomer
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -118,6 +120,16 @@ const App = () => {
     const { user } = useContext(AuthContext);
 
     if (user.akses.area) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const CUSTOMERRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.customer) {
       return children;
     }
 
@@ -663,6 +675,31 @@ const App = () => {
               <AREARoute>
                 <TambahKelurahan />
               </AREARoute>
+            }
+          />
+          {/*  Customer */}
+          <Route
+            path="/customer"
+            element={
+              <CUSTOMERRoute>
+                <TampilCustomer />
+              </CUSTOMERRoute>
+            }
+          />
+          <Route
+            path="/customer/:id"
+            element={
+              <CUSTOMERRoute>
+                <TampilCustomer />
+              </CUSTOMERRoute>
+            }
+          />
+          <Route
+            path="/customer/tambahCustomer"
+            element={
+              <CUSTOMERRoute>
+                <TambahCustomer />
+              </CUSTOMERRoute>
             }
           />
         </Routes>

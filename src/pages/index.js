@@ -56,3 +56,6 @@ export { default as UbahKelurahan } from "./Master/Area/Kelurahan/UbahKelurahan"
 export { default as TampilCabang } from "./Master/Cabang/TampilCabang";
 export { default as TambahCabang } from "./Master/Cabang/TambahCabang";
 export { default as UbahCabang } from "./Master/Cabang/UbahCabang";
+// Customer
+export { default as TampilCustomer } from "./Master/Customer/TampilCustomer";
+export { default as TambahCustomer } from "./Master/Customer/TambahCustomer";

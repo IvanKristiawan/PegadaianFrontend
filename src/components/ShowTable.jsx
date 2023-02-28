@@ -1102,3 +1102,85 @@ export function ShowTableKelurahan({ currentPosts, searchTerm }) {
     </TableContainer>
   );
 }
+
+export function ShowTableCustomer({ currentPosts, searchTerm }) {
+  let navigate = useNavigate();
+  const classes = useStyles();
+  return (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead className={classes.root}>
+          <TableRow>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Nama
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Alamat
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              No. Telp / HP
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Cabang</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts
+            .filter((val) => {
+              if (searchTerm === "") {
+                return val;
+              } else if (
+                val.namaCustomer
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.alamatCustomer
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.noTeleponCustomer
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.cabang.id
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.cabang.namaCabang
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase())
+              ) {
+                return val;
+              }
+            })
+            .map((user, index) => (
+              <TableRow
+                key={user.id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { bgcolor: Colors.grey300 },
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  navigate(`/customer/${user.id}`);
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.namaCustomer}
+                </TableCell>
+                <TableCell>{user.alamatCustomer}</TableCell>
+                <TableCell>{user.noTeleponCustomer}</TableCell>
+                <TableCell>
+                  {user.cabang.id} - {user.cabang.namaCabang}
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}

@@ -15,8 +15,7 @@ import {
   FaAngleDoubleRight,
   FaBook,
   FaUserCog,
-  FaSignOutAlt,
-  FaChartArea
+  FaSignOutAlt
 } from "react-icons/fa";
 
 const Sidebar = ({
@@ -120,6 +119,11 @@ const Sidebar = ({
                   Provinsi <NavLink to="/provinsi" />
                 </MenuItem>
               </SubMenu>
+            )}
+            {user.akses.customer === true && (
+              <MenuItem>
+                Customer <NavLink to="/customer" />
+              </MenuItem>
             )}
             {user.akses.cabang === true && (
               <MenuItem>
