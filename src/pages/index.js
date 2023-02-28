@@ -48,6 +48,10 @@ export { default as UbahKabupaten } from "./Master/Area/Kabupaten/UbahKabupaten"
 export { default as TampilKecamatan } from "./Master/Area/Kecamatan/TampilKecamatan";
 export { default as TambahKecamatan } from "./Master/Area/Kecamatan/TambahKecamatan";
 export { default as UbahKecamatan } from "./Master/Area/Kecamatan/UbahKecamatan";
+// Kelurahan
+export { default as TampilKelurahan } from "./Master/Area/Kelurahan/TampilKelurahan";
+export { default as TambahKelurahan } from "./Master/Area/Kelurahan/TambahKelurahan";
+export { default as UbahKelurahan } from "./Master/Area/Kelurahan/UbahKelurahan";
 // Cabang Page
 export { default as TampilCabang } from "./Master/Cabang/TampilCabang";
 export { default as TambahCabang } from "./Master/Cabang/TambahCabang";
