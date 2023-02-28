@@ -42,7 +42,10 @@ import {
   UbahCOA,
   TampilCabang,
   TambahCabang,
-  UbahCabang
+  UbahCabang,
+  TampilProvinsi,
+  TambahProvinsi,
+  UbahProvinsi
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -96,6 +99,16 @@ const App = () => {
     const { user } = useContext(AuthContext);
 
     if (user.akses.bukuBesar) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const AREARoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.area) {
       return children;
     }
 
@@ -509,6 +522,39 @@ const App = () => {
               <CABANGRoute>
                 <TambahCabang />
               </CABANGRoute>
+            }
+          />
+          {/*  Provinsi */}
+          <Route
+            path="/provinsi"
+            element={
+              <AREARoute>
+                <TampilProvinsi />
+              </AREARoute>
+            }
+          />
+          <Route
+            path="/provinsi/:id"
+            element={
+              <AREARoute>
+                <TampilProvinsi />
+              </AREARoute>
+            }
+          />
+          <Route
+            path="/provinsi/:id/edit"
+            element={
+              <AREARoute>
+                <UbahProvinsi />
+              </AREARoute>
+            }
+          />
+          <Route
+            path="/provinsi/tambahProvinsi"
+            element={
+              <AREARoute>
+                <TambahProvinsi />
+              </AREARoute>
             }
           />
         </Routes>

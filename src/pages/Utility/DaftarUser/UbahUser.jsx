@@ -36,6 +36,7 @@ const UbahUser = () => {
   const [jaminan, setJaminan] = useState(false);
   const [marketing, setMarketing] = useState(false);
   const [bukuBesar, setBukuBesar] = useState(false);
+  const [area, setArea] = useState(false);
   const [cabang, setCabang] = useState(false);
 
   // Akses Utility
@@ -131,6 +132,7 @@ const UbahUser = () => {
     setJaminan(response.data.akses.jaminan);
     setMarketing(response.data.akses.marketing);
     setBukuBesar(response.data.akses.bukuBesar);
+    setArea(response.data.akses.area);
     setCabang(response.data.akses.cabang);
 
     // Akses Utility
@@ -173,6 +175,7 @@ const UbahUser = () => {
               jaminan,
               marketing,
               bukuBesar,
+              area,
               cabang,
               tutupPeriode,
               gantiPeriode,
@@ -437,6 +440,12 @@ const UbahUser = () => {
                       label="Buku Besar"
                       checked={bukuBesar}
                       onChange={() => setBukuBesar(!bukuBesar)}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      label="Area"
+                      checked={area}
+                      onChange={() => setArea(!area)}
                     />
                     <Form.Check
                       type="checkbox"

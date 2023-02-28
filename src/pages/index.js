@@ -36,6 +36,10 @@ export { default as UbahSubGroupCOA } from "./Master/BukuBesar/SubGroupCOA/UbahS
 export { default as TampilCOA } from "./Master/BukuBesar/COA/TampilCOA";
 export { default as TambahCOA } from "./Master/BukuBesar/COA/TambahCOA";
 export { default as UbahCOA } from "./Master/BukuBesar/COA/UbahCOA";
+// Provinsi Page
+export { default as TampilProvinsi } from "./Master/Area/Provinsi/TampilProvinsi";
+export { default as TambahProvinsi } from "./Master/Area/Provinsi/TambahProvinsi";
+export { default as UbahProvinsi } from "./Master/Area/Provinsi/UbahProvinsi";
 // Cabang Page
 export { default as TampilCabang } from "./Master/Cabang/TampilCabang";
 export { default as TambahCabang } from "./Master/Cabang/TambahCabang";

@@ -792,3 +792,58 @@ export function ShowTableGantiPeriode({ currentPosts, searchTerm }) {
     </TableContainer>
   );
 }
+
+export function ShowTableKategoriProvinsi({ currentPosts, searchTerm }) {
+  let navigate = useNavigate();
+  const classes = useStyles();
+  return (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead className={classes.root}>
+          <TableRow>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Kode
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Nama</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts
+            .filter((val) => {
+              if (searchTerm === "") {
+                return val;
+              } else if (
+                val.id.toUpperCase().includes(searchTerm.toUpperCase()) ||
+                val.namaProvinsi
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase())
+              ) {
+                return val;
+              }
+            })
+            .map((user, index) => (
+              <TableRow
+                key={user.id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { bgcolor: Colors.grey300 },
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  navigate(`/provinsi/${user.id}`);
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.id}
+                </TableCell>
+                <TableCell>{user.namaProvinsi}</TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}

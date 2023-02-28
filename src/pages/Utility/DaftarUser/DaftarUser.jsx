@@ -48,6 +48,7 @@ const DaftarUser = () => {
   const [jaminan, setJaminan] = useState(false);
   const [marketing, setMarketing] = useState(false);
   const [bukuBesar, setBukuBesar] = useState(false);
+  const [area, setArea] = useState(false);
   const [cabang, setCabang] = useState(false);
 
   // Akses Utility
@@ -145,6 +146,7 @@ const DaftarUser = () => {
       setJaminan(response.data.akses.jaminan);
       setMarketing(response.data.akses.marketing);
       setBukuBesar(response.data.akses.bukuBesar);
+      setArea(response.data.akses.area);
       setCabang(response.data.akses.cabang);
 
       // Akses Utility
@@ -551,6 +553,12 @@ const DaftarUser = () => {
                       label="Buku Besar"
                       disabled
                       checked={bukuBesar}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      label="Area"
+                      disabled
+                      checked={area}
                     />
                     <Form.Check
                       type="checkbox"

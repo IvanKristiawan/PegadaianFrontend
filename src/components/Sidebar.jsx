@@ -13,11 +13,10 @@ import {
 import {
   FaAngleDoubleLeft,
   FaAngleDoubleRight,
-  FaTachometerAlt,
-  FaGem,
   FaBook,
   FaUserCog,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaChartArea
 } from "react-icons/fa";
 
 const Sidebar = ({
@@ -103,6 +102,22 @@ const Sidebar = ({
                 </MenuItem>
                 <MenuItem>
                   COA <NavLink to="/coa" />
+                </MenuItem>
+              </SubMenu>
+            )}
+            {user.akses.area === true && (
+              <SubMenu title={"Area"}>
+                <MenuItem>
+                  Kelurahan / Desa <NavLink to="/kelurahan" />
+                </MenuItem>
+                <MenuItem>
+                  Kecamatan <NavLink to="/kecamatan" />
+                </MenuItem>
+                <MenuItem>
+                  Kabupaten / Kota <NavLink to="/kabupaten" />
+                </MenuItem>
+                <MenuItem>
+                  Provinsi <NavLink to="/provinsi" />
                 </MenuItem>
               </SubMenu>
             )}
