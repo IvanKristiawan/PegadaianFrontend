@@ -44,6 +44,10 @@ export { default as UbahProvinsi } from "./Master/Area/Provinsi/UbahProvinsi";
 export { default as TampilKabupaten } from "./Master/Area/Kabupaten/TampilKabupaten";
 export { default as TambahKabupaten } from "./Master/Area/Kabupaten/TambahKabupaten";
 export { default as UbahKabupaten } from "./Master/Area/Kabupaten/UbahKabupaten";
+// Kecamatan
+export { default as TampilKecamatan } from "./Master/Area/Kecamatan/TampilKecamatan";
+export { default as TambahKecamatan } from "./Master/Area/Kecamatan/TambahKecamatan";
+export { default as UbahKecamatan } from "./Master/Area/Kecamatan/UbahKecamatan";
 // Cabang Page
 export { default as TampilCabang } from "./Master/Cabang/TampilCabang";
 export { default as TambahCabang } from "./Master/Cabang/TambahCabang";
