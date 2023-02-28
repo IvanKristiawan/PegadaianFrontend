@@ -8,13 +8,14 @@ import { Container, Card, Form, Row, Col } from "react-bootstrap";
 import { Box, Button, Snackbar, Alert } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 
-const UbahProvinsi = () => {
+const UbahKabupaten = () => {
   const { screenSize } = useStateContext();
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [kodeKabupaten, setKodeKabupaten] = useState("");
+  const [namaKabupaten, setNamaKabupaten] = useState("");
   const [kodeProvinsi, setKodeProvinsi] = useState("");
-  const [namaProvinsi, setNamaProvinsi] = useState("");
 
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -29,21 +30,24 @@ const UbahProvinsi = () => {
   };
 
   useEffect(() => {
-    getProvinsiId();
+    getKabupatenById();
   }, []);
 
-  const getProvinsiId = async () => {
+  const getKabupatenById = async () => {
     setLoading(true);
-    const response = await axios.post(`${tempUrl}/provinsis/${id}`, {
+    const response = await axios.post(`${tempUrl}/kabupatens/${id}`, {
       _id: user.id,
       token: user.token
     });
-    setKodeProvinsi(response.data.kodeProvinsi);
-    setNamaProvinsi(response.data.namaProvinsi);
+    setKodeKabupaten(response.data.id);
+    setNamaKabupaten(response.data.namaKabupaten);
+    setKodeProvinsi(
+      `${response.data.provinsis.id} - ${response.data.provinsis.namaProvinsi}`
+    );
     setLoading(false);
   };
 
-  const updateProvinsi = async (e) => {
+  const updateKabupaten = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const form = e.currentTarget;
@@ -53,14 +57,14 @@ const UbahProvinsi = () => {
         setLoading(true);
         try {
           setLoading(true);
-          await axios.post(`${tempUrl}/updateProvinsi/${id}`, {
-            namaProvinsi,
+          await axios.post(`${tempUrl}/updateKabupaten/${id}`, {
+            namaKabupaten,
             userIdUpdate: user.id,
             _id: user.id,
             token: user.token
           });
           setLoading(false);
-          navigate(`/provinsi/${id}`);
+          navigate(`/kabupaten/${id}`);
         } catch (error) {
           alert(error.response.data.message);
         }
@@ -80,6 +84,11 @@ const UbahProvinsi = () => {
     textAlign: screenSize >= 650 && "right"
   };
 
+  const textRightSmall = {
+    textAlign: screenSize >= 650 && "right",
+    fontSize: "14px"
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -87,12 +96,12 @@ const UbahProvinsi = () => {
   return (
     <Container>
       <h3>Area</h3>
-      <h5 style={{ fontWeight: 400 }}>Ubah Provinsi</h5>
+      <h5 style={{ fontWeight: 400 }}>Ubah Kabupaten</h5>
       <hr />
       <Card>
-        <Card.Header>Provinsi</Card.Header>
+        <Card.Header>Kabupaten</Card.Header>
         <Card.Body>
-          <Form noValidate validated={validated} onSubmit={updateProvinsi}>
+          <Form noValidate validated={validated} onSubmit={updateKabupaten}>
             <Row>
               <Col sm={6}>
                 <Form.Group
@@ -101,7 +110,7 @@ const UbahProvinsi = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
-                    Kode :
+                    Provinsi :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
@@ -122,14 +131,35 @@ const UbahProvinsi = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="3" style={textRight}>
+                    Kode :
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control
+                      required
+                      value={kodeKabupaten}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRightSmall}>
                     Nama :
                   </Form.Label>
                   <Col sm="9">
                     <Form.Control
                       required
-                      value={namaProvinsi}
+                      value={namaKabupaten}
                       onChange={(e) =>
-                        setNamaProvinsi(e.target.value.toUpperCase())
+                        setNamaKabupaten(e.target.value.toUpperCase())
                       }
                     />
                   </Col>
@@ -140,7 +170,7 @@ const UbahProvinsi = () => {
               <Button
                 variant="outlined"
                 color="secondary"
-                onClick={() => navigate("/provinsi")}
+                onClick={() => navigate("/kabupaten")}
                 sx={{ marginRight: 2 }}
               >
                 {"< Kembali"}
@@ -167,7 +197,7 @@ const UbahProvinsi = () => {
   );
 };
 
-export default UbahProvinsi;
+export default UbahKabupaten;
 
 const alertBox = {
   width: "100%"

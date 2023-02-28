@@ -1,24 +1,25 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../../contexts/ContextProvider";
 import { Loader } from "../../../../components";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
-import { Box, Button, Snackbar, Alert } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import { Box, Alert, Button, Snackbar } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
 
-const UbahProvinsi = () => {
+const TambahKabupaten = () => {
   const { screenSize } = useStateContext();
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [kodeKabupaten, setKodeKabupaten] = useState("");
+  const [namaKabupaten, setNamaKabupaten] = useState("");
   const [kodeProvinsi, setKodeProvinsi] = useState("");
-  const [namaProvinsi, setNamaProvinsi] = useState("");
 
+  const [provinsis, setProvinsis] = useState([]);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
-  const { id } = useParams();
   const [loading, setLoading] = useState(false);
 
   const handleClose = (event, reason) => {
@@ -29,21 +30,31 @@ const UbahProvinsi = () => {
   };
 
   useEffect(() => {
-    getProvinsiId();
+    getProvinsiData();
   }, []);
 
-  const getProvinsiId = async () => {
-    setLoading(true);
-    const response = await axios.post(`${tempUrl}/provinsis/${id}`, {
+  const getProvinsiData = async (kodeUnit) => {
+    setKodeProvinsi("");
+    const response = await axios.post(`${tempUrl}/provinsis`, {
       _id: user.id,
       token: user.token
     });
-    setKodeProvinsi(response.data.kodeProvinsi);
-    setNamaProvinsi(response.data.namaProvinsi);
-    setLoading(false);
+    setProvinsis(response.data);
+    setKodeProvinsi(response.data[0].id);
+    getKabupatenNextKode(response.data[0].id);
   };
 
-  const updateProvinsi = async (e) => {
+  const getKabupatenNextKode = async (provinsiId) => {
+    const response = await axios.post(`${tempUrl}/kabupatenNextKode`, {
+      provinsiId,
+      _id: user.id,
+      token: user.token,
+      kodeCabang: user.cabang.id
+    });
+    setKodeKabupaten(response.data);
+  };
+
+  const saveKabupaten = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const form = e.currentTarget;
@@ -51,22 +62,18 @@ const UbahProvinsi = () => {
       setLoading(true);
       try {
         setLoading(true);
-        try {
-          setLoading(true);
-          await axios.post(`${tempUrl}/updateProvinsi/${id}`, {
-            namaProvinsi,
-            userIdUpdate: user.id,
-            _id: user.id,
-            token: user.token
-          });
-          setLoading(false);
-          navigate(`/provinsi/${id}`);
-        } catch (error) {
-          alert(error.response.data.message);
-        }
+        await axios.post(`${tempUrl}/saveKabupaten`, {
+          kodeKabupaten,
+          namaKabupaten,
+          provinsiId: kodeProvinsi,
+          userIdInput: user.id,
+          _id: user.id,
+          token: user.token
+        });
         setLoading(false);
+        navigate("/kabupaten");
       } catch (error) {
-        alert(error);
+        alert(error.response.data.message);
       }
       setLoading(false);
     } else {
@@ -76,23 +83,52 @@ const UbahProvinsi = () => {
     setValidated(true);
   };
 
-  const textRight = {
-    textAlign: screenSize >= 650 && "right"
-  };
-
   if (loading) {
     return <Loader />;
   }
 
+  const textRight = {
+    textAlign: screenSize >= 650 && "right"
+  };
+
   return (
     <Container>
       <h3>Area</h3>
-      <h5 style={{ fontWeight: 400 }}>Ubah Provinsi</h5>
+      <h5 style={{ fontWeight: 400 }}>Tambah Kabupaten</h5>
       <hr />
       <Card>
-        <Card.Header>Provinsi</Card.Header>
+        <Card.Header>Kabupaten</Card.Header>
         <Card.Body>
-          <Form noValidate validated={validated} onSubmit={updateProvinsi}>
+          <Form noValidate validated={validated} onSubmit={saveKabupaten}>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRight}>
+                    Provinsi :
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Select
+                      required
+                      value={kodeProvinsi}
+                      onChange={(e) => {
+                        setKodeProvinsi(e.target.value);
+                        getKabupatenNextKode(e.target.value);
+                      }}
+                    >
+                      {provinsis.map((provinsi, index) => (
+                        <option value={provinsi.id}>
+                          {provinsi.id} - {provinsi.namaProvinsi}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
             <Row>
               <Col sm={6}>
                 <Form.Group
@@ -106,7 +142,7 @@ const UbahProvinsi = () => {
                   <Col sm="9">
                     <Form.Control
                       required
-                      value={kodeProvinsi}
+                      value={kodeKabupaten}
                       disabled
                       readOnly
                     />
@@ -127,30 +163,30 @@ const UbahProvinsi = () => {
                   <Col sm="9">
                     <Form.Control
                       required
-                      value={namaProvinsi}
+                      value={namaKabupaten}
                       onChange={(e) =>
-                        setNamaProvinsi(e.target.value.toUpperCase())
+                        setNamaKabupaten(e.target.value.toUpperCase())
                       }
                     />
                   </Col>
                 </Form.Group>
               </Col>
             </Row>
-            <Box>
+            <Box sx={spacingTop}>
               <Button
                 variant="outlined"
                 color="secondary"
-                onClick={() => navigate("/provinsi")}
+                onClick={() => navigate("/kabupaten")}
                 sx={{ marginRight: 2 }}
               >
                 {"< Kembali"}
               </Button>
               <Button
                 variant="contained"
-                startIcon={<EditIcon />}
+                startIcon={<SaveIcon />}
                 type="submit"
               >
-                Edit
+                Simpan
               </Button>
             </Box>
           </Form>
@@ -167,7 +203,11 @@ const UbahProvinsi = () => {
   );
 };
 
-export default UbahProvinsi;
+export default TambahKabupaten;
+
+const spacingTop = {
+  mt: 4
+};
 
 const alertBox = {
   width: "100%"

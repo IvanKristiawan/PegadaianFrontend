@@ -40,6 +40,10 @@ export { default as UbahCOA } from "./Master/BukuBesar/COA/UbahCOA";
 export { default as TampilProvinsi } from "./Master/Area/Provinsi/TampilProvinsi";
 export { default as TambahProvinsi } from "./Master/Area/Provinsi/TambahProvinsi";
 export { default as UbahProvinsi } from "./Master/Area/Provinsi/UbahProvinsi";
+// Kabupaten
+export { default as TampilKabupaten } from "./Master/Area/Kabupaten/TampilKabupaten";
+export { default as TambahKabupaten } from "./Master/Area/Kabupaten/TambahKabupaten";
+export { default as UbahKabupaten } from "./Master/Area/Kabupaten/UbahKabupaten";
 // Cabang Page
 export { default as TampilCabang } from "./Master/Cabang/TampilCabang";
 export { default as TambahCabang } from "./Master/Cabang/TambahCabang";

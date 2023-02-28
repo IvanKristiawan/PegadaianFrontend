@@ -45,7 +45,10 @@ import {
   UbahCabang,
   TampilProvinsi,
   TambahProvinsi,
-  UbahProvinsi
+  UbahProvinsi,
+  TampilKabupaten,
+  TambahKabupaten,
+  UbahKabupaten
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -554,6 +557,39 @@ const App = () => {
             element={
               <AREARoute>
                 <TambahProvinsi />
+              </AREARoute>
+            }
+          />
+          {/*  Kabupaten */}
+          <Route
+            path="/kabupaten"
+            element={
+              <AREARoute>
+                <TampilKabupaten />
+              </AREARoute>
+            }
+          />
+          <Route
+            path="/kabupaten/:id"
+            element={
+              <AREARoute>
+                <TampilKabupaten />
+              </AREARoute>
+            }
+          />
+          <Route
+            path="/kabupaten/:id/edit"
+            element={
+              <AREARoute>
+                <UbahKabupaten />
+              </AREARoute>
+            }
+          />
+          <Route
+            path="/kabupaten/tambahKabupaten"
+            element={
+              <AREARoute>
+                <TambahKabupaten />
               </AREARoute>
             }
           />
