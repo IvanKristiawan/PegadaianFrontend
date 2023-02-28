@@ -15,6 +15,7 @@ const UbahKelurahan = () => {
   const [validated, setValidated] = useState(false);
   const [kodeKelurahan, setKodeKelurahan] = useState("");
   const [namaKelurahan, setNamaKelurahan] = useState("");
+  const [kodePos, setKodePos] = useState("");
   const [kodeProvinsi, setKodeProvinsi] = useState("");
   const [kodeKabupaten, setKodeKabupaten] = useState("");
   const [kodeKecamatan, setKodeKecamatan] = useState("");
@@ -43,6 +44,7 @@ const UbahKelurahan = () => {
     });
     setKodeKelurahan(response.data.id);
     setNamaKelurahan(response.data.namaKelurahan);
+    setKodePos(response.data.kodePos);
     setKodeProvinsi(
       `${response.data.provinsis.id} - ${response.data.provinsis.namaProvinsi}`
     );
@@ -67,6 +69,7 @@ const UbahKelurahan = () => {
           setLoading(true);
           await axios.post(`${tempUrl}/updateKelurahan/${id}`, {
             namaKelurahan,
+            kodePos,
             userIdUpdate: user.id,
             _id: user.id,
             token: user.token
@@ -206,6 +209,27 @@ const UbahKelurahan = () => {
                       onChange={(e) =>
                         setNamaKelurahan(e.target.value.toUpperCase())
                       }
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRight}>
+                    Kode Pos :
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control
+                      required
+                      type="number"
+                      value={kodePos}
+                      onChange={(e) => setKodePos(e.target.value.toUpperCase())}
                     />
                   </Col>
                 </Form.Group>

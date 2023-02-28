@@ -15,6 +15,7 @@ const TambahKelurahan = () => {
   const [validated, setValidated] = useState(false);
   const [kodeKelurahan, setKodeKelurahan] = useState("");
   const [namaKelurahan, setNamaKelurahan] = useState("");
+  const [kodePos, setKodePos] = useState("");
   const [kodeProvinsi, setKodeProvinsi] = useState("");
   const [kodeKabupaten, setKodeKabupaten] = useState("");
   const [kodeKecamatan, setKodeKecamatan] = useState("");
@@ -85,6 +86,7 @@ const TambahKelurahan = () => {
         setLoading(true);
         await axios.post(`${tempUrl}/saveKelurahan`, {
           namaKelurahan,
+          kodePos,
           kecamatanId: kodeKecamatan,
           userIdInput: user.id,
           _id: user.id,
@@ -109,11 +111,6 @@ const TambahKelurahan = () => {
 
   const textRight = {
     textAlign: screenSize >= 650 && "right"
-  };
-
-  const textRightSmall = {
-    textAlign: screenSize >= 650 && "right",
-    fontSize: "14px"
   };
 
   return (
@@ -224,7 +221,7 @@ const TambahKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRightSmall}>
+                  <Form.Label column sm="3" style={textRight}>
                     Nama :
                   </Form.Label>
                   <Col sm="9">
@@ -234,6 +231,27 @@ const TambahKelurahan = () => {
                       onChange={(e) =>
                         setNamaKelurahan(e.target.value.toUpperCase())
                       }
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRight}>
+                    Kode Pos :
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control
+                      required
+                      type="number"
+                      value={kodePos}
+                      onChange={(e) => setKodePos(e.target.value.toUpperCase())}
                     />
                   </Col>
                 </Form.Group>
