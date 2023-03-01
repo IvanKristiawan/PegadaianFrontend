@@ -59,3 +59,4 @@ export { default as UbahCabang } from "./Master/Cabang/UbahCabang";
 // Customer
 export { default as TampilCustomer } from "./Master/Customer/TampilCustomer";
 export { default as TambahCustomer } from "./Master/Customer/TambahCustomer";
+export { default as UbahCustomer } from "./Master/Customer/UbahCustomer";

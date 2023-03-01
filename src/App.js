@@ -56,7 +56,8 @@ import {
   TambahKelurahan,
   UbahKelurahan,
   TampilCustomer,
-  TambahCustomer
+  TambahCustomer,
+  UbahCustomer
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -691,6 +692,14 @@ const App = () => {
             element={
               <CUSTOMERRoute>
                 <TampilCustomer />
+              </CUSTOMERRoute>
+            }
+          />
+          <Route
+            path="/customer/:id/edit"
+            element={
+              <CUSTOMERRoute>
+                <UbahCustomer />
               </CUSTOMERRoute>
             }
           />
