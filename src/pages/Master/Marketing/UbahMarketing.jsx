@@ -187,19 +187,28 @@ const UbahMarketing = () => {
                     Cabang :
                   </Form.Label>
                   <Col sm="9">
-                    <Form.Select
-                      required
-                      value={kodeCabang}
-                      onChange={(e) => {
-                        setKodeCabang(e.target.value);
-                      }}
-                    >
-                      {cabangs.map((cabang, index) => (
-                        <option value={cabang.id}>
-                          {cabang.id} - {cabang.namaCabang}
-                        </option>
-                      ))}
-                    </Form.Select>
+                    {user.tipeUser === "OWNER" ? (
+                      <Form.Select
+                        required
+                        value={kodeCabang}
+                        onChange={(e) => {
+                          setKodeCabang(e.target.value);
+                        }}
+                      >
+                        {cabangs.map((cabang, index) => (
+                          <option value={cabang.id}>
+                            {cabang.id} - {cabang.namaCabang}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    ) : (
+                      <Form.Control
+                        required
+                        value={kodeCabang}
+                        disabled
+                        readOnly
+                      />
+                    )}
                   </Col>
                 </Form.Group>
               </Col>
