@@ -52,7 +52,6 @@ const TampilCustomer = () => {
   const [statusPerkawinanCustomer, setStatusPerkawinanCustomer] = useState("");
   const [pekerjaanCustomer, setPekerjaanCustomer] = useState("");
   const [kewarganegaraanCustomer, setKewarganegaraanCustomer] = useState("");
-  const [kodeCabang, setKodeCabang] = useState("");
 
   const [previewPdf, setPreviewPdf] = useState(false);
   const [previewExcel, setPreviewExcel] = useState(false);
@@ -83,9 +82,7 @@ const TampilCustomer = () => {
     } else if (
       val.namaCustomer.toUpperCase().includes(searchTerm.toUpperCase()) ||
       val.alamatCustomer.toUpperCase().includes(searchTerm.toUpperCase()) ||
-      val.noTeleponCustomer.toUpperCase().includes(searchTerm.toUpperCase()) ||
-      val.cabang.id.toUpperCase().includes(searchTerm.toUpperCase()) ||
-      val.cabang.namaCabang.toUpperCase().includes(searchTerm.toUpperCase())
+      val.noTeleponCustomer.toUpperCase().includes(searchTerm.toUpperCase())
     ) {
       return val;
     }
@@ -108,7 +105,7 @@ const TampilCustomer = () => {
   const getCustomers = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${tempUrl}/customers`, {
+      const response = await axios.post(`${tempUrl}/customersPerCabang`, {
         _id: user.id,
         token: user.token,
         kodeCabang: user.cabang.id
@@ -142,9 +139,6 @@ const TampilCustomer = () => {
       setStatusPerkawinanCustomer(response.data.statusPerkawinanCustomer);
       setPekerjaanCustomer(response.data.pekerjaanCustomer);
       setKewarganegaraanCustomer(response.data.kewarganegaraanCustomer);
-      setKodeCabang(
-        `${response.data.cabang.id} - ${response.data.cabang.namaCabang}`
-      );
     }
   };
 
@@ -172,7 +166,6 @@ const TampilCustomer = () => {
       setStatusPerkawinanCustomer("");
       setPekerjaanCustomer("");
       setKewarganegaraanCustomer("");
-      setKodeCabang("");
       navigate("/customer");
     } catch (error) {
       if (error.response.data.message.includes("foreign key")) {
@@ -653,22 +646,6 @@ const TampilCustomer = () => {
                       disabled
                       readOnly
                     />
-                  </Col>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={6}>
-                <Form.Group
-                  as={Row}
-                  className="mb-3"
-                  controlId="formPlaintextPassword"
-                >
-                  <Form.Label column sm="4" style={textRight}>
-                    Cabang :
-                  </Form.Label>
-                  <Col sm="8">
-                    <Form.Control value={kodeCabang} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>

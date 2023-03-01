@@ -383,10 +383,10 @@ const TampilKecamatan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Kode :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control value={kodeKecamatan} disabled readOnly />
                   </Col>
                 </Form.Group>
@@ -399,10 +399,10 @@ const TampilKecamatan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Nama :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control value={namaKecamatan} disabled readOnly />
                   </Col>
                 </Form.Group>
@@ -415,10 +415,10 @@ const TampilKecamatan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Provinsi :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control value={kodeProvinsi} disabled readOnly />
                   </Col>
                 </Form.Group>
@@ -431,10 +431,10 @@ const TampilKecamatan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Kabupaten :
+                  <Form.Label column sm="4" style={textRight}>
+                    Kabupaten / Kota :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control value={kodeKabupaten} disabled readOnly />
                   </Col>
                 </Form.Group>

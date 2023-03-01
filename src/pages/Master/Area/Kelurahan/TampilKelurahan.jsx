@@ -399,10 +399,10 @@ const TampilKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Kode :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control value={kodeKelurahan} disabled readOnly />
                   </Col>
                 </Form.Group>
@@ -415,10 +415,10 @@ const TampilKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Nama :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control value={namaKelurahan} disabled readOnly />
                   </Col>
                 </Form.Group>
@@ -431,10 +431,10 @@ const TampilKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Provinsi :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control value={kodeProvinsi} disabled readOnly />
                   </Col>
                 </Form.Group>
@@ -447,10 +447,10 @@ const TampilKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Kabupaten :
+                  <Form.Label column sm="4" style={textRight}>
+                    Kabupaten / Kota :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control value={kodeKabupaten} disabled readOnly />
                   </Col>
                 </Form.Group>
@@ -463,10 +463,10 @@ const TampilKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Kecamatan :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control value={kodeKecamatan} disabled readOnly />
                   </Col>
                 </Form.Group>

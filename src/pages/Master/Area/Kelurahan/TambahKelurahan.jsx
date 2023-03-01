@@ -129,10 +129,10 @@ const TambahKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Provinsi :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control
                       required
                       value={kodeProvinsi}
@@ -150,10 +150,10 @@ const TambahKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
-                    Kabupaten :
+                  <Form.Label column sm="4" style={textRight}>
+                    Kabupaten / Kota :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control
                       required
                       value={kodeKabupaten}
@@ -171,10 +171,10 @@ const TambahKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Kecamatan :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Select
                       required
                       value={kodeKecamatan}
@@ -200,10 +200,10 @@ const TambahKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Kode :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control
                       required
                       value={kodeKelurahan}
@@ -221,10 +221,10 @@ const TambahKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Nama :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control
                       required
                       value={namaKelurahan}
@@ -243,10 +243,10 @@ const TambahKelurahan = () => {
                   className="mb-3"
                   controlId="formPlaintextPassword"
                 >
-                  <Form.Label column sm="3" style={textRight}>
+                  <Form.Label column sm="4" style={textRight}>
                     Kode Pos :
                   </Form.Label>
-                  <Col sm="9">
+                  <Col sm="8">
                     <Form.Control
                       required
                       type="number"

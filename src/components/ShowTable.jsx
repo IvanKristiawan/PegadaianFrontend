@@ -1123,13 +1123,7 @@ export function ShowTableCustomer({ currentPosts, searchTerm }) {
             >
               Alamat
             </TableCell>
-            <TableCell
-              sx={{ fontWeight: "bold" }}
-              className={classes.tableRightBorder}
-            >
-              No. Telp / HP
-            </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }}>Cabang</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>No. Telp / HP</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -1145,12 +1139,6 @@ export function ShowTableCustomer({ currentPosts, searchTerm }) {
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
                 val.noTeleponCustomer
-                  .toUpperCase()
-                  .includes(searchTerm.toUpperCase()) ||
-                val.cabang.id
-                  .toUpperCase()
-                  .includes(searchTerm.toUpperCase()) ||
-                val.cabang.namaCabang
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase())
               ) {
@@ -1174,9 +1162,6 @@ export function ShowTableCustomer({ currentPosts, searchTerm }) {
                 </TableCell>
                 <TableCell>{user.alamatCustomer}</TableCell>
                 <TableCell>{user.noTeleponCustomer}</TableCell>
-                <TableCell>
-                  {user.cabang.id} - {user.cabang.namaCabang}
-                </TableCell>
               </TableRow>
             ))}
         </TableBody>
