@@ -366,6 +366,8 @@ const TampilMarketing = () => {
                   </Col>
                 </Form.Group>
               </Col>
+            </Row>
+            <Row>
               <Col sm={6}>
                 <Form.Group
                   as={Row}

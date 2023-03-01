@@ -362,7 +362,9 @@ const TampilKategoriJaminan = () => {
                   </Col>
                 </Form.Group>
               </Col>
-              <Col sm={6}>
+            </Row>
+            <Row>
+            <Col sm={6}>
                 <Form.Group
                   as={Row}
                   className="mb-3"
