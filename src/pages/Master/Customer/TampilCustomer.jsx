@@ -123,7 +123,7 @@ const TampilCustomer = () => {
         _id: user.id,
         token: user.token
       });
-      setCif(response.data.id);
+      setCif(response.data.cifCustomer);
       setNikCustomer(response.data.nikCustomer);
       setNamaCustomer(response.data.namaCustomer);
       setTempatLahirCustomer(response.data.tempatLahirCustomer);
