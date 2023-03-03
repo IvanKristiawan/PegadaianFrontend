@@ -112,7 +112,7 @@ const UbahCOA = () => {
 
   return (
     <Container>
-      <h3>Buku Besar</h3>
+      <h3>Master</h3>
       <h5 style={{ fontWeight: 400 }}>Ubah COA</h5>
       <hr />
       <Card>

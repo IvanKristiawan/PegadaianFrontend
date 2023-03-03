@@ -82,7 +82,7 @@ const UbahProfilUser = () => {
 
   return (
     <Container>
-      <h3>User</h3>
+      <h3>Utility</h3>
       <h5 style={{ fontWeight: 400 }}>Ubah Password User</h5>
       <hr />
       <Card>

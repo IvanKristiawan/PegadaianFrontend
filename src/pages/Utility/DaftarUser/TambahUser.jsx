@@ -262,7 +262,7 @@ const TambahUser = () => {
 
   return (
     <Container>
-      <h3>User</h3>
+      <h3>Utility</h3>
       <h5 style={{ fontWeight: 400 }}>Tambah User</h5>
       <Dialog
         open={openAlertUsername}

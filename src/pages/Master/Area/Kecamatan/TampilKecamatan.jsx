@@ -181,7 +181,7 @@ const TampilKecamatan = () => {
     const doc = new jsPDF();
     doc.setFontSize(12);
     doc.text(`${setting.namaPerusahaan} - ${setting.kotaPerusahaan}`, 15, 10);
-    doc.text(`${setting.lokasiPerusahaan}`, 15, 15);
+    doc.text(`${setting.alamatPerusahaan}`, 15, 15);
     doc.setFontSize(16);
     doc.text(`Daftar Kecamatan`, 90, 30);
     doc.setFontSize(10);

@@ -158,7 +158,7 @@ const UbahCustomer = () => {
 
   return (
     <Container>
-      <h3>Customer</h3>
+      <h3>Master</h3>
       <h5 style={{ fontWeight: 400 }}>Ubah Customer</h5>
       <hr />
       <Card>

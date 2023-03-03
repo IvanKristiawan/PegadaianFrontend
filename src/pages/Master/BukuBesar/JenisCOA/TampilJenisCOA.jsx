@@ -163,7 +163,7 @@ const TampilJenisCOA = () => {
     const doc = new jsPDF();
     doc.setFontSize(12);
     doc.text(`${setting.namaPerusahaan} - ${setting.kotaPerusahaan}`, 15, 10);
-    doc.text(`${setting.lokasiPerusahaan}`, 15, 15);
+    doc.text(`${setting.alamatPerusahaan}`, 15, 15);
     doc.setFontSize(16);
     doc.text(`Daftar Jenis COA`, 80, 30);
     doc.setFontSize(10);
@@ -203,7 +203,7 @@ const TampilJenisCOA = () => {
 
   return (
     <Container>
-      <h3>Buku Besar</h3>
+      <h3>Master</h3>
       <h5 style={{ fontWeight: 400 }}>Daftar Kelompok COA</h5>
       <Box sx={downloadButtons}>
         <ButtonGroup variant="outlined" color="secondary">

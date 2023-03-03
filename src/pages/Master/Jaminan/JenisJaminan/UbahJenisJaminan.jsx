@@ -108,7 +108,7 @@ const UbahJenisJaminan = () => {
 
   return (
     <Container>
-      <h3>Jaminan</h3>
+      <h3>Master</h3>
       <h5 style={{ fontWeight: 400 }}>Ubah Jenis Jaminan</h5>
       <hr />
       <Card>

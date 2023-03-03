@@ -169,7 +169,7 @@ const TampilJenisJaminan = () => {
     const doc = new jsPDF();
     doc.setFontSize(12);
     doc.text(`${setting.namaPerusahaan} - ${setting.kotaPerusahaan}`, 15, 10);
-    doc.text(`${setting.lokasiPerusahaan}`, 15, 15);
+    doc.text(`${setting.alamatPerusahaan}`, 15, 15);
     doc.setFontSize(16);
     doc.text(`Daftar Jenis jaminan`, 80, 30);
     doc.setFontSize(10);
@@ -214,7 +214,7 @@ const TampilJenisJaminan = () => {
 
   return (
     <Container>
-      <h3>Jaminan</h3>
+      <h3>Master</h3>
       <h5 style={{ fontWeight: 400 }}>Daftar Jenis Jaminan</h5>
       <Box sx={downloadButtons}>
         <ButtonGroup variant="outlined" color="secondary">

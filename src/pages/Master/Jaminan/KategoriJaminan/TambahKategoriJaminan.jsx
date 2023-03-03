@@ -70,7 +70,7 @@ const TambahKategoriJaminan = () => {
 
   return (
     <Container>
-      <h3>Jaminan</h3>
+      <h3>Master</h3>
       <h5 style={{ fontWeight: 400 }}>Tambah Kategori Jaminan</h5>
       <hr />
       <Card>

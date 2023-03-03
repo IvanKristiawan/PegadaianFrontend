@@ -153,6 +153,11 @@ const Sidebar = ({
                 Ganti Periode <NavLink to="/gantiPeriode" />
               </MenuItem>
             )}
+            {user.akses.setting === true && (
+              <MenuItem>
+                Setting <NavLink to="/setting" />
+              </MenuItem>
+            )}
           </SubMenu>
         </Menu>
       </SidebarContent>

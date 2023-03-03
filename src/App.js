@@ -18,6 +18,8 @@ import {
   DaftarUser,
   TambahUser,
   UbahUser,
+  TampilSetting,
+  UbahSetting,
   TampilGantiPeriode,
   TampilKategoriJaminan,
   TambahKategoriJaminan,
@@ -157,6 +159,16 @@ const App = () => {
     return <Navigate to="/unauthorized" />;
   };
 
+  const SETTINGRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.setting) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
   const DAFTARUSERRoute = ({ children }) => {
     const { user } = useContext(AuthContext);
 
@@ -216,6 +228,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
+          {/* Profil User */}
           <Route
             path="/profilUser"
             element={
@@ -263,6 +276,23 @@ const App = () => {
               <DAFTARUSERRoute>
                 <TambahUser />
               </DAFTARUSERRoute>
+            }
+          />
+          {/* Setting */}
+          <Route
+            path="/setting"
+            element={
+              <SETTINGRoute>
+                <TampilSetting />
+              </SETTINGRoute>
+            }
+          />
+          <Route
+            path="/setting/:id/edit"
+            element={
+              <SETTINGRoute>
+                <UbahSetting />
+              </SETTINGRoute>
             }
           />
           {/* Ganti Periode */}

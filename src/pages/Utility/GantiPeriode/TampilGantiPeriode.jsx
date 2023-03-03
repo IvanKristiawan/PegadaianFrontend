@@ -151,7 +151,7 @@ const TampilGantiPeriode = () => {
     const doc = new jsPDF();
     doc.setFontSize(12);
     doc.text(`${setting.namaPerusahaan} - ${setting.kotaPerusahaan}`, 15, 10);
-    doc.text(`${setting.lokasiPerusahaan}`, 15, 15);
+    doc.text(`${setting.alamatPerusahaan}`, 15, 15);
     doc.setFontSize(16);
     doc.text(`Daftar Periode`, 90, 30);
     doc.setFontSize(10);
@@ -196,7 +196,7 @@ const TampilGantiPeriode = () => {
 
   return (
     <Container>
-      <h3>Periode</h3>
+      <h3>Utility</h3>
       <h5 style={{ fontWeight: 400 }}>Daftar Periode</h5>
       <Box sx={downloadButtons}>
         <ButtonGroup variant="outlined" color="secondary">
