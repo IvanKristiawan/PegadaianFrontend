@@ -39,11 +39,15 @@ const TambahUser = () => {
   const [customer, setCustomer] = useState(false);
   const [cabang, setCabang] = useState(false);
 
+  // Akses Gadai
+  const [pengajuan, setPengajuan] = useState(false);
+
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
   const [daftarUser, setDaftarUser] = useState(false);
   const [tutupPeriode, setTutupPeriode] = useState(false);
   const [gantiPeriode, setGantiPeriode] = useState(false);
+  const [settingAkses, setSettingAkses] = useState(false);
 
   const [cabangs, setCabangs] = useState([]);
   const [coaSubTunais, setCoaSubTunais] = useState([]);
@@ -223,11 +227,13 @@ const TambahUser = () => {
               bukuBesar,
               area,
               customer,
+              pengajuan,
               cabang,
               tutupPeriode,
               gantiPeriode,
               profilUser,
-              daftarUser
+              daftarUser,
+              setting: settingAkses
             },
             cabangId: kodeCabang,
             _id: user.id,
@@ -528,6 +534,15 @@ const TambahUser = () => {
                       checked={cabang}
                       onChange={() => setCabang(!cabang)}
                     />
+                    <p style={secondCheckboxTitle}>Gadai</p>
+                    <Form>
+                      <Form.Check
+                        type="checkbox"
+                        label="Pengajuan"
+                        checked={pengajuan}
+                        onChange={() => setPengajuan(!pengajuan)}
+                      />
+                    </Form>
                   </Form>
                 </Box>
                 <Box sx={[showDataWrapper, secondWrapper]}>
@@ -556,6 +571,12 @@ const TambahUser = () => {
                       label="Ganti Periode"
                       checked={gantiPeriode}
                       onChange={() => setGantiPeriode(!gantiPeriode)}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      label="Setting"
+                      checked={settingAkses}
+                      onChange={() => setSettingAkses(!settingAkses)}
                     />
                   </Form>
                 </Box>
@@ -631,5 +652,10 @@ const secondWrapper = {
 };
 
 const checkboxTitle = {
+  marginBottom: 0
+};
+
+const secondCheckboxTitle = {
+  marginTop: 15,
   marginBottom: 0
 };

@@ -52,11 +52,15 @@ const DaftarUser = () => {
   const [customer, setCustomer] = useState(false);
   const [cabang, setCabang] = useState(false);
 
+  // Akses Gadai
+  const [pengajuan, setPengajuan] = useState(false);
+
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
   const [daftarUser, setDaftarUser] = useState(false);
   const [tutupPeriode, setTutupPeriode] = useState(false);
   const [gantiPeriode, setGantiPeriode] = useState(false);
+  const [settingAkses, setSettingAkses] = useState(false);
 
   const [previewPdf, setPreviewPdf] = useState(false);
   const [previewExcel, setPreviewExcel] = useState(false);
@@ -151,11 +155,15 @@ const DaftarUser = () => {
       setCustomer(response.data.akses.customer);
       setCabang(response.data.akses.cabang);
 
+      // Akses Pengajuan
+      setPengajuan(response.data.akses.pengajuan);
+
       // Akses Utility
       setProfilUser(response.data.akses.profilUser);
       setDaftarUser(response.data.akses.daftarUser);
       setTutupPeriode(response.data.akses.tutupPeriode);
       setGantiPeriode(response.data.akses.gantiPeriode);
+      setSettingAkses(response.data.akses.setting);
     }
   };
 
@@ -575,6 +583,15 @@ const DaftarUser = () => {
                       checked={cabang}
                     />
                   </Form>
+                  <p style={secondCheckboxTitle}>Gadai</p>
+                  <Form>
+                    <Form.Check
+                      type="checkbox"
+                      label="Pengajuan"
+                      disabled
+                      checked={pengajuan}
+                    />
+                  </Form>
                 </Box>
                 <Box sx={[showDataWrapper, secondWrapper]}>
                   <p style={checkboxTitle}>Utility</p>
@@ -602,6 +619,12 @@ const DaftarUser = () => {
                       label="Ganti Periode"
                       disabled
                       checked={gantiPeriode}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      label="Setting"
+                      disabled
+                      checked={settingAkses}
                     />
                   </Form>
                 </Box>
@@ -675,6 +698,11 @@ const secondWrapper = {
 };
 
 const checkboxTitle = {
+  marginBottom: 0
+};
+
+const secondCheckboxTitle = {
+  marginTop: 15,
   marginBottom: 0
 };
 

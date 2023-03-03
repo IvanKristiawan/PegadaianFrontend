@@ -40,11 +40,15 @@ const UbahUser = () => {
   const [customer, setCustomer] = useState(false);
   const [cabang, setCabang] = useState(false);
 
+  // Akses Gadai
+  const [pengajuan, setPengajuan] = useState(false);
+
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
   const [daftarUser, setDaftarUser] = useState(false);
   const [tutupPeriode, setTutupPeriode] = useState(false);
   const [gantiPeriode, setGantiPeriode] = useState(false);
+  const [settingAkses, setSettingAkses] = useState(false);
 
   const [cabangs, setCabangs] = useState([]);
   const [coaSubTunais, setCoaSubTunais] = useState([]);
@@ -128,6 +132,9 @@ const UbahUser = () => {
     setCoaKasir(response.data.coaKasir);
     setKodeCabang(response.data.cabang.id);
 
+    // Akses Gadai
+    setPengajuan(response.data.pengajuan);
+
     // Akses Master
     setJaminan(response.data.akses.jaminan);
     setMarketing(response.data.akses.marketing);
@@ -135,6 +142,7 @@ const UbahUser = () => {
     setArea(response.data.akses.area);
     setCustomer(response.data.akses.customer);
     setCabang(response.data.akses.cabang);
+    setSettingAkses(response.data.akses.setting);
 
     // Akses Utility
     setProfilUser(response.data.akses.profilUser);
@@ -179,10 +187,12 @@ const UbahUser = () => {
               area,
               customer,
               cabang,
+              pengajuan,
               tutupPeriode,
               gantiPeriode,
               profilUser,
-              daftarUser
+              daftarUser,
+              setting: settingAkses
             },
             cabangId: kodeCabang,
             _id: user.id,
@@ -471,6 +481,15 @@ const UbahUser = () => {
                       onChange={() => setCabang(!cabang)}
                     />
                   </Form>
+                  <p style={secondCheckboxTitle}>Gadai</p>
+                  <Form>
+                    <Form.Check
+                      type="checkbox"
+                      label="Pengajuan"
+                      checked={pengajuan}
+                      onChange={() => setPengajuan(!pengajuan)}
+                    />
+                  </Form>
                 </Box>
                 <Box sx={[showDataWrapper, secondWrapper]}>
                   <p style={checkboxTitle}>Utility</p>
@@ -498,6 +517,12 @@ const UbahUser = () => {
                       label="Ganti Periode"
                       checked={gantiPeriode}
                       onChange={() => setGantiPeriode(!gantiPeriode)}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      label="Setting"
+                      checked={settingAkses}
+                      onChange={() => setSettingAkses(!settingAkses)}
                     />
                   </Form>
                 </Box>
@@ -573,5 +598,10 @@ const secondWrapper = {
 };
 
 const checkboxTitle = {
+  marginBottom: 0
+};
+
+const secondCheckboxTitle = {
+  marginTop: 15,
   marginBottom: 0
 };

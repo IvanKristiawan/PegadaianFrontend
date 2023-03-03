@@ -15,7 +15,8 @@ import {
   FaAngleDoubleRight,
   FaBook,
   FaUserCog,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaExchangeAlt
 } from "react-icons/fa";
 
 const Sidebar = ({
@@ -128,6 +129,13 @@ const Sidebar = ({
             {user.akses.cabang === true && (
               <MenuItem>
                 Cabang <NavLink to="/cabang" />
+              </MenuItem>
+            )}
+          </SubMenu>
+          <SubMenu title={"Gadai"} icon={<FaExchangeAlt />}>
+            {user.akses.pengajuan === true && (
+              <MenuItem>
+                Pengajuan <NavLink to="/pengajuan" />
               </MenuItem>
             )}
           </SubMenu>
