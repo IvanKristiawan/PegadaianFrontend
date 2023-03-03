@@ -135,7 +135,7 @@ const Sidebar = ({
           <SubMenu title={"Gadai"} icon={<FaExchangeAlt />}>
             {user.akses.pengajuan === true && (
               <MenuItem>
-                Pengajuan <NavLink to="/pengajuan" />
+                Pengajuan <NavLink to="/daftarPengajuan" />
               </MenuItem>
             )}
           </SubMenu>

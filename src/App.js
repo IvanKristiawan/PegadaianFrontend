@@ -59,7 +59,8 @@ import {
   UbahKelurahan,
   TampilCustomer,
   TambahCustomer,
-  UbahCustomer
+  UbahCustomer,
+  TampilDaftarPengajuan
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -193,6 +194,16 @@ const App = () => {
     const { user } = useContext(AuthContext);
 
     if (user.akses.gantiPeriode) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const PENGAJUANRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.pengajuan) {
       return children;
     }
 
@@ -741,6 +752,40 @@ const App = () => {
               </CUSTOMERRoute>
             }
           />
+          {/* GADAI */}
+          {/* Pengajuan */}
+          <Route
+            path="/daftarPengajuan"
+            element={
+              <PENGAJUANRoute>
+                <TampilDaftarPengajuan />
+              </PENGAJUANRoute>
+            }
+          />
+          {/* <Route
+            path="/daftarBeli/beli/tambahBeli"
+            element={
+              <BELIRoute>
+                <TambahBeli />
+              </BELIRoute>
+            }
+          /> */}
+          {/* <Route
+            path="/daftarBeli/beli/:id"
+            element={
+              <BELIRoute>
+                <TampilBeli />
+              </BELIRoute>
+            }
+          /> */}
+          {/* <Route
+            path="/daftarBeli/beli/:id/edit"
+            element={
+              <BELIRoute>
+                <UbahBeli />
+              </BELIRoute>
+            }
+          /> */}
         </Routes>
         <Footer />
       </main>

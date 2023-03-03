@@ -63,3 +63,5 @@ export { default as UbahCabang } from "./Master/Cabang/UbahCabang";
 export { default as TampilCustomer } from "./Master/Customer/TampilCustomer";
 export { default as TambahCustomer } from "./Master/Customer/TambahCustomer";
 export { default as UbahCustomer } from "./Master/Customer/UbahCustomer";
+// Pengajuan
+export { default as TampilDaftarPengajuan } from "./Gadai/Pengajuan/TampilDaftarPengajuan";
