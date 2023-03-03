@@ -60,8 +60,8 @@ const TambahCabang = () => {
         });
         setLoading(false);
         navigate("/cabang");
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        alert(error);
       }
       setLoading(false);
     } else {
