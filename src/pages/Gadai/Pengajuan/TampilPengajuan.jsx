@@ -89,7 +89,15 @@ const TampilPengajuan = () => {
     setNikCustomer(response.data.customer.nikCustomer);
     setNamaCustomer(response.data.customer.namaCustomer);
     setTempatLahirCustomer(response.data.customer.tempatLahirCustomer);
-    setTanggalLahirCustomer(response.data.customer.tanggalLahirCustomer);
+    let newTglLahir = new Date(response.data.customer.tanggalLahirCustomer);
+    let tempTglLahir = `${newTglLahir.getDate().toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${(newTglLahir.getMonth() + 1).toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${newTglLahir.getFullYear()}`;
+    setTanggalLahirCustomer(tempTglLahir);
     setJenisKelaminCustomer(response.data.customer.jenisKelaminCustomer);
     setNoTeleponCustomer(response.data.customer.noTeleponCustomer);
     setAlamatCustomer(response.data.customer.alamatCustomer);

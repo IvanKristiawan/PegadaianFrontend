@@ -915,7 +915,20 @@ const TambahPengajuan = () => {
                           setNikCustomer(user.nikCustomer);
                           setNamaCustomer(user.namaCustomer);
                           setTempatLahirCustomer(user.tempatLahirCustomer);
-                          setTanggalLahirCustomer(user.tanggalLahirCustomer);
+                          let newTglLahir = new Date(user.tanggalLahirCustomer);
+                          let tempTglLahir = `${newTglLahir
+                            .getDate()
+                            .toLocaleString("en-US", {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false
+                            })}-${(newTglLahir.getMonth() + 1).toLocaleString(
+                            "en-US",
+                            {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false
+                            }
+                          )}-${newTglLahir.getFullYear()}`;
+                          setTanggalLahirCustomer(tempTglLahir);
                           setJenisKelaminCustomer(user.jenisKelaminCustomer);
                           setNoTeleponCustomer(user.noTeleponCustomer);
                           setAlamatCustomer(user.alamatCustomer);

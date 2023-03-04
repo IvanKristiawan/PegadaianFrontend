@@ -156,7 +156,15 @@ const UbahPengajuan = () => {
     setNikCustomer(response.data.customer.nikCustomer);
     setNamaCustomer(response.data.customer.namaCustomer);
     setTempatLahirCustomer(response.data.customer.tempatLahirCustomer);
-    setTanggalLahirCustomer(response.data.customer.tanggalLahirCustomer);
+    let newTglLahir = new Date(response.data.customer.tanggalLahirCustomer);
+    let tempTglLahir = `${newTglLahir.getDate().toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${(newTglLahir.getMonth() + 1).toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${newTglLahir.getFullYear()}`;
+    setTanggalLahirCustomer(tempTglLahir);
     setJenisKelaminCustomer(response.data.customer.jenisKelaminCustomer);
     setNoTeleponCustomer(response.data.customer.noTeleponCustomer);
     setAlamatCustomer(response.data.customer.alamatCustomer);
@@ -881,7 +889,7 @@ const UbahPengajuan = () => {
               <Button
                 variant="outlined"
                 color="secondary"
-                onClick={() => navigate("/daftarPengajuan")}
+                onClick={() => navigate(`/daftarPengajuan/pengajuan/${id}`)}
                 sx={{ marginRight: 2 }}
               >
                 {"< Kembali"}
@@ -967,7 +975,20 @@ const UbahPengajuan = () => {
                           setNikCustomer(user.nikCustomer);
                           setNamaCustomer(user.namaCustomer);
                           setTempatLahirCustomer(user.tempatLahirCustomer);
-                          setTanggalLahirCustomer(user.tanggalLahirCustomer);
+                          let newTglLahir = new Date(user.tanggalLahirCustomer);
+                          let tempTglLahir = `${newTglLahir
+                            .getDate()
+                            .toLocaleString("en-US", {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false
+                            })}-${(newTglLahir.getMonth() + 1).toLocaleString(
+                            "en-US",
+                            {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false
+                            }
+                          )}-${newTglLahir.getFullYear()}`;
+                          setTanggalLahirCustomer(tempTglLahir);
                           setJenisKelaminCustomer(user.jenisKelaminCustomer);
                           setNoTeleponCustomer(user.noTeleponCustomer);
                           setAlamatCustomer(user.alamatCustomer);
