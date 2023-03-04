@@ -60,7 +60,8 @@ import {
   TampilCustomer,
   TambahCustomer,
   UbahCustomer,
-  TampilDaftarPengajuan
+  TampilDaftarPengajuan,
+  TambahPengajuan
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -762,14 +763,14 @@ const App = () => {
               </PENGAJUANRoute>
             }
           />
-          {/* <Route
-            path="/daftarBeli/beli/tambahBeli"
+          <Route
+            path="/daftarPengajuan/pengajuan/tambahPengajuan"
             element={
-              <BELIRoute>
-                <TambahBeli />
-              </BELIRoute>
+              <PENGAJUANRoute>
+                <TambahPengajuan />
+              </PENGAJUANRoute>
             }
-          /> */}
+          />
           {/* <Route
             path="/daftarBeli/beli/:id"
             element={

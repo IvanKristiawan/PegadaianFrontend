@@ -65,3 +65,4 @@ export { default as TambahCustomer } from "./Master/Customer/TambahCustomer";
 export { default as UbahCustomer } from "./Master/Customer/UbahCustomer";
 // Pengajuan
 export { default as TampilDaftarPengajuan } from "./Gadai/Pengajuan/TampilDaftarPengajuan";
+export { default as TambahPengajuan } from "./Gadai/Pengajuan/TambahPengajuan";
