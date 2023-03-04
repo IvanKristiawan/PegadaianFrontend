@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../contexts/AuthContext";
@@ -41,7 +41,7 @@ const useStyles = makeStyles({
   }
 });
 
-const TambahPengajuan = () => {
+const UbahPengajuan = () => {
   const { screenSize } = useStateContext();
   const { user, setting } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
@@ -87,6 +87,7 @@ const TambahPengajuan = () => {
   const [searchTermCustomer, setSearchTermCustomer] = useState("");
   const [openCustomer, setOpenCustomer] = useState(false);
   const navigate = useNavigate();
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
 
   const classes = useStyles();
@@ -127,15 +128,76 @@ const TambahPengajuan = () => {
   const jenisResikoOption = ["RENDAH", "SEDANG", "TINGGI"];
 
   useEffect(() => {
+    getPengajuanById();
     getCustomersData();
     getCoasData();
     getMarketingsData();
     getJenisJaminansData();
-    getPengajuanNextKode();
   }, []);
 
+  const getPengajuanById = async () => {
+    setLoading(true);
+    const response = await axios.post(`${tempUrl}/pengajuans/${id}`, {
+      _id: user.id,
+      token: user.token
+    });
+    setNoAju(response.data.noAju);
+    setTanggalAju(new Date(response.data.tanggalAju));
+    setJenisResikoAju(response.data.jenisResikoAju);
+    setKetResikoAju(response.data.ketResikoAju);
+    setNoSbg(response.data.noSbg);
+    setTglKontrak(response.data.tglKontrak);
+    setTglJtTemp(response.data.tglJtTempo);
+    setBungaPerBulanAju(response.data.bungaPerBulanAju);
+    setPinjamanAju(response.data.pinjamanAju);
+    setBiayaAdmAju(response.data.biayaAdmAju);
+
+    setCifCustomer(response.data.customer.cifCustomer);
+    setNikCustomer(response.data.customer.nikCustomer);
+    setNamaCustomer(response.data.customer.namaCustomer);
+    setTempatLahirCustomer(response.data.customer.tempatLahirCustomer);
+    setTanggalLahirCustomer(response.data.customer.tanggalLahirCustomer);
+    setJenisKelaminCustomer(response.data.customer.jenisKelaminCustomer);
+    setNoTeleponCustomer(response.data.customer.noTeleponCustomer);
+    setAlamatCustomer(response.data.customer.alamatCustomer);
+
+    const findCustomer = await axios.post(
+      `${tempUrl}/customers/${response.data.customer.id}`,
+      {
+        _id: user.id,
+        token: user.token,
+        kodeCabang: user.cabang.id
+      }
+    );
+
+    setKodeKelurahan(
+      `${findCustomer.data.kelurahan.id} - ${findCustomer.data.kelurahan.namaKelurahan}`
+    );
+    setKodeKecamatan(
+      `${findCustomer.data.kecamatan.id} - ${findCustomer.data.kecamatan.namaKecamatan}`
+    );
+    setKodeKabupaten(
+      `${findCustomer.data.kabupaten.id} - ${findCustomer.data.kabupaten.namaKabupaten}`
+    );
+    setKodeProvinsi(
+      `${findCustomer.data.provinsis.id} - ${findCustomer.data.provinsis.namaProvinsi}`
+    );
+    setKodePos(findCustomer.data.kelurahan.kodePos);
+
+    setStatusPerkawinanCustomer(
+      response.data.customer.statusPerkawinanCustomer
+    );
+    setPekerjaanCustomer(response.data.customer.pekerjaanCustomer);
+    setKewarganegaraanCustomer(response.data.customer.kewarganegaraanCustomer);
+
+    setKodeCOA(response.data.coa.kodeCOA);
+    setKodeMarketing(response.data.marketing.kodeMarketing);
+    setNamaJenis(response.data.jenisjaminan.namaJenis);
+    setBungaPerBulanJenis(response.data.jenisjaminan.bungaPerBulanJenis);
+    setLoading(false);
+  };
+
   const getCustomersData = async (kodeUnit) => {
-    setCifCustomer("");
     const response = await axios.post(
       `${tempUrl}/customersPerCabangSorByNama`,
       {
@@ -148,36 +210,29 @@ const TambahPengajuan = () => {
   };
 
   const getCoasData = async (kodeUnit) => {
-    setKodeCOA("");
     const response = await axios.post(`${tempUrl}/COAs`, {
       _id: user.id,
       token: user.token
     });
     setCoas(response.data);
-    setKodeCOA(response.data[0].kodeCOA);
   };
 
   const getMarketingsData = async (kodeUnit) => {
-    setKodeMarketing("");
     const response = await axios.post(`${tempUrl}/marketings`, {
       _id: user.id,
       token: user.token,
       kodeCabang: user.cabang.id
     });
     setMarketings(response.data);
-    setKodeMarketing(response.data[0].kodeMarketing);
   };
 
   const getJenisJaminansData = async (kodeUnit) => {
-    setNamaJenis("");
     const response = await axios.post(`${tempUrl}/jenisJaminans`, {
       _id: user.id,
       token: user.token,
       kodeCabang: user.cabang.id
     });
     setJenisJaminans(response.data);
-    setNamaJenis(response.data[0].namaJenis);
-    setBungaPerBulanJenis(response.data[0].bungaPerBulanJenis);
   };
 
   const changeJenisJaminan = async (namaJenis) => {
@@ -191,16 +246,7 @@ const TambahPengajuan = () => {
     setBungaPerBulanJenis(response.data.bungaPerBulanJenis);
   };
 
-  const getPengajuanNextKode = async () => {
-    const response = await axios.post(`${tempUrl}/pengajuanNextKode`, {
-      _id: user.id,
-      token: user.token,
-      kodeCabang: user.cabang.id
-    });
-    setNoAju(response.data);
-  };
-
-  const savePengajuan = async (e) => {
+  const updatePengajuan = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const form = e.currentTarget;
@@ -208,7 +254,7 @@ const TambahPengajuan = () => {
       setLoading(true);
       try {
         setLoading(true);
-        await axios.post(`${tempUrl}/savePengajuan`, {
+        await axios.post(`${tempUrl}/updatePengajuan/${id}`, {
           cifCustomer,
           kodeCOA,
           kodeMarketing,
@@ -250,9 +296,9 @@ const TambahPengajuan = () => {
   return (
     <Container>
       <h3>Gadai</h3>
-      <h5 style={{ fontWeight: 400 }}>Tambah Pengajuan</h5>
+      <h5 style={{ fontWeight: 400 }}>Ubah Pengajuan</h5>
       <hr />
-      <Form noValidate validated={validated} onSubmit={savePengajuan}>
+      <Form noValidate validated={validated} onSubmit={updatePengajuan}>
         <Card>
           <Card.Header>Data Nasabah</Card.Header>
           <Card.Body>
@@ -336,11 +382,17 @@ const TambahPengajuan = () => {
                     NIK / CIF :
                   </Form.Label>
                   <Col sm="4">
-                    <Form.Control value={nikCustomer} disabled readOnly />
+                    <Form.Control
+                      type="number"
+                      value={nikCustomer}
+                      disabled
+                      readOnly
+                    />
                   </Col>
                   <Col sm="4">
                     <Form.Control
                       required
+                      type="number"
                       value={cifCustomer}
                       readOnly
                       placeholder="Pilih..."
@@ -959,7 +1011,7 @@ const TambahPengajuan = () => {
   );
 };
 
-export default TambahPengajuan;
+export default UbahPengajuan;
 
 const spacingTop = {
   mt: 4

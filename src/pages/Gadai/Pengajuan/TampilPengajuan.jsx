@@ -1,51 +1,16 @@
 import { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../contexts/AuthContext";
-import { Colors } from "../../../constants/styles";
 import { tempUrl, useStateContext } from "../../../contexts/ContextProvider";
-import { Loader, SearchBar } from "../../../components";
+import { Loader, usePagination, ButtonModifier } from "../../../components";
+import { ShowTableJaminan } from "../../../components/ShowTable";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
-import {
-  Box,
-  Alert,
-  Button,
-  Snackbar,
-  Paper,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import { makeStyles } from "@mui/styles";
+import { Box, Button, Pagination } from "@mui/material";
 
-const useStyles = makeStyles({
-  root: {
-    "& .MuiTableCell-head": {
-      color: "white",
-      backgroundColor: Colors.blue700
-    }
-  },
-  tableRightBorder: {
-    borderWidth: 0,
-    borderRightWidth: 1,
-    borderColor: "white",
-    borderStyle: "solid"
-  }
-});
-
-const TambahPengajuan = () => {
+const TampilPengajuan = () => {
   const { screenSize } = useStateContext();
   const { user, setting } = useContext(AuthContext);
-  const [open, setOpen] = useState(false);
-  const [validated, setValidated] = useState(false);
   const [noAju, setNoAju] = useState("");
   const [tanggalAju, setTanggalAju] = useState(new Date());
   const [jenisResikoAju, setJenisResikoAju] = useState("");
@@ -78,165 +43,109 @@ const TambahPengajuan = () => {
   const [kodeMarketing, setKodeMarketing] = useState("");
   const [namaJenis, setNamaJenis] = useState("");
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
-
-  const [customers, setCustomers] = useState([]);
-  const [coas, setCoas] = useState([]);
-  const [marketings, setMarketings] = useState([]);
-  const [jenisJaminans, setJenisJaminans] = useState([]);
-  const [error, setError] = useState(false);
-  const [searchTermCustomer, setSearchTermCustomer] = useState("");
-  const [openCustomer, setOpenCustomer] = useState(false);
+  const [jaminans, setJaminans] = useState([]);
   const navigate = useNavigate();
+
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  let [page, setPage] = useState(1);
+  const PER_PAGE = 20;
 
-  const classes = useStyles();
+  // Get current posts
+  const indexOfLastPost = page * PER_PAGE;
+  const indexOfFirstPost = indexOfLastPost - PER_PAGE;
+  const currentPosts = jaminans.slice(indexOfFirstPost, indexOfLastPost);
 
-  const handleClickOpenCustomer = () => {
-    setOpenCustomer(true);
+  const count = Math.ceil(jaminans.length / PER_PAGE);
+  const _DATA = usePagination(jaminans, PER_PAGE);
+
+  const handleChange = (e, p) => {
+    setPage(p);
+    _DATA.jump(p);
   };
-
-  const handleCloseCustomer = () => {
-    setOpenCustomer(false);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
-
-  const tempPostsCustomer = customers.filter((val) => {
-    if (searchTermCustomer === "") {
-      return val;
-    } else if (
-      val.namaCustomer
-        .toUpperCase()
-        .includes(searchTermCustomer.toUpperCase()) ||
-      val.alamatCustomer
-        .toUpperCase()
-        .includes(searchTermCustomer.toUpperCase()) ||
-      val.noTeleponCustomer
-        .toUpperCase()
-        .includes(searchTermCustomer.toUpperCase())
-    ) {
-      return val;
-    }
-  });
-
-  const jenisResikoOption = ["RENDAH", "SEDANG", "TINGGI"];
 
   useEffect(() => {
-    getCustomersData();
-    getCoasData();
-    getMarketingsData();
-    getJenisJaminansData();
-    getPengajuanNextKode();
+    getPengajuanById();
   }, []);
 
-  const getCustomersData = async (kodeUnit) => {
-    setCifCustomer("");
-    const response = await axios.post(
-      `${tempUrl}/customersPerCabangSorByNama`,
+  const getPengajuanById = async () => {
+    setLoading(true);
+    const response = await axios.post(`${tempUrl}/pengajuans/${id}`, {
+      _id: user.id,
+      token: user.token
+    });
+    setNoAju(response.data.noAju);
+    setTanggalAju(response.data.tanggalAju);
+    setJenisResikoAju(response.data.jenisResikoAju);
+    setKetResikoAju(response.data.ketResikoAju);
+    setNoSbg(response.data.noSbg);
+    setTglKontrak(response.data.tglKontrak);
+    setTglJtTemp(response.data.tglJtTempo);
+    setBungaPerBulanAju(response.data.bungaPerBulanAju);
+    setPinjamanAju(response.data.pinjamanAju);
+    setBiayaAdmAju(response.data.biayaAdmAju);
+
+    setCifCustomer(response.data.customer.cifCustomer);
+    setNikCustomer(response.data.customer.nikCustomer);
+    setNamaCustomer(response.data.customer.namaCustomer);
+    setTempatLahirCustomer(response.data.customer.tempatLahirCustomer);
+    setTanggalLahirCustomer(response.data.customer.tanggalLahirCustomer);
+    setJenisKelaminCustomer(response.data.customer.jenisKelaminCustomer);
+    setNoTeleponCustomer(response.data.customer.noTeleponCustomer);
+    setAlamatCustomer(response.data.customer.alamatCustomer);
+
+    const findCustomer = await axios.post(
+      `${tempUrl}/customers/${response.data.customer.id}`,
       {
         _id: user.id,
         token: user.token,
         kodeCabang: user.cabang.id
       }
     );
-    setCustomers(response.data);
+
+    setKodeKelurahan(
+      `${findCustomer.data.kelurahan.id} - ${findCustomer.data.kelurahan.namaKelurahan}`
+    );
+    setKodeKecamatan(
+      `${findCustomer.data.kecamatan.id} - ${findCustomer.data.kecamatan.namaKecamatan}`
+    );
+    setKodeKabupaten(
+      `${findCustomer.data.kabupaten.id} - ${findCustomer.data.kabupaten.namaKabupaten}`
+    );
+    setKodeProvinsi(
+      `${findCustomer.data.provinsis.id} - ${findCustomer.data.provinsis.namaProvinsi}`
+    );
+    setKodePos(findCustomer.data.kelurahan.kodePos);
+
+    setStatusPerkawinanCustomer(
+      response.data.customer.statusPerkawinanCustomer
+    );
+    setPekerjaanCustomer(response.data.customer.pekerjaanCustomer);
+    setKewarganegaraanCustomer(response.data.customer.kewarganegaraanCustomer);
+
+    setKodeCOA(`${response.data.coa.kodeCOA} - ${response.data.coa.namaCOA}`);
+    setKodeMarketing(
+      `${response.data.marketing.kodeMarketing} - ${response.data.marketing.namaMarketing}`
+    );
+    setNamaJenis(response.data.jenisjaminan.namaJenis);
+    setBungaPerBulanJenis(response.data.jenisjaminan.bungaPerBulanJenis);
+    setLoading(false);
   };
 
-  const getCoasData = async (kodeUnit) => {
-    setKodeCOA("");
-    const response = await axios.post(`${tempUrl}/COAs`, {
-      _id: user.id,
-      token: user.token
-    });
-    setCoas(response.data);
-    setKodeCOA(response.data[0].kodeCOA);
-  };
-
-  const getMarketingsData = async (kodeUnit) => {
-    setKodeMarketing("");
-    const response = await axios.post(`${tempUrl}/marketings`, {
-      _id: user.id,
-      token: user.token,
-      kodeCabang: user.cabang.id
-    });
-    setMarketings(response.data);
-    setKodeMarketing(response.data[0].kodeMarketing);
-  };
-
-  const getJenisJaminansData = async (kodeUnit) => {
-    setNamaJenis("");
-    const response = await axios.post(`${tempUrl}/jenisJaminans`, {
-      _id: user.id,
-      token: user.token,
-      kodeCabang: user.cabang.id
-    });
-    setJenisJaminans(response.data);
-    setNamaJenis(response.data[0].namaJenis);
-    setBungaPerBulanJenis(response.data[0].bungaPerBulanJenis);
-  };
-
-  const changeJenisJaminan = async (namaJenis) => {
-    const response = await axios.post(`${tempUrl}/jenisJaminanByNama`, {
-      namaJenis,
-      _id: user.id,
-      token: user.token,
-      kodeCabang: user.cabang.id
-    });
-    setNamaJenis(namaJenis);
-    setBungaPerBulanJenis(response.data.bungaPerBulanJenis);
-  };
-
-  const getPengajuanNextKode = async () => {
-    const response = await axios.post(`${tempUrl}/pengajuanNextKode`, {
-      _id: user.id,
-      token: user.token,
-      kodeCabang: user.cabang.id
-    });
-    setNoAju(response.data);
-  };
-
-  const savePengajuan = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const form = e.currentTarget;
-    if (form.checkValidity() && cifCustomer.length !== 0) {
-      setLoading(true);
-      try {
-        setLoading(true);
-        await axios.post(`${tempUrl}/savePengajuan`, {
-          cifCustomer,
-          kodeCOA,
-          kodeMarketing,
-          namaJenis,
-
-          tanggalAju,
-          jenisResikoAju,
-          ketResikoAju,
-          bungaPerBulanAju,
-          pinjamanAju,
-          biayaAdmAju,
-
-          kodeCabang: user.cabang.id,
-          userIdInput: user.id,
-          _id: user.id,
-          token: user.token
-        });
-        setLoading(false);
-        navigate("/daftarPengajuan");
-      } catch (err) {
-        console.log(err);
+  const deletePengajuan = async (id) => {
+    setLoading(true);
+    try {
+      await axios.post(`${tempUrl}/deletePengajuan/${id}`, {
+        _id: user.id,
+        token: user.token
+      });
+      navigate("/daftarPengajuan");
+    } catch (error) {
+      if (error.response.data.message.includes("foreign key")) {
+        alert(`${noAju} tidak bisa dihapus karena sudah ada data!`);
       }
-      setLoading(false);
-    } else {
-      setError(true);
-      setOpen(!open);
     }
-    setValidated(true);
+    setLoading(false);
   };
 
   if (loading) {
@@ -250,9 +159,27 @@ const TambahPengajuan = () => {
   return (
     <Container>
       <h3>Gadai</h3>
-      <h5 style={{ fontWeight: 400 }}>Tambah Pengajuan</h5>
+      <h5 style={{ fontWeight: 400 }}>Tampil Pengajuan</h5>
       <hr />
-      <Form noValidate validated={validated} onSubmit={savePengajuan}>
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={() => navigate("/daftarPengajuan")}
+        sx={{ marginLeft: 2, marginTop: 4 }}
+      >
+        {"< Kembali"}
+      </Button>
+      <Box sx={buttonModifierContainer}>
+        <ButtonModifier
+          id={id}
+          kode={id}
+          addLink={`/daftarPengajuan/pengajuan/tambahJaminan`}
+          editLink={`/daftarPengajuan/pengajuan/${id}/edit`}
+          deleteUser={deletePengajuan}
+          nameUser={noAju}
+        />
+      </Box>
+      <Form>
         <Card>
           <Card.Header>Data Nasabah</Card.Header>
           <Card.Body>
@@ -302,11 +229,7 @@ const TambahPengajuan = () => {
                     Tanggal :
                   </Form.Label>
                   <Col sm="8">
-                    <DatePicker
-                      dateFormat="dd/MM/yyyy"
-                      selected={tanggalAju}
-                      onChange={(date) => setTanggalAju(date)}
-                    />
+                    <Form.Control value={tanggalAju} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -336,17 +259,15 @@ const TambahPengajuan = () => {
                     NIK / CIF :
                   </Form.Label>
                   <Col sm="4">
-                    <Form.Control value={nikCustomer} disabled readOnly />
+                    <Form.Control
+                      type="number"
+                      value={nikCustomer}
+                      disabled
+                      readOnly
+                    />
                   </Col>
                   <Col sm="4">
-                    <Form.Control
-                      required
-                      value={cifCustomer}
-                      readOnly
-                      placeholder="Pilih..."
-                      onClick={() => handleClickOpenCustomer()}
-                      isInvalid={cifCustomer.length === 0 && true}
-                    />
+                    <Form.Control value={cifCustomer} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -566,19 +487,7 @@ const TambahPengajuan = () => {
                     Marketing :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Select
-                      required
-                      value={kodeMarketing}
-                      onChange={(e) => {
-                        setKodeMarketing(e.target.value);
-                      }}
-                    >
-                      {marketings.map((marketing, index) => (
-                        <option value={marketing.kodeMarketing}>
-                          {marketing.kodeMarketing} - {marketing.namaMarketing}
-                        </option>
-                      ))}
-                    </Form.Select>
+                    <Form.Control value={kodeMarketing} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -594,19 +503,7 @@ const TambahPengajuan = () => {
                     Kode Kas :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Select
-                      required
-                      value={kodeCOA}
-                      onChange={(e) => {
-                        setKodeCOA(e.target.value);
-                      }}
-                    >
-                      {coas.map((coa, index) => (
-                        <option value={coa.kodeCOA}>
-                          {coa.kodeCOA} - {coa.namaCOA}
-                        </option>
-                      ))}
-                    </Form.Select>
+                    <Form.Control value={kodeCOA} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -620,17 +517,7 @@ const TambahPengajuan = () => {
                     Jenis Resiko :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Select
-                      required
-                      value={jenisResikoAju}
-                      onChange={(e) => {
-                        setJenisResikoAju(e.target.value);
-                      }}
-                    >
-                      {jenisResikoOption.map((jenisResiko) => (
-                        <option value={jenisResiko}>{jenisResiko}</option>
-                      ))}
-                    </Form.Select>
+                    <Form.Control value={jenisResikoAju} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -647,12 +534,7 @@ const TambahPengajuan = () => {
                     Keterangan :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control
-                      value={ketResikoAju}
-                      onChange={(e) =>
-                        setKetResikoAju(e.target.value.toUpperCase())
-                      }
-                    />
+                    <Form.Control value={ketResikoAju} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -721,19 +603,7 @@ const TambahPengajuan = () => {
                     Jenis Jaminan :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Select
-                      required
-                      value={namaJenis}
-                      onChange={(e) => {
-                        changeJenisJaminan(e.target.value);
-                      }}
-                    >
-                      {jenisJaminans.map((jenisJaminan) => (
-                        <option value={jenisJaminan.namaJenis}>
-                          {jenisJaminan.namaJenis}
-                        </option>
-                      ))}
-                    </Form.Select>
+                    <Form.Control value={namaJenis} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -769,11 +639,7 @@ const TambahPengajuan = () => {
                     Pinjaman Rp. :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control
-                      required
-                      value={pinjamanAju}
-                      onChange={(e) => setPinjamanAju(e.target.value)}
-                    />
+                    <Form.Control value={pinjamanAju} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -825,158 +691,37 @@ const TambahPengajuan = () => {
                 </Form.Group>
               </Col>
             </Row>
-            <Box sx={spacingTop}>
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={() => navigate("/daftarPengajuan")}
-                sx={{ marginRight: 2 }}
-              >
-                {"< Kembali"}
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<SaveIcon />}
-                type="submit"
-              >
-                Simpan
-              </Button>
-            </Box>
           </Card.Body>
         </Card>
       </Form>
-      {error && (
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error" sx={alertBox}>
-            Data belum terisi semua!
-          </Alert>
-        </Snackbar>
-      )}
-      <Dialog
-        open={openCustomer}
-        onClose={handleCloseCustomer}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{`Pilih Data Customer`}</DialogTitle>
-        <DialogActions>
-          <Box sx={dialogContainer}>
-            <SearchBar setSearchTerm={setSearchTermCustomer} />
-            <TableContainer component={Paper} sx={dialogWrapper}>
-              <Table aria-label="simple table">
-                <TableHead className={classes.root}>
-                  <TableRow>
-                    <TableCell
-                      sx={{ fontWeight: "bold" }}
-                      className={classes.tableRightBorder}
-                    >
-                      Nama
-                    </TableCell>
-                    <TableCell
-                      sx={{ fontWeight: "bold" }}
-                      className={classes.tableRightBorder}
-                    >
-                      Alamat
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: "bold" }}>
-                      No. Telp / HP
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {tempPostsCustomer
-                    .filter((val) => {
-                      if (searchTermCustomer === "") {
-                        return val;
-                      } else if (
-                        val.namaCustomer
-                          .toUpperCase()
-                          .includes(searchTermCustomer.toUpperCase()) ||
-                        val.alamatCustomer
-                          .toUpperCase()
-                          .includes(searchTermCustomer.toUpperCase()) ||
-                        val.noTeleponCustomer
-                          .toUpperCase()
-                          .includes(searchTermCustomer.toUpperCase())
-                      ) {
-                        return val;
-                      }
-                    })
-                    .map((user, index) => (
-                      <TableRow
-                        key={user._id}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                          "&:hover": { bgcolor: Colors.grey300 },
-                          cursor: "pointer"
-                        }}
-                        onClick={() => {
-                          setCifCustomer(user.cifCustomer);
-                          setNikCustomer(user.nikCustomer);
-                          setNamaCustomer(user.namaCustomer);
-                          setTempatLahirCustomer(user.tempatLahirCustomer);
-                          setTanggalLahirCustomer(user.tanggalLahirCustomer);
-                          setJenisKelaminCustomer(user.jenisKelaminCustomer);
-                          setNoTeleponCustomer(user.noTeleponCustomer);
-                          setAlamatCustomer(user.alamatCustomer);
-                          setKodeKelurahan(
-                            `${user.kelurahan.id} - ${user.kelurahan.namaKelurahan}`
-                          );
-                          setKodeKecamatan(
-                            `${user.kecamatan.id} - ${user.kecamatan.namaKecamatan}`
-                          );
-                          setKodeKabupaten(
-                            `${user.kabupaten.id} - ${user.kabupaten.namaKabupaten}`
-                          );
-                          setKodeProvinsi(
-                            `${user.provinsis.id} - ${user.provinsis.namaProvinsi}`
-                          );
-                          setKodePos(user.kelurahan.kodePos);
-                          setStatusPerkawinanCustomer(
-                            user.statusPerkawinanCustomer
-                          );
-                          setPekerjaanCustomer(user.pekerjaanCustomer);
-                          setKewarganegaraanCustomer(
-                            user.kewarganegaraanCustomer
-                          );
-                          handleCloseCustomer();
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {user.namaCustomer}
-                        </TableCell>
-                        <TableCell>{user.alamatCustomer}</TableCell>
-                        <TableCell>{user.noTeleponCustomer}</TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-        </DialogActions>
-      </Dialog>
+      <Box sx={tableContainer}>
+        <ShowTableJaminan id={id} currentPosts={currentPosts} />
+      </Box>
+      <Box sx={tableContainer}>
+        <Pagination
+          count={count}
+          page={page}
+          onChange={handleChange}
+          color="primary"
+          size={screenSize <= 600 ? "small" : "large"}
+        />
+      </Box>
     </Container>
   );
 };
 
-export default TambahPengajuan;
+export default TampilPengajuan;
 
-const spacingTop = {
-  mt: 4
-};
-
-const alertBox = {
-  width: "100%"
-};
-
-const dialogContainer = {
+const buttonModifierContainer = {
+  mt: 4,
+  mb: 4,
   display: "flex",
-  flexDirection: "column",
-  padding: 4,
-  width: "800px"
+  flexWrap: "wrap",
+  justifyContent: "center"
 };
 
-const dialogWrapper = {
-  width: "100%",
-  marginTop: 2
+const tableContainer = {
+  pt: 4,
+  display: "flex",
+  justifyContent: "center"
 };
