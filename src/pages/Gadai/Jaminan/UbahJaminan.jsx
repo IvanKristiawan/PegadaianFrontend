@@ -18,7 +18,7 @@ const UbahJaminan = () => {
 
   const [error, setError] = useState(false);
   const navigate = useNavigate();
-  const { id, idPinjaman } = useParams();
+  const { id, idJaminan } = useParams();
   const [loading, setLoading] = useState(false);
 
   const handleClose = (event, reason) => {
@@ -34,12 +34,12 @@ const UbahJaminan = () => {
 
   const getJaminanById = async () => {
     setLoading(true);
-    const response = await axios.post(`${tempUrl}/jaminans/${idPinjaman}`, {
+    const response = await axios.post(`${tempUrl}/jaminans/${idJaminan}`, {
       _id: user.id,
       token: user.token
     });
     setKetJam(response.data.ketJam);
-    setHargaTafsirJam(response.data.hargaTafsirJam);
+    setHargaTafsirJam(response.data.hargaTafsirJam.toLocaleString());
     setLoading(false);
   };
 
@@ -53,15 +53,15 @@ const UbahJaminan = () => {
         setLoading(true);
         try {
           setLoading(true);
-          await axios.post(`${tempUrl}/updateJaminan/${idPinjaman}`, {
+          await axios.post(`${tempUrl}/updateJaminan/${idJaminan}`, {
             ketJam,
-            hargaTafsirJam,
+            hargaTafsirJam: hargaTafsirJam.replace(/,/g, ""),
             userIdUpdate: user.id,
             _id: user.id,
             token: user.token
           });
           setLoading(false);
-          navigate(`/daftarPengajuan/pengajuan/${id}/${idPinjaman}`);
+          navigate(`/daftarPengajuan/pengajuan/${id}/${idJaminan}`);
         } catch (err) {
           console.log(err);
         }
@@ -127,11 +127,22 @@ const UbahJaminan = () => {
                   <Col sm="8">
                     <Form.Control
                       required
-                      type="number"
                       value={hargaTafsirJam}
-                      onChange={(e) =>
-                        setHargaTafsirJam(e.target.value.toUpperCase())
-                      }
+                      onChange={(e) => {
+                        let tempNum;
+                        let isNumNan = isNaN(
+                          parseInt(e.target.value.replace(/,/g, ""), 10)
+                        );
+                        if (isNumNan) {
+                          tempNum = "";
+                        } else {
+                          tempNum = parseInt(
+                            e.target.value.replace(/,/g, ""),
+                            10
+                          ).toLocaleString();
+                        }
+                        setHargaTafsirJam(tempNum);
+                      }}
                     />
                   </Col>
                 </Form.Group>
@@ -142,7 +153,7 @@ const UbahJaminan = () => {
                 variant="outlined"
                 color="secondary"
                 onClick={() =>
-                  navigate(`/daftarPengajuan/pengajuan/${id}/${idPinjaman}`)
+                  navigate(`/daftarPengajuan/pengajuan/${id}/${idJaminan}`)
                 }
                 sx={{ marginRight: 2 }}
               >

@@ -801,7 +801,7 @@ const App = () => {
             }
           />
           <Route
-            path="/daftarPengajuan/pengajuan/:id/:idPinjaman"
+            path="/daftarPengajuan/pengajuan/:id/:idJaminan"
             element={
               <PENGAJUANRoute>
                 <TampilJaminan />
@@ -809,7 +809,7 @@ const App = () => {
             }
           />
           <Route
-            path="/daftarPengajuan/pengajuan/:id/:idPinjaman/edit"
+            path="/daftarPengajuan/pengajuan/:id/:idJaminan/edit"
             element={
               <PENGAJUANRoute>
                 <UbahJaminan />

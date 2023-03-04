@@ -53,9 +53,9 @@ const TambahPengajuan = () => {
   const [noSbg, setNoSbg] = useState("");
   const [tglKontrak, setTglKontrak] = useState("");
   const [tglJtTempo, setTglJtTemp] = useState("");
-  const [bungaPerBulanAju, setBungaPerBulanAju] = useState(0);
-  const [pinjamanAju, setPinjamanAju] = useState(0);
-  const [biayaAdmAju, setBiayaAdmAju] = useState(0);
+  const [bungaPerBulanAju, setBungaPerBulanAju] = useState("");
+  const [pinjamanAju, setPinjamanAju] = useState("");
+  const [biayaAdmAju, setBiayaAdmAju] = useState("");
 
   const [cifCustomer, setCifCustomer] = useState("");
   const [nikCustomer, setNikCustomer] = useState("");
@@ -218,7 +218,7 @@ const TambahPengajuan = () => {
           jenisResikoAju,
           ketResikoAju,
           bungaPerBulanAju,
-          pinjamanAju,
+          pinjamanAju: pinjamanAju.replace(/,/g, ""),
           biayaAdmAju,
 
           kodeCabang: user.cabang.id,
@@ -772,7 +772,21 @@ const TambahPengajuan = () => {
                     <Form.Control
                       required
                       value={pinjamanAju}
-                      onChange={(e) => setPinjamanAju(e.target.value)}
+                      onChange={(e) => {
+                        let tempNum;
+                        let isNumNan = isNaN(
+                          parseInt(e.target.value.replace(/,/g, ""), 10)
+                        );
+                        if (isNumNan) {
+                          tempNum = "";
+                        } else {
+                          tempNum = parseInt(
+                            e.target.value.replace(/,/g, ""),
+                            10
+                          ).toLocaleString();
+                        }
+                        setPinjamanAju(tempNum);
+                      }}
                     />
                   </Col>
                 </Form.Group>
@@ -790,7 +804,10 @@ const TambahPengajuan = () => {
                   </Form.Label>
                   <Col sm="8">
                     <Form.Control
-                      value={`${(bungaPerBulanJenis * pinjamanAju) / 100} %`}
+                      value={(
+                        (bungaPerBulanJenis * pinjamanAju.replace(/,/g, "")) /
+                        100
+                      ).toLocaleString()}
                       disabled
                       readOnly
                     />
@@ -817,7 +834,10 @@ const TambahPengajuan = () => {
                   </Col>
                   <Col sm="4">
                     <Form.Control
-                      value={`${(setting.feeAdmGadai * pinjamanAju) / 100} %`}
+                      value={(
+                        (setting.feeAdmGadai * pinjamanAju.replace(/,/g, "")) /
+                        100
+                      ).toLocaleString()}
                       disabled
                       readOnly
                     />

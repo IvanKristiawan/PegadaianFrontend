@@ -38,7 +38,7 @@ const TambahJaminan = () => {
         setLoading(true);
         await axios.post(`${tempUrl}/saveJaminan`, {
           ketJam,
-          hargaTafsirJam,
+          hargaTafsirJam: hargaTafsirJam.replace(/,/g, ""),
           pengajuanId: id,
           userIdInput: user.id,
           _id: user.id,
@@ -108,11 +108,22 @@ const TambahJaminan = () => {
                   <Col sm="8">
                     <Form.Control
                       required
-                      type="number"
                       value={hargaTafsirJam}
-                      onChange={(e) =>
-                        setHargaTafsirJam(e.target.value.toUpperCase())
-                      }
+                      onChange={(e) => {
+                        let tempNum;
+                        let isNumNan = isNaN(
+                          parseInt(e.target.value.replace(/,/g, ""), 10)
+                        );
+                        if (isNumNan) {
+                          tempNum = "";
+                        } else {
+                          tempNum = parseInt(
+                            e.target.value.replace(/,/g, ""),
+                            10
+                          ).toLocaleString();
+                        }
+                        setHargaTafsirJam(tempNum);
+                      }}
                     />
                   </Col>
                 </Form.Group>

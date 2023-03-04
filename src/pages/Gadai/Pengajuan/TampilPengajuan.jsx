@@ -659,7 +659,11 @@ const TampilPengajuan = () => {
                     Pinjaman Rp. :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control value={pinjamanAju} disabled readOnly />
+                    <Form.Control
+                      value={pinjamanAju.toLocaleString()}
+                      disabled
+                      readOnly
+                    />
                   </Col>
                 </Form.Group>
               </Col>
@@ -676,7 +680,10 @@ const TampilPengajuan = () => {
                   </Form.Label>
                   <Col sm="8">
                     <Form.Control
-                      value={`${(bungaPerBulanJenis * pinjamanAju) / 100} %`}
+                      value={(
+                        (bungaPerBulanJenis * pinjamanAju) /
+                        100
+                      ).toLocaleString()}
                       disabled
                       readOnly
                     />
@@ -703,7 +710,10 @@ const TampilPengajuan = () => {
                   </Col>
                   <Col sm="4">
                     <Form.Control
-                      value={`${(setting.feeAdmGadai * pinjamanAju) / 100} %`}
+                      value={(
+                        (setting.feeAdmGadai * pinjamanAju) /
+                        100
+                      ).toLocaleString()}
                       disabled
                       readOnly
                     />

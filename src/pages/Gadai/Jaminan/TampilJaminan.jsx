@@ -22,7 +22,7 @@ import "jspdf-autotable";
 
 const TampilJaminan = () => {
   const { user } = useContext(AuthContext);
-  const { id, idPinjaman } = useParams();
+  const { id, idJaminan } = useParams();
   const { screenSize } = useStateContext();
 
   const [isFetchError] = useState(false);
@@ -49,7 +49,7 @@ const TampilJaminan = () => {
 
   const getJaminanById = async () => {
     if (id) {
-      const response = await axios.post(`${tempUrl}/jaminans/${idPinjaman}`, {
+      const response = await axios.post(`${tempUrl}/jaminans/${idJaminan}`, {
         _id: user.id,
         token: user.token
       });
@@ -61,7 +61,7 @@ const TampilJaminan = () => {
   const deleteJaminan = async (id) => {
     setLoading(true);
     try {
-      await axios.post(`${tempUrl}/deleteJaminan/${idPinjaman}`, {
+      await axios.post(`${tempUrl}/deleteJaminan/${idJaminan}`, {
         _id: user.id,
         token: user.token
       });
@@ -92,6 +92,14 @@ const TampilJaminan = () => {
     <Container>
       <h3>Gadai</h3>
       <h5 style={{ fontWeight: 400 }}>Jaminan</h5>
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={() => navigate(`/daftarPengajuan/pengajuan/${id}`)}
+        sx={{ marginLeft: 2, marginTop: 4 }}
+      >
+        {"< Kembali"}
+      </Button>
       <Box sx={buttonModifierContainer}>
         <ButtonGroup variant="contained">
           <Button
@@ -99,7 +107,7 @@ const TampilJaminan = () => {
             startIcon={<EditIcon />}
             sx={{ textTransform: "none" }}
             onClick={() => {
-              navigate(`/daftarPengajuan/pengajuan/${id}/${idPinjaman}/edit`);
+              navigate(`/daftarPengajuan/pengajuan/${id}/${idJaminan}/edit`);
             }}
           >
             Ubah
