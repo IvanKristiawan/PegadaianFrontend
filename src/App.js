@@ -63,7 +63,10 @@ import {
   TampilDaftarPengajuan,
   TambahPengajuan,
   TampilPengajuan,
-  UbahPengajuan
+  UbahPengajuan,
+  TambahJaminan,
+  TampilJaminan,
+  UbahJaminan
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -786,6 +789,30 @@ const App = () => {
             element={
               <PENGAJUANRoute>
                 <UbahPengajuan />
+              </PENGAJUANRoute>
+            }
+          />
+          <Route
+            path="/daftarPengajuan/pengajuan/:id/tambahJaminan"
+            element={
+              <PENGAJUANRoute>
+                <TambahJaminan />
+              </PENGAJUANRoute>
+            }
+          />
+          <Route
+            path="/daftarPengajuan/pengajuan/:id/:idPinjaman"
+            element={
+              <PENGAJUANRoute>
+                <TampilJaminan />
+              </PENGAJUANRoute>
+            }
+          />
+          <Route
+            path="/daftarPengajuan/pengajuan/:id/:idPinjaman/edit"
+            element={
+              <PENGAJUANRoute>
+                <UbahJaminan />
               </PENGAJUANRoute>
             }
           />

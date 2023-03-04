@@ -63,8 +63,12 @@ export { default as UbahCabang } from "./Master/Cabang/UbahCabang";
 export { default as TampilCustomer } from "./Master/Customer/TampilCustomer";
 export { default as TambahCustomer } from "./Master/Customer/TambahCustomer";
 export { default as UbahCustomer } from "./Master/Customer/UbahCustomer";
-// Pengajuan
+// Gadai Pengajuan
 export { default as TampilDaftarPengajuan } from "./Gadai/Pengajuan/TampilDaftarPengajuan";
 export { default as TambahPengajuan } from "./Gadai/Pengajuan/TambahPengajuan";
 export { default as TampilPengajuan } from "./Gadai/Pengajuan/TampilPengajuan";
 export { default as UbahPengajuan } from "./Gadai/Pengajuan/UbahPengajuan";
+// Gadai Jaminan
+export { default as TambahJaminan } from "./Gadai/Jaminan/TambahJaminan";
+export { default as TampilJaminan } from "./Gadai/Jaminan/TampilJaminan";
+export { default as UbahJaminan } from "./Gadai/Jaminan/UbahJaminan";

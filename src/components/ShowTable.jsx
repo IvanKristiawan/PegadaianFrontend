@@ -1269,7 +1269,7 @@ export function ShowTableDaftarPengajuan({ currentPosts, searchTerm }) {
   );
 }
 
-export function ShowTableJaminan({ currentPosts, searchTerm }) {
+export function ShowTableJaminan({ currentPosts, pengajuanId }) {
   let navigate = useNavigate();
   const classes = useStyles();
   return (
@@ -1287,30 +1287,26 @@ export function ShowTableJaminan({ currentPosts, searchTerm }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {currentPosts
-            .filter((val) => {
-              if (searchTerm === "") {
-                return val;
-              }
-            })
-            .map((user, index) => (
-              <TableRow
-                key={user.id}
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                  "&:hover": { bgcolor: Colors.grey300 },
-                  cursor: "pointer"
-                }}
-                onClick={() => {
-                  navigate(`/daftarPengajuan/${user.id}`);
-                }}
-              >
-                <TableCell component="th" scope="row">
-                  {user.ketJam}
-                </TableCell>
-                <TableCell>{user.hargaTafsirJam}</TableCell>
-              </TableRow>
-            ))}
+          {currentPosts.map((user, index) => (
+            <TableRow
+              key={user.id}
+              sx={{
+                "&:last-child td, &:last-child th": { border: 0 },
+                "&:hover": { bgcolor: Colors.grey300 },
+                cursor: "pointer"
+              }}
+              onClick={() => {
+                navigate(
+                  `/daftarPengajuan/pengajuan/${pengajuanId}/${user.id}`
+                );
+              }}
+            >
+              <TableCell component="th" scope="row">
+                {user.ketJam}
+              </TableCell>
+              <TableCell>{user.hargaTafsirJam.toLocaleString()}</TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

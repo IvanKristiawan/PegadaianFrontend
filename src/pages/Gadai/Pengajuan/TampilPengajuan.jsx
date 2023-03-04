@@ -66,6 +66,7 @@ const TampilPengajuan = () => {
 
   useEffect(() => {
     getPengajuanById();
+    getJaminansPerPengajuan();
   }, []);
 
   const getPengajuanById = async () => {
@@ -140,6 +141,17 @@ const TampilPengajuan = () => {
     setLoading(false);
   };
 
+  const getJaminansPerPengajuan = async () => {
+    setLoading(true);
+    const response = await axios.post(`${tempUrl}/jaminans`, {
+      pengajuanId: id,
+      _id: user.id,
+      token: user.token
+    });
+    setJaminans(response.data);
+    setLoading(false);
+  };
+
   const deletePengajuan = async (id) => {
     setLoading(true);
     try {
@@ -181,7 +193,7 @@ const TampilPengajuan = () => {
         <ButtonModifier
           id={id}
           kode={id}
-          addLink={`/daftarPengajuan/pengajuan/tambahJaminan`}
+          addLink={`/daftarPengajuan/pengajuan/${id}/tambahJaminan`}
           editLink={`/daftarPengajuan/pengajuan/${id}/edit`}
           deleteUser={deletePengajuan}
           nameUser={noAju}
@@ -703,7 +715,11 @@ const TampilPengajuan = () => {
         </Card>
       </Form>
       <Box sx={tableContainer}>
-        <ShowTableJaminan id={id} currentPosts={currentPosts} />
+        <ShowTableJaminan
+          id={id}
+          currentPosts={currentPosts}
+          pengajuanId={id}
+        />
       </Box>
       <Box sx={tableContainer}>
         <Pagination
