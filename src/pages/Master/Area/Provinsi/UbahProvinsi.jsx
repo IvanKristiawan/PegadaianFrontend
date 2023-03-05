@@ -38,7 +38,7 @@ const UbahProvinsi = () => {
       _id: user.id,
       token: user.token
     });
-    setKodeProvinsi(response.data.kodeProvinsi);
+    setKodeProvinsi(response.data.id);
     setNamaProvinsi(response.data.namaProvinsi);
     setLoading(false);
   };

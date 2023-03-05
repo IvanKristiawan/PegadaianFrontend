@@ -1206,7 +1206,7 @@ export function ShowTableDaftarPengajuan({ currentPosts, searchTerm }) {
               sx={{ fontWeight: "bold" }}
               className={classes.tableRightBorder}
             >
-              Pinjaman (Rp.)
+              Kode Kas
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>Kasir</TableCell>
           </TableRow>

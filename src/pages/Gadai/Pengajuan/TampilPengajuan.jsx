@@ -3,10 +3,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../contexts/ContextProvider";
-import { Loader, usePagination, ButtonModifier } from "../../../components";
+import { Loader, usePagination } from "../../../components";
 import { ShowTableJaminan } from "../../../components/ShowTable";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
-import { Box, Button, Pagination } from "@mui/material";
+import {
+  Box,
+  ButtonGroup,
+  Button,
+  Pagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
+} from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const TampilPengajuan = () => {
   const { screenSize } = useStateContext();
@@ -45,11 +58,20 @@ const TampilPengajuan = () => {
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
   const [jaminans, setJaminans] = useState([]);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   let [page, setPage] = useState(1);
   const PER_PAGE = 20;
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // Get current posts
   const indexOfLastPost = page * PER_PAGE;
@@ -190,14 +212,66 @@ const TampilPengajuan = () => {
         {"< Kembali"}
       </Button>
       <Box sx={buttonModifierContainer}>
-        <ButtonModifier
+        {/* <ButtonModifier
           id={id}
           kode={id}
           addLink={`/daftarPengajuan/pengajuan/${id}/tambahJaminan`}
           editLink={`/daftarPengajuan/pengajuan/${id}/edit`}
           deleteUser={deletePengajuan}
           nameUser={noAju}
-        />
+        /> */}
+        <ButtonGroup variant="contained">
+          <Button
+            color="success"
+            sx={{ bgcolor: "success.light", textTransform: "none" }}
+            startIcon={<AddCircleOutlineIcon />}
+            size="small"
+            onClick={() => {
+              navigate(`/daftarPengajuan/pengajuan/${id}/tambahJaminan`);
+            }}
+          >
+            Angunan
+          </Button>
+          {id && (
+            <>
+              <Button
+                color="primary"
+                startIcon={<EditIcon />}
+                sx={{ textTransform: "none" }}
+                onClick={() => {
+                  navigate(`/daftarPengajuan/pengajuan/${id}/edit`);
+                }}
+              >
+                Ubah
+              </Button>
+              <Button
+                color="error"
+                startIcon={<DeleteOutlineIcon />}
+                sx={{ textTransform: "none" }}
+                onClick={handleClickOpen}
+              >
+                Hapus
+              </Button>
+            </>
+          )}
+        </ButtonGroup>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              {`Yakin ingin menghapus data ${noAju}?`}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => deletePengajuan(id)}>Ok</Button>
+            <Button onClick={handleClose}>Cancel</Button>
+          </DialogActions>
+        </Dialog>
       </Box>
       <Form>
         <Card>

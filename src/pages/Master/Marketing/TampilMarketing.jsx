@@ -5,23 +5,15 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../contexts/ContextProvider";
 import { ShowTableMarketing } from "../../../components/ShowTable";
 import { FetchErrorHandling } from "../../../components/FetchErrorHandling";
-import { SearchBar, Loader, usePagination } from "../../../components";
-import { Container, Form, Row, Col } from "react-bootstrap";
 import {
-  Box,
-  Pagination,
-  Button,
-  ButtonGroup,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions
-} from "@mui/material";
+  SearchBar,
+  Loader,
+  usePagination,
+  ButtonModifier
+} from "../../../components";
+import { Container, Form, Row, Col } from "react-bootstrap";
+import { Box, Pagination, Button, ButtonGroup } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { useDownloadExcel } from "react-export-table-to-excel";
@@ -293,59 +285,14 @@ const TampilMarketing = () => {
         </table>
       </div>
       <Box sx={buttonModifierContainer}>
-        <Button
-          variant="contained"
-          color="success"
-          sx={{ bgcolor: "success.light", textTransform: "none" }}
-          startIcon={<AddCircleOutlineIcon />}
-          size="small"
-          onClick={() => {
-            navigate(`/marketing/tambahMarketing`);
-          }}
-        >
-          Tambah
-        </Button>
-        {id && (
-          <>
-            <ButtonGroup variant="contained">
-              <Button
-                color="primary"
-                startIcon={<EditIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={() => {
-                  navigate(`/marketing/${id}/edit`);
-                }}
-              >
-                Ubah
-              </Button>
-              <Button
-                color="error"
-                startIcon={<DeleteOutlineIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={handleClickOpen}
-              >
-                Hapus
-              </Button>
-            </ButtonGroup>
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-slide-description">
-                  {`Yakin ingin menghapus data ${kodeMarketing}?`}
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => deleteMarketing(id)}>Ok</Button>
-                <Button onClick={handleClose}>Cancel</Button>
-              </DialogActions>
-            </Dialog>
-          </>
-        )}
+        <ButtonModifier
+          id={id}
+          kode={id}
+          addLink={`/marketing/tambahMarketing`}
+          editLink={`/marketing/${id}/edit`}
+          deleteUser={deleteMarketing}
+          nameUser={kodeMarketing}
+        />
       </Box>
       {id && (
         <Container>
