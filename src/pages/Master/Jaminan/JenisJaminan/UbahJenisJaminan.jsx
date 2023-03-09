@@ -16,6 +16,7 @@ const UbahJenisJaminan = () => {
   const [namaJenis, setNamaJenis] = useState("");
   const [namaJenisLama, setNamaJenisLama] = useState("");
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
+  const [lamaJatuhTempo, setLamaJatuhTempo] = useState("");
   const [namaKategori, setNamaKategori] = useState("");
 
   const [kategoriJaminans, setKategoriJaminans] = useState([]);
@@ -45,6 +46,7 @@ const UbahJenisJaminan = () => {
     setNamaJenis(response.data.namaJenis);
     setNamaJenisLama(response.data.namaJenis);
     setBungaPerBulanJenis(response.data.bungaPerBulanJenis);
+    setLamaJatuhTempo(response.data.lamaJatuhTempo);
     setNamaKategori(response.data.kategorijaminan.namaKategori);
     setLoading(false);
   };
@@ -71,6 +73,7 @@ const UbahJenisJaminan = () => {
             namaJenis,
             namaJenisLama,
             bungaPerBulanJenis,
+            lamaJatuhTempo,
             namaKategori,
             userIdUpdate: user.id,
             _id: user.id,
@@ -154,6 +157,29 @@ const UbahJenisJaminan = () => {
                       value={bungaPerBulanJenis}
                       onChange={(e) =>
                         setBungaPerBulanJenis(e.target.value.toUpperCase())
+                      }
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Lama Jatuh Tempo :
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control
+                      required
+                      type="number"
+                      value={lamaJatuhTempo}
+                      onChange={(e) =>
+                        setLamaJatuhTempo(e.target.value.toUpperCase())
                       }
                     />
                   </Col>

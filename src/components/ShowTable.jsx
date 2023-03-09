@@ -199,6 +199,12 @@ export function ShowTableJenisJaminan({ currentPosts, searchTerm }) {
             >
               Bunga/Bulan
             </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Lama Jatuh Tempo
+            </TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>Kategori</TableCell>
           </TableRow>
         </TableHead>
@@ -214,7 +220,8 @@ export function ShowTableJenisJaminan({ currentPosts, searchTerm }) {
                 val.kategorijaminan.namaKategori
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
-                val.bungaPerBulanJenis == searchTerm
+                val.bungaPerBulanJenis == searchTerm ||
+                val.lamaJatuhTempo == searchTerm
               ) {
                 return val;
               }
@@ -235,6 +242,7 @@ export function ShowTableJenisJaminan({ currentPosts, searchTerm }) {
                   {user.namaJenis}
                 </TableCell>
                 <TableCell>{user.bungaPerBulanJenis}</TableCell>
+                <TableCell>{user.lamaJatuhTempo}</TableCell>
                 <TableCell>{user.kategorijaminan.namaKategori}</TableCell>
               </TableRow>
             ))}

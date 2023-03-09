@@ -15,6 +15,7 @@ const TambahJenisJaminan = () => {
   const [validated, setValidated] = useState(false);
   const [namaJenis, setNamaJenis] = useState("");
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
+  const [lamaJatuhTempo, setLamaJatuhTempo] = useState(30);
   const [namaKategori, setNamaKategori] = useState("");
 
   const [kategoriJaminans, setKategoriJaminans] = useState([]);
@@ -54,6 +55,7 @@ const TambahJenisJaminan = () => {
         await axios.post(`${tempUrl}/saveJenisJaminan`, {
           namaJenis,
           bungaPerBulanJenis,
+          lamaJatuhTempo,
           namaKategori,
           userIdInput: user.id,
           _id: user.id,
@@ -133,6 +135,29 @@ const TambahJenisJaminan = () => {
                       value={bungaPerBulanJenis}
                       onChange={(e) =>
                         setBungaPerBulanJenis(e.target.value.toUpperCase())
+                      }
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Lama Jatuh Tempo :
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control
+                      required
+                      type="number"
+                      value={lamaJatuhTempo}
+                      onChange={(e) =>
+                        setLamaJatuhTempo(e.target.value.toUpperCase())
                       }
                     />
                   </Col>

@@ -30,6 +30,7 @@ const TampilJenisJaminan = () => {
   const [isFetchError, setIsFetchError] = useState(false);
   const [namaJenis, setNamaJenis] = useState("");
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
+  const [lamaJatuhTempo, setLamaJatuhTempo] = useState("");
   const [namaKategori, setNamaKategori] = useState("");
 
   const [previewPdf, setPreviewPdf] = useState(false);
@@ -37,16 +38,6 @@ const TampilJenisJaminan = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [jaminans, setJenisJaminan] = useState([]);
   const navigate = useNavigate();
-
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const [loading, setLoading] = useState(false);
   let [page, setPage] = useState(1);
@@ -63,7 +54,8 @@ const TampilJenisJaminan = () => {
       val.kategorijaminan.namaKategori
         .toUpperCase()
         .includes(searchTerm.toUpperCase()) ||
-      val.bungaPerBulanJenis == searchTerm
+      val.bungaPerBulanJenis == searchTerm ||
+      val.lamaJatuhTempo == searchTerm
     ) {
       return val;
     }
@@ -105,6 +97,7 @@ const TampilJenisJaminan = () => {
       });
       setNamaJenis(response.data.namaJenis);
       setBungaPerBulanJenis(response.data.bungaPerBulanJenis);
+      setLamaJatuhTempo(response.data.lamaJatuhTempo);
       setNamaKategori(response.data.kategorijaminan.namaKategori);
     }
   };
@@ -118,6 +111,7 @@ const TampilJenisJaminan = () => {
       });
       getJaminans();
       setBungaPerBulanJenis("");
+      setLamaJatuhTempo("");
       setNamaJenis("");
       setNamaKategori("");
       navigate("/jenisJaminan");
@@ -166,7 +160,7 @@ const TampilJenisJaminan = () => {
     doc.text(`Daftar Jenis jaminan`, 80, 30);
     doc.setFontSize(10);
     doc.text(
-      `Dicetak Oleh: ${user.bungaPerBulanJenis} | Tanggal : ${current_date} | Jam : ${current_time}`,
+      `Dicetak Oleh: ${user.username} | Tanggal : ${current_date} | Jam : ${current_time}`,
       15,
       290
     );
@@ -254,6 +248,7 @@ const TampilJenisJaminan = () => {
                 <tr key={user.id}>
                   <td>{user.namaJenis}</td>
                   <td>{user.bungaPerBulanJenis}</td>
+                  <td>{user.lamaJatuhTempo}</td>
                   <td>{user.kategorijaminan.namaKategori}</td>
                 </tr>
               ))}
@@ -283,6 +278,7 @@ const TampilJenisJaminan = () => {
                 <tr key={user.id}>
                   <td>{user.namaJenis}</td>
                   <td>{user.bungaPerBulanJenis}</td>
+                  <td>{user.lamaJatuhTempo}</td>
                   <td>{user.kategorijaminan.namaKategori}</td>
                 </tr>
               ))}
@@ -336,6 +332,22 @@ const TampilJenisJaminan = () => {
                       disabled
                       readOnly
                     />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="3" style={textRightSmall}>
+                    Lama Jatuh Tempo :
+                  </Form.Label>
+                  <Col sm="9">
+                    <Form.Control value={lamaJatuhTempo} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
