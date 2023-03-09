@@ -1208,6 +1208,12 @@ export function ShowTableDaftarPengajuan({ currentPosts, searchTerm }) {
             >
               Kode Kas
             </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Pinjaman
+            </TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>Kasir</TableCell>
           </TableRow>
         </TableHead>
@@ -1236,7 +1242,11 @@ export function ShowTableDaftarPengajuan({ currentPosts, searchTerm }) {
                   .toString()
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
-                val.pinjamanAju == searchTerm
+                val.pinjamanAju == searchTerm ||
+                val.user.username
+                  .toString()
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase())
               ) {
                 return val;
               }
@@ -1261,6 +1271,7 @@ export function ShowTableDaftarPengajuan({ currentPosts, searchTerm }) {
                 <TableCell>{user.customer.alamatCustomer}</TableCell>
                 <TableCell>{user.coa.kodeCOA}</TableCell>
                 <TableCell>{user.pinjamanAju.toLocaleString()}</TableCell>
+                <TableCell>{user.user.username}</TableCell>
               </TableRow>
             ))}
         </TableBody>

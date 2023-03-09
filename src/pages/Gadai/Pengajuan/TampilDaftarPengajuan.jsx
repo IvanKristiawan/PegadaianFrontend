@@ -45,7 +45,11 @@ const TampilDaftarPengajuan = () => {
         .toString()
         .toUpperCase()
         .includes(searchTerm.toUpperCase()) ||
-      val.pinjamanAju == searchTerm
+      val.pinjamanAju == searchTerm ||
+      val.user.username
+        .toString()
+        .toUpperCase()
+        .includes(searchTerm.toUpperCase())
     ) {
       return val;
     }

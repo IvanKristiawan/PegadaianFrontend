@@ -201,7 +201,7 @@ const TampilPengajuan = () => {
   return (
     <Container>
       <h3>Gadai</h3>
-      <h5 style={{ fontWeight: 400 }}>Tampil Pengajuan</h5>
+      <h5 style={{ fontWeight: 400 }}>Data Pengajuan</h5>
       <hr />
       <Button
         variant="outlined"
@@ -212,14 +212,6 @@ const TampilPengajuan = () => {
         {"< Kembali"}
       </Button>
       <Box sx={buttonModifierContainer}>
-        {/* <ButtonModifier
-          id={id}
-          kode={id}
-          addLink={`/daftarPengajuan/pengajuan/${id}/tambahJaminan`}
-          editLink={`/daftarPengajuan/pengajuan/${id}/edit`}
-          deleteUser={deletePengajuan}
-          nameUser={noAju}
-        /> */}
         <ButtonGroup variant="contained">
           <Button
             color="success"
@@ -230,7 +222,7 @@ const TampilPengajuan = () => {
               navigate(`/daftarPengajuan/pengajuan/${id}/tambahJaminan`);
             }}
           >
-            Angunan
+            Agunan
           </Button>
           {id && (
             <>
