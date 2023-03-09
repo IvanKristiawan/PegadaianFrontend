@@ -72,3 +72,8 @@ export { default as UbahPengajuan } from "./Gadai/Pengajuan/UbahPengajuan";
 export { default as TambahJaminan } from "./Gadai/Jaminan/TambahJaminan";
 export { default as TampilJaminan } from "./Gadai/Jaminan/TampilJaminan";
 export { default as UbahJaminan } from "./Gadai/Jaminan/UbahJaminan";
+// Gadai Approval
+export { default as TampilDaftarApproval } from "./Gadai/Approval/TampilDaftarApproval";
+export { default as TambahApproval } from "./Gadai/Approval/TambahApproval";
+export { default as TampilApproval } from "./Gadai/Approval/TampilApproval";
+export { default as UbahApproval } from "./Gadai/Approval/UbahApproval";

@@ -42,6 +42,7 @@ const UbahUser = () => {
 
   // Akses Gadai
   const [pengajuan, setPengajuan] = useState(false);
+  const [approval, setApproval] = useState(false);
 
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
@@ -134,6 +135,7 @@ const UbahUser = () => {
 
     // Akses Gadai
     setPengajuan(response.data.pengajuan);
+    setApproval(response.data.approval);
 
     // Akses Master
     setJaminan(response.data.akses.jaminan);
@@ -188,6 +190,7 @@ const UbahUser = () => {
               customer,
               cabang,
               pengajuan,
+              approval,
               tutupPeriode,
               gantiPeriode,
               profilUser,
@@ -488,6 +491,14 @@ const UbahUser = () => {
                       label="Pengajuan"
                       checked={pengajuan}
                       onChange={() => setPengajuan(!pengajuan)}
+                    />
+                  </Form>
+                  <Form>
+                    <Form.Check
+                      type="checkbox"
+                      label="Approval"
+                      checked={approval}
+                      onChange={() => setApproval(!approval)}
                     />
                   </Form>
                 </Box>

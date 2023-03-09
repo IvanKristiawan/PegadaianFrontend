@@ -4,7 +4,7 @@ import axios from "axios";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../contexts/ContextProvider";
 import { Loader, usePagination } from "../../../components";
-import { ShowTableJaminan } from "../../../components/ShowTable";
+import { ShowTableApproval } from "../../../components/ShowTable";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
 import {
   Box,
@@ -17,11 +17,10 @@ import {
   DialogContentText,
   DialogActions
 } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const TampilPengajuan = () => {
+const TampilApproval = () => {
   const { screenSize } = useStateContext();
   const { user, setting } = useContext(AuthContext);
   const [noAju, setNoAju] = useState("");
@@ -165,18 +164,21 @@ const TampilPengajuan = () => {
     setLoading(false);
   };
 
-  const deletePengajuan = async (id) => {
+  const deleteApproval = async (id) => {
     setLoading(true);
     try {
-      await axios.post(`${tempUrl}/deletePengajuan/${id}`, {
+      await axios.post(`${tempUrl}/updateApproval/${id}`, {
+        noSbg: null,
+        tglKontrak: null,
+        tglJtTempo: null,
+        userIdApproval: null,
+        tglApproval: null,
         _id: user.id,
         token: user.token
       });
-      navigate("/daftarPengajuan");
+      navigate("/daftarApproval");
     } catch (error) {
-      if (error.response.data.message.includes("foreign key")) {
-        alert(`${noAju} tidak bisa dihapus karena sudah ada data!`);
-      }
+      alert(error);
     }
     setLoading(false);
   };
@@ -192,29 +194,18 @@ const TampilPengajuan = () => {
   return (
     <Container>
       <h3>Gadai</h3>
-      <h5 style={{ fontWeight: 400 }}>Data Pengajuan</h5>
+      <h5 style={{ fontWeight: 400 }}>Data Approval</h5>
       <hr />
       <Button
         variant="outlined"
         color="secondary"
-        onClick={() => navigate("/daftarPengajuan")}
+        onClick={() => navigate("/daftarApproval")}
         sx={{ marginLeft: 2, marginTop: 4 }}
       >
         {"< Kembali"}
       </Button>
       <Box sx={buttonModifierContainer}>
         <ButtonGroup variant="contained">
-          <Button
-            color="success"
-            sx={{ bgcolor: "success.light", textTransform: "none" }}
-            startIcon={<AddCircleOutlineIcon />}
-            size="small"
-            onClick={() => {
-              navigate(`/daftarPengajuan/pengajuan/${id}/tambahJaminan`);
-            }}
-          >
-            Agunan
-          </Button>
           {id && (
             <>
               <Button
@@ -222,7 +213,7 @@ const TampilPengajuan = () => {
                 startIcon={<EditIcon />}
                 sx={{ textTransform: "none" }}
                 onClick={() => {
-                  navigate(`/daftarPengajuan/pengajuan/${id}/edit`);
+                  navigate(`/daftarApproval/approval/${id}/edit`);
                 }}
               >
                 Ubah
@@ -247,11 +238,11 @@ const TampilPengajuan = () => {
           <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              {`Yakin ingin menghapus data ${noAju}?`}
+              {`Yakin ingin menghapus data ${noSbg}?`}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => deletePengajuan(id)}>Ok</Button>
+            <Button onClick={() => deleteApproval(id)}>Ok</Button>
             <Button onClick={handleClose}>Cancel</Button>
           </DialogActions>
         </Dialog>
@@ -782,7 +773,7 @@ const TampilPengajuan = () => {
         </Card>
       </Form>
       <Box sx={tableContainer}>
-        <ShowTableJaminan
+        <ShowTableApproval
           id={id}
           currentPosts={currentPosts}
           pengajuanId={id}
@@ -801,7 +792,7 @@ const TampilPengajuan = () => {
   );
 };
 
-export default TampilPengajuan;
+export default TampilApproval;
 
 const buttonModifierContainer = {
   mt: 4,

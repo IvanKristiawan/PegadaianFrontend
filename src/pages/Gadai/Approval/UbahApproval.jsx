@@ -1,39 +1,46 @@
 import { useContext, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { Colors } from "../../../constants/styles";
 import { tempUrl, useStateContext } from "../../../contexts/ContextProvider";
-import { Loader, usePagination } from "../../../components";
-import { ShowTableJaminan } from "../../../components/ShowTable";
+import { Loader } from "../../../components";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
-import {
-  Box,
-  ButtonGroup,
-  Button,
-  Pagination,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions
-} from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Box, Alert, Button, Snackbar } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
+import { makeStyles } from "@mui/styles";
 
-const TampilPengajuan = () => {
+const useStyles = makeStyles({
+  root: {
+    "& .MuiTableCell-head": {
+      color: "white",
+      backgroundColor: Colors.blue700
+    }
+  },
+  tableRightBorder: {
+    borderWidth: 0,
+    borderRightWidth: 1,
+    borderColor: "white",
+    borderStyle: "solid"
+  }
+});
+
+const UbahApproval = () => {
   const { screenSize } = useStateContext();
   const { user, setting } = useContext(AuthContext);
+  const [open, setOpen] = useState(false);
+  const [validated, setValidated] = useState(false);
   const [noAju, setNoAju] = useState("");
   const [tanggalAju, setTanggalAju] = useState(new Date());
   const [jenisResikoAju, setJenisResikoAju] = useState("");
   const [ketResikoAju, setKetResikoAju] = useState("");
   const [noSbg, setNoSbg] = useState("");
-  const [tglKontrak, setTglKontrak] = useState("");
-  const [tglJtTempo, setTglJtTemp] = useState("");
-  const [bungaPerBulanAju, setBungaPerBulanAju] = useState(0);
-  const [pinjamanAju, setPinjamanAju] = useState(0);
-  const [biayaAdmAju, setBiayaAdmAju] = useState(0);
+  const [tglKontrak, setTglKontrak] = useState(new Date());
+  const [tglJtTempo, setTglJtTempo] = useState(new Date());
+  const [bungaPerBulanAju, setBungaPerBulanAju] = useState("");
+  const [pinjamanAju, setPinjamanAju] = useState("");
+  const [biayaAdmAju, setBiayaAdmAju] = useState("");
 
   const [cifCustomer, setCifCustomer] = useState("");
   const [nikCustomer, setNikCustomer] = useState("");
@@ -56,42 +63,27 @@ const TampilPengajuan = () => {
   const [kodeMarketing, setKodeMarketing] = useState("");
   const [namaJenis, setNamaJenis] = useState("");
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
-  const [jaminans, setJaminans] = useState([]);
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [lamaJatuhTempo, setLamaJatuhTempo] = useState(0);
 
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
-  let [page, setPage] = useState(1);
-  const PER_PAGE = 20;
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const classes = useStyles();
 
-  const handleClose = () => {
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
     setOpen(false);
   };
 
-  // Get current posts
-  const indexOfLastPost = page * PER_PAGE;
-  const indexOfFirstPost = indexOfLastPost - PER_PAGE;
-  const currentPosts = jaminans.slice(indexOfFirstPost, indexOfLastPost);
-
-  const count = Math.ceil(jaminans.length / PER_PAGE);
-  const _DATA = usePagination(jaminans, PER_PAGE);
-
-  const handleChange = (e, p) => {
-    setPage(p);
-    _DATA.jump(p);
-  };
-
   useEffect(() => {
-    getPengajuanById();
-    getJaminansPerPengajuan();
+    getApprovalById();
   }, []);
 
-  const getPengajuanById = async () => {
+  const getApprovalById = async () => {
     setLoading(true);
     const response = await axios.post(`${tempUrl}/pengajuans/${id}`, {
       _id: user.id,
@@ -102,10 +94,10 @@ const TampilPengajuan = () => {
     setJenisResikoAju(response.data.jenisResikoAju);
     setKetResikoAju(response.data.ketResikoAju);
     setNoSbg(response.data.noSbg);
-    setTglKontrak(response.data.tglKontrak);
-    setTglJtTemp(response.data.tglJtTempo);
+    setTglKontrak(new Date(response.data.tglKontrak));
+    setTglJtTempo(new Date(response.data.tglJtTempo));
     setBungaPerBulanAju(response.data.bungaPerBulanAju);
-    setPinjamanAju(response.data.pinjamanAju);
+    setPinjamanAju(response.data.pinjamanAju.toLocaleString());
     setBiayaAdmAju(response.data.biayaAdmAju);
 
     setCifCustomer(response.data.customer.cifCustomer);
@@ -145,40 +137,42 @@ const TampilPengajuan = () => {
     setPekerjaanCustomer(response.data.customer.pekerjaanCustomer);
     setKewarganegaraanCustomer(response.data.customer.kewarganegaraanCustomer);
 
-    setKodeCOA(`${response.data.coa.kodeCOA} - ${response.data.coa.namaCOA}`);
-    setKodeMarketing(
-      `${response.data.marketing.kodeMarketing} - ${response.data.marketing.namaMarketing}`
-    );
+    setKodeCOA(response.data.coa.kodeCOA);
+    setKodeMarketing(response.data.marketing.kodeMarketing);
     setNamaJenis(response.data.jenisjaminan.namaJenis);
     setBungaPerBulanJenis(response.data.jenisjaminan.bungaPerBulanJenis);
+    setLamaJatuhTempo(response.data.jenisjaminan.lamaJatuhTempo);
     setLoading(false);
   };
 
-  const getJaminansPerPengajuan = async () => {
-    setLoading(true);
-    const response = await axios.post(`${tempUrl}/jaminans`, {
-      pengajuanId: id,
-      _id: user.id,
-      token: user.token
-    });
-    setJaminans(response.data);
-    setLoading(false);
-  };
-
-  const deletePengajuan = async (id) => {
-    setLoading(true);
-    try {
-      await axios.post(`${tempUrl}/deletePengajuan/${id}`, {
-        _id: user.id,
-        token: user.token
-      });
-      navigate("/daftarPengajuan");
-    } catch (error) {
-      if (error.response.data.message.includes("foreign key")) {
-        alert(`${noAju} tidak bisa dihapus karena sudah ada data!`);
+  const updateApproval = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const form = e.currentTarget;
+    if (form.checkValidity() && cifCustomer.length !== 0) {
+      setLoading(true);
+      try {
+        setLoading(true);
+        await axios.post(`${tempUrl}/updateApproval/${id}`, {
+          noSbg,
+          tglKontrak,
+          tglJtTempo,
+          kodeCabang: user.cabang.id,
+          userIdInput: user.id,
+          _id: user.id,
+          token: user.token
+        });
+        setLoading(false);
+        navigate("/daftarApproval");
+      } catch (err) {
+        console.log(err);
       }
+      setLoading(false);
+    } else {
+      setError(true);
+      setOpen(!open);
     }
-    setLoading(false);
+    setValidated(true);
   };
 
   if (loading) {
@@ -192,71 +186,9 @@ const TampilPengajuan = () => {
   return (
     <Container>
       <h3>Gadai</h3>
-      <h5 style={{ fontWeight: 400 }}>Data Pengajuan</h5>
+      <h5 style={{ fontWeight: 400 }}>Ubah Approval</h5>
       <hr />
-      <Button
-        variant="outlined"
-        color="secondary"
-        onClick={() => navigate("/daftarPengajuan")}
-        sx={{ marginLeft: 2, marginTop: 4 }}
-      >
-        {"< Kembali"}
-      </Button>
-      <Box sx={buttonModifierContainer}>
-        <ButtonGroup variant="contained">
-          <Button
-            color="success"
-            sx={{ bgcolor: "success.light", textTransform: "none" }}
-            startIcon={<AddCircleOutlineIcon />}
-            size="small"
-            onClick={() => {
-              navigate(`/daftarPengajuan/pengajuan/${id}/tambahJaminan`);
-            }}
-          >
-            Agunan
-          </Button>
-          {id && (
-            <>
-              <Button
-                color="primary"
-                startIcon={<EditIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={() => {
-                  navigate(`/daftarPengajuan/pengajuan/${id}/edit`);
-                }}
-              >
-                Ubah
-              </Button>
-              <Button
-                color="error"
-                startIcon={<DeleteOutlineIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={handleClickOpen}
-              >
-                Hapus
-              </Button>
-            </>
-          )}
-        </ButtonGroup>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              {`Yakin ingin menghapus data ${noAju}?`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => deletePengajuan(id)}>Ok</Button>
-            <Button onClick={handleClose}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
-      <Form>
+      <Form noValidate validated={validated} onSubmit={updateApproval}>
         <Card>
           <Card.Header>Data Nasabah</Card.Header>
           <Card.Body>
@@ -632,7 +564,12 @@ const TampilPengajuan = () => {
                     No. SBG :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control value={noSbg} disabled readOnly />
+                    <Form.Control
+                      value={noSbg}
+                      onChange={(e) => {
+                        setNoSbg(e.target.value);
+                      }}
+                    />
                   </Col>
                 </Form.Group>
               </Col>
@@ -648,7 +585,19 @@ const TampilPengajuan = () => {
                     Tgl. Kontrak :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control value={tglKontrak} disabled readOnly />
+                    <DatePicker
+                      dateFormat="dd/MM/yyyy"
+                      selected={tglKontrak}
+                      onChange={(date) => {
+                        let tempDate = new Date(date);
+                        let tempTglJtTempo = tempDate.setDate(
+                          date.getDate() + lamaJatuhTempo
+                        );
+                        setTglJtTempo(new Date(tempTglJtTempo));
+
+                        setTglKontrak(date);
+                      }}
+                    />
                   </Col>
                 </Form.Group>
               </Col>
@@ -664,7 +613,12 @@ const TampilPengajuan = () => {
                     Tgl. J. Tempo :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control value={tglJtTempo} disabled readOnly />
+                    <DatePicker
+                      dateFormat="dd/MM/yyyy"
+                      selected={tglJtTempo}
+                      disabled
+                      readOnly
+                    />
                   </Col>
                 </Form.Group>
               </Col>
@@ -737,10 +691,7 @@ const TampilPengajuan = () => {
                   </Form.Label>
                   <Col sm="8">
                     <Form.Control
-                      value={(
-                        (bungaPerBulanJenis * pinjamanAju) /
-                        100
-                      ).toLocaleString()}
+                      value={bungaPerBulanAju.toLocaleString()}
                       disabled
                       readOnly
                     />
@@ -760,7 +711,7 @@ const TampilPengajuan = () => {
                   </Form.Label>
                   <Col sm="4">
                     <Form.Control
-                      value={`${setting.feeAdmGadai} %`}
+                      value={`${biayaAdmAju} %`}
                       disabled
                       readOnly
                     />
@@ -768,7 +719,7 @@ const TampilPengajuan = () => {
                   <Col sm="4">
                     <Form.Control
                       value={(
-                        (setting.feeAdmGadai * pinjamanAju) /
+                        (biayaAdmAju * pinjamanAju) /
                         100
                       ).toLocaleString()}
                       disabled
@@ -778,41 +729,43 @@ const TampilPengajuan = () => {
                 </Form.Group>
               </Col>
             </Row>
+            <Box sx={spacingTop}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => navigate(`/daftarApproval/approval/${id}`)}
+                sx={{ marginRight: 2 }}
+              >
+                {"< Kembali"}
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<SaveIcon />}
+                type="submit"
+              >
+                Simpan
+              </Button>
+            </Box>
           </Card.Body>
         </Card>
       </Form>
-      <Box sx={tableContainer}>
-        <ShowTableJaminan
-          id={id}
-          currentPosts={currentPosts}
-          pengajuanId={id}
-        />
-      </Box>
-      <Box sx={tableContainer}>
-        <Pagination
-          count={count}
-          page={page}
-          onChange={handleChange}
-          color="primary"
-          size={screenSize <= 600 ? "small" : "large"}
-        />
-      </Box>
+      {error && (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error" sx={alertBox}>
+            Data belum terisi semua!
+          </Alert>
+        </Snackbar>
+      )}
     </Container>
   );
 };
 
-export default TampilPengajuan;
+export default UbahApproval;
 
-const buttonModifierContainer = {
-  mt: 4,
-  mb: 4,
-  display: "flex",
-  flexWrap: "wrap",
-  justifyContent: "center"
+const spacingTop = {
+  mt: 4
 };
 
-const tableContainer = {
-  pt: 4,
-  display: "flex",
-  justifyContent: "center"
+const alertBox = {
+  width: "100%"
 };

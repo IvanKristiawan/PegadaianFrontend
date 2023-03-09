@@ -1,8 +1,5 @@
-// import "./styles.css";
 import React, { useContext, useState, useEffect } from "react";
-// import { Route, Switch, Redirect } from 'react-router-dom';
 import { Routes, Route, Navigate } from "react-router-dom";
-// import Login from "./pages/Login/Login";
 import "./styles.scss";
 import { Sidebar, Footer, ScrollToTop } from "./components";
 // import { Link } from "react-router-dom";
@@ -66,7 +63,11 @@ import {
   UbahPengajuan,
   TambahJaminan,
   TampilJaminan,
-  UbahJaminan
+  UbahJaminan,
+  TampilDaftarApproval,
+  TambahApproval,
+  TampilApproval,
+  UbahApproval
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -210,6 +211,16 @@ const App = () => {
     const { user } = useContext(AuthContext);
 
     if (user.akses.pengajuan) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const APPROVALRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.approval) {
       return children;
     }
 
@@ -814,6 +825,39 @@ const App = () => {
               <PENGAJUANRoute>
                 <UbahJaminan />
               </PENGAJUANRoute>
+            }
+          />
+          {/* Approval */}
+          <Route
+            path="/daftarApproval"
+            element={
+              <APPROVALRoute>
+                <TampilDaftarApproval />
+              </APPROVALRoute>
+            }
+          />
+          <Route
+            path="/daftarApproval/approval/tambahApproval"
+            element={
+              <APPROVALRoute>
+                <TambahApproval />
+              </APPROVALRoute>
+            }
+          />
+          <Route
+            path="/daftarApproval/approval/:id"
+            element={
+              <APPROVALRoute>
+                <TampilApproval />
+              </APPROVALRoute>
+            }
+          />
+          <Route
+            path="/daftarApproval/approval/:id/edit"
+            element={
+              <APPROVALRoute>
+                <UbahApproval />
+              </APPROVALRoute>
             }
           />
         </Routes>

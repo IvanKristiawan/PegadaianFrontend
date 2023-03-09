@@ -41,6 +41,7 @@ const TambahUser = () => {
 
   // Akses Gadai
   const [pengajuan, setPengajuan] = useState(false);
+  const [approval, setApproval] = useState(false);
 
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
@@ -228,6 +229,7 @@ const TambahUser = () => {
               area,
               customer,
               pengajuan,
+              approval,
               cabang,
               tutupPeriode,
               gantiPeriode,
@@ -541,6 +543,14 @@ const TambahUser = () => {
                         label="Pengajuan"
                         checked={pengajuan}
                         onChange={() => setPengajuan(!pengajuan)}
+                      />
+                    </Form>
+                    <Form>
+                      <Form.Check
+                        type="checkbox"
+                        label="Approval"
+                        checked={approval}
+                        onChange={() => setApproval(!approval)}
                       />
                     </Form>
                   </Form>

@@ -1331,3 +1331,161 @@ export function ShowTableJaminan({ currentPosts, pengajuanId }) {
     </TableContainer>
   );
 }
+
+export function ShowTableDaftarApproval({ currentPosts, searchTerm }) {
+  let navigate = useNavigate();
+  const classes = useStyles();
+  return (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead className={classes.root}>
+          <TableRow>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              No. Sbg
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              No. Aju
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Tgl. Aju
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Atas Nama
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Alamat
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Kode Kas
+            </TableCell>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Pinjaman
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Kasir</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts
+            .filter((val) => {
+              if (searchTerm === "") {
+                return val;
+              } else if (
+                val.noSbg
+                  .toString()
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.noAju
+                  .toString()
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.tanggalAju
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.customer.namaCustomer
+                  .toString()
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.customer.alamatCustomer
+                  .toString()
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.coa.kodeCOA
+                  .toString()
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase()) ||
+                val.pinjamanAju == searchTerm ||
+                val.user.username
+                  .toString()
+                  .toUpperCase()
+                  .includes(searchTerm.toUpperCase())
+              ) {
+                return val;
+              }
+            })
+            .map((user, index) => (
+              <TableRow
+                key={user.id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { bgcolor: Colors.grey300 },
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  navigate(`/daftarApproval/approval/${user.id}`);
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.noSbg}
+                </TableCell>
+                <TableCell>{user.noAju}</TableCell>
+                <TableCell>{user.tanggalAju}</TableCell>
+                <TableCell>{user.customer.namaCustomer}</TableCell>
+                <TableCell>{user.customer.alamatCustomer}</TableCell>
+                <TableCell>{user.coa.kodeCOA}</TableCell>
+                <TableCell>{user.pinjamanAju.toLocaleString()}</TableCell>
+                <TableCell>{user.user.username}</TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
+export function ShowTableApproval({ currentPosts, pengajuanId }) {
+  const classes = useStyles();
+  return (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead className={classes.root}>
+          <TableRow>
+            <TableCell
+              sx={{ fontWeight: "bold" }}
+              className={classes.tableRightBorder}
+            >
+              Nama Jaminan
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Harga Rp.</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts.map((user, index) => (
+            <TableRow
+              key={user.id}
+              sx={{
+                "&:last-child td, &:last-child th": { border: 0 },
+                "&:hover": { bgcolor: Colors.grey300 }
+              }}
+            >
+              <TableCell component="th" scope="row">
+                {user.ketJam}
+              </TableCell>
+              <TableCell>{user.hargaTafsirJam.toLocaleString()}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}

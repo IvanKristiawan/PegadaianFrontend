@@ -1,39 +1,62 @@
 import { useContext, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { Colors } from "../../../constants/styles";
 import { tempUrl, useStateContext } from "../../../contexts/ContextProvider";
-import { Loader, usePagination } from "../../../components";
-import { ShowTableJaminan } from "../../../components/ShowTable";
+import { Loader, SearchBar } from "../../../components";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
 import {
   Box,
-  ButtonGroup,
+  Alert,
   Button,
-  Pagination,
+  Snackbar,
+  Paper,
   Dialog,
   DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions
+  DialogActions,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
 } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import SaveIcon from "@mui/icons-material/Save";
+import { makeStyles } from "@mui/styles";
 
-const TampilPengajuan = () => {
+const useStyles = makeStyles({
+  root: {
+    "& .MuiTableCell-head": {
+      color: "white",
+      backgroundColor: Colors.blue700
+    }
+  },
+  tableRightBorder: {
+    borderWidth: 0,
+    borderRightWidth: 1,
+    borderColor: "white",
+    borderStyle: "solid"
+  }
+});
+
+const TambahApproval = () => {
   const { screenSize } = useStateContext();
   const { user, setting } = useContext(AuthContext);
+  const [open, setOpen] = useState(false);
+  const [validated, setValidated] = useState(false);
+  const [ajuId, setAjuId] = useState("");
   const [noAju, setNoAju] = useState("");
-  const [tanggalAju, setTanggalAju] = useState(new Date());
+  const [tanggalAju, setTanggalAju] = useState();
   const [jenisResikoAju, setJenisResikoAju] = useState("");
   const [ketResikoAju, setKetResikoAju] = useState("");
   const [noSbg, setNoSbg] = useState("");
-  const [tglKontrak, setTglKontrak] = useState("");
-  const [tglJtTempo, setTglJtTemp] = useState("");
-  const [bungaPerBulanAju, setBungaPerBulanAju] = useState(0);
-  const [pinjamanAju, setPinjamanAju] = useState(0);
-  const [biayaAdmAju, setBiayaAdmAju] = useState(0);
+  const [tglKontrak, setTglKontrak] = useState(new Date());
+  const [tglJtTempo, setTglJtTempo] = useState(new Date());
+  const [bungaPerBulanAju, setBungaPerBulanAju] = useState("");
+  const [pinjamanAju, setPinjamanAju] = useState("");
+  const [biayaAdmAju, setBiayaAdmAju] = useState("");
 
   const [cifCustomer, setCifCustomer] = useState("");
   const [nikCustomer, setNikCustomer] = useState("");
@@ -56,129 +79,119 @@ const TampilPengajuan = () => {
   const [kodeMarketing, setKodeMarketing] = useState("");
   const [namaJenis, setNamaJenis] = useState("");
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
-  const [jaminans, setJaminans] = useState([]);
+  const [lamaJatuhTempo, setLamaJatuhTempo] = useState(0);
+
+  const [pengajuans, setPengajuans] = useState([]);
+  const [error, setError] = useState(false);
+  const [searchTermPengajuan, setSearchTermPengajuan] = useState("");
+  const [openPengajuan, setOpenPengajuan] = useState(false);
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-
-  const { id } = useParams();
   const [loading, setLoading] = useState(false);
-  let [page, setPage] = useState(1);
-  const PER_PAGE = 20;
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const classes = useStyles();
+
+  const handleClickOpenPengajuan = () => {
+    setOpenPengajuan(true);
   };
 
-  const handleClose = () => {
+  const handleClosePengajuan = () => {
+    setOpenPengajuan(false);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
     setOpen(false);
   };
 
-  // Get current posts
-  const indexOfLastPost = page * PER_PAGE;
-  const indexOfFirstPost = indexOfLastPost - PER_PAGE;
-  const currentPosts = jaminans.slice(indexOfFirstPost, indexOfLastPost);
-
-  const count = Math.ceil(jaminans.length / PER_PAGE);
-  const _DATA = usePagination(jaminans, PER_PAGE);
-
-  const handleChange = (e, p) => {
-    setPage(p);
-    _DATA.jump(p);
-  };
+  const tempPostsPengajuan = pengajuans.filter((val) => {
+    if (searchTermPengajuan === "") {
+      return val;
+    } else if (
+      val.noAju.toUpperCase().includes(searchTermPengajuan.toUpperCase()) ||
+      val.tanggalAju
+        .toUpperCase()
+        .includes(searchTermPengajuan.toUpperCase()) ||
+      val.customer.namaCustomer
+        .toUpperCase()
+        .includes(searchTermPengajuan.toUpperCase())
+    ) {
+      return val;
+    }
+  });
 
   useEffect(() => {
-    getPengajuanById();
-    getJaminansPerPengajuan();
+    if (user.tipeUser === "ADMIN") {
+      getPengajuansDataAdmin();
+    } else {
+      getPengajuansDataManager();
+    }
+    getApprovalNextKode();
   }, []);
 
-  const getPengajuanById = async () => {
-    setLoading(true);
-    const response = await axios.post(`${tempUrl}/pengajuans/${id}`, {
+  const getPengajuansDataManager = async (kodeUnit) => {
+    setCifCustomer("");
+    const response = await axios.post(`${tempUrl}/pengajuansNotApproved`, {
       _id: user.id,
       token: user.token
     });
-    setNoAju(response.data.noAju);
-    setTanggalAju(response.data.tanggalAju);
-    setJenisResikoAju(response.data.jenisResikoAju);
-    setKetResikoAju(response.data.ketResikoAju);
-    setNoSbg(response.data.noSbg);
-    setTglKontrak(response.data.tglKontrak);
-    setTglJtTemp(response.data.tglJtTempo);
-    setBungaPerBulanAju(response.data.bungaPerBulanAju);
-    setPinjamanAju(response.data.pinjamanAju);
-    setBiayaAdmAju(response.data.biayaAdmAju);
-
-    setCifCustomer(response.data.customer.cifCustomer);
-    setNikCustomer(response.data.customer.nikCustomer);
-    setNamaCustomer(response.data.customer.namaCustomer);
-    setTempatLahirCustomer(response.data.customer.tempatLahirCustomer);
-    let newTglLahir = new Date(response.data.customer.tanggalLahirCustomer);
-    let tempTglLahir = `${newTglLahir.getDate().toLocaleString("en-US", {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    })}-${(newTglLahir.getMonth() + 1).toLocaleString("en-US", {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    })}-${newTglLahir.getFullYear()}`;
-    setTanggalLahirCustomer(tempTglLahir);
-    setJenisKelaminCustomer(response.data.customer.jenisKelaminCustomer);
-    setNoTeleponCustomer(response.data.customer.noTeleponCustomer);
-    setAlamatCustomer(response.data.customer.alamatCustomer);
-
-    setKodeKelurahan(
-      `${response.data.customer.kelurahan.id} - ${response.data.customer.kelurahan.namaKelurahan}`
-    );
-    setKodeKecamatan(
-      `${response.data.customer.kecamatan.id} - ${response.data.customer.kecamatan.namaKecamatan}`
-    );
-    setKodeKabupaten(
-      `${response.data.customer.kabupaten.id} - ${response.data.customer.kabupaten.namaKabupaten}`
-    );
-    setKodeProvinsi(
-      `${response.data.customer.provinsis.id} - ${response.data.customer.provinsis.namaProvinsi}`
-    );
-    setKodePos(response.data.customer.kelurahan.kodePos);
-
-    setStatusPerkawinanCustomer(
-      response.data.customer.statusPerkawinanCustomer
-    );
-    setPekerjaanCustomer(response.data.customer.pekerjaanCustomer);
-    setKewarganegaraanCustomer(response.data.customer.kewarganegaraanCustomer);
-
-    setKodeCOA(`${response.data.coa.kodeCOA} - ${response.data.coa.namaCOA}`);
-    setKodeMarketing(
-      `${response.data.marketing.kodeMarketing} - ${response.data.marketing.namaMarketing}`
-    );
-    setNamaJenis(response.data.jenisjaminan.namaJenis);
-    setBungaPerBulanJenis(response.data.jenisjaminan.bungaPerBulanJenis);
-    setLoading(false);
+    setPengajuans(response.data);
   };
 
-  const getJaminansPerPengajuan = async () => {
-    setLoading(true);
-    const response = await axios.post(`${tempUrl}/jaminans`, {
-      pengajuanId: id,
-      _id: user.id,
-      token: user.token
-    });
-    setJaminans(response.data);
-    setLoading(false);
-  };
-
-  const deletePengajuan = async (id) => {
-    setLoading(true);
-    try {
-      await axios.post(`${tempUrl}/deletePengajuan/${id}`, {
+  const getPengajuansDataAdmin = async (kodeUnit) => {
+    setCifCustomer("");
+    const response = await axios.post(
+      `${tempUrl}/pengajuansPerCabangNotApproved`,
+      {
         _id: user.id,
-        token: user.token
-      });
-      navigate("/daftarPengajuan");
-    } catch (error) {
-      if (error.response.data.message.includes("foreign key")) {
-        alert(`${noAju} tidak bisa dihapus karena sudah ada data!`);
+        token: user.token,
+        kodeCabang: user.cabang.id
       }
+    );
+    setPengajuans(response.data);
+  };
+
+  const getApprovalNextKode = async () => {
+    const response = await axios.post(`${tempUrl}/approvalNextKode`, {
+      kodeApproval: setting.kodeApproval,
+      _id: user.id,
+      token: user.token,
+      kodeCabang: user.cabang.id
+    });
+    setNoSbg(response.data);
+  };
+
+  const saveApproval = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const form = e.currentTarget;
+    if (form.checkValidity() && noAju.length !== 0) {
+      setLoading(true);
+      try {
+        setLoading(true);
+        await axios.post(`${tempUrl}/updateApproval/${ajuId}`, {
+          noSbg,
+          tglKontrak,
+          tglJtTempo,
+
+          kodeCabang: user.cabang.id,
+          userIdApproval: user.id,
+          tglApproval: new Date(),
+          _id: user.id,
+          token: user.token
+        });
+        setLoading(false);
+        navigate("/daftarApproval");
+      } catch (err) {
+        alert(err);
+      }
+      setLoading(false);
+    } else {
+      setError(true);
+      setOpen(!open);
     }
-    setLoading(false);
+    setValidated(true);
   };
 
   if (loading) {
@@ -192,71 +205,9 @@ const TampilPengajuan = () => {
   return (
     <Container>
       <h3>Gadai</h3>
-      <h5 style={{ fontWeight: 400 }}>Data Pengajuan</h5>
+      <h5 style={{ fontWeight: 400 }}>Tambah Approval</h5>
       <hr />
-      <Button
-        variant="outlined"
-        color="secondary"
-        onClick={() => navigate("/daftarPengajuan")}
-        sx={{ marginLeft: 2, marginTop: 4 }}
-      >
-        {"< Kembali"}
-      </Button>
-      <Box sx={buttonModifierContainer}>
-        <ButtonGroup variant="contained">
-          <Button
-            color="success"
-            sx={{ bgcolor: "success.light", textTransform: "none" }}
-            startIcon={<AddCircleOutlineIcon />}
-            size="small"
-            onClick={() => {
-              navigate(`/daftarPengajuan/pengajuan/${id}/tambahJaminan`);
-            }}
-          >
-            Agunan
-          </Button>
-          {id && (
-            <>
-              <Button
-                color="primary"
-                startIcon={<EditIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={() => {
-                  navigate(`/daftarPengajuan/pengajuan/${id}/edit`);
-                }}
-              >
-                Ubah
-              </Button>
-              <Button
-                color="error"
-                startIcon={<DeleteOutlineIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={handleClickOpen}
-              >
-                Hapus
-              </Button>
-            </>
-          )}
-        </ButtonGroup>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              {`Yakin ingin menghapus data ${noAju}?`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => deletePengajuan(id)}>Ok</Button>
-            <Button onClick={handleClose}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
-      <Form>
+      <Form noValidate validated={validated} onSubmit={saveApproval}>
         <Card>
           <Card.Header>Data Nasabah</Card.Header>
           <Card.Body>
@@ -271,7 +222,14 @@ const TampilPengajuan = () => {
                     No. Pengajuan :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control required value={noAju} disabled readOnly />
+                    <Form.Control
+                      required
+                      value={noAju}
+                      readOnly
+                      placeholder="Pilih..."
+                      onClick={() => handleClickOpenPengajuan()}
+                      isInvalid={noAju.length === 0 && true}
+                    />
                   </Col>
                 </Form.Group>
               </Col>
@@ -336,12 +294,7 @@ const TampilPengajuan = () => {
                     NIK / CIF :
                   </Form.Label>
                   <Col sm="4">
-                    <Form.Control
-                      type="number"
-                      value={nikCustomer}
-                      disabled
-                      readOnly
-                    />
+                    <Form.Control value={nikCustomer} disabled readOnly />
                   </Col>
                   <Col sm="4">
                     <Form.Control value={cifCustomer} disabled readOnly />
@@ -632,7 +585,12 @@ const TampilPengajuan = () => {
                     No. SBG :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control value={noSbg} disabled readOnly />
+                    <Form.Control
+                      value={noSbg}
+                      onChange={(e) => {
+                        setNoSbg(e.target.value);
+                      }}
+                    />
                   </Col>
                 </Form.Group>
               </Col>
@@ -648,7 +606,19 @@ const TampilPengajuan = () => {
                     Tgl. Kontrak :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control value={tglKontrak} disabled readOnly />
+                    <DatePicker
+                      dateFormat="dd/MM/yyyy"
+                      selected={tglKontrak}
+                      onChange={(date) => {
+                        let tempDate = new Date(date);
+                        let tempTglJtTempo = tempDate.setDate(
+                          date.getDate() + lamaJatuhTempo
+                        );
+                        setTglJtTempo(new Date(tempTglJtTempo));
+
+                        setTglKontrak(date);
+                      }}
+                    />
                   </Col>
                 </Form.Group>
               </Col>
@@ -664,7 +634,12 @@ const TampilPengajuan = () => {
                     Tgl. J. Tempo :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control value={tglJtTempo} disabled readOnly />
+                    <DatePicker
+                      dateFormat="dd/MM/yyyy"
+                      selected={tglJtTempo}
+                      disabled
+                      readOnly
+                    />
                   </Col>
                 </Form.Group>
               </Col>
@@ -737,10 +712,7 @@ const TampilPengajuan = () => {
                   </Form.Label>
                   <Col sm="8">
                     <Form.Control
-                      value={(
-                        (bungaPerBulanJenis * pinjamanAju) /
-                        100
-                      ).toLocaleString()}
+                      value={bungaPerBulanAju.toLocaleString()}
                       disabled
                       readOnly
                     />
@@ -760,7 +732,7 @@ const TampilPengajuan = () => {
                   </Form.Label>
                   <Col sm="4">
                     <Form.Control
-                      value={`${setting.feeAdmGadai} %`}
+                      value={`${biayaAdmAju} %`}
                       disabled
                       readOnly
                     />
@@ -768,7 +740,7 @@ const TampilPengajuan = () => {
                   <Col sm="4">
                     <Form.Control
                       value={(
-                        (setting.feeAdmGadai * pinjamanAju) /
+                        (biayaAdmAju * pinjamanAju) /
                         100
                       ).toLocaleString()}
                       disabled
@@ -778,41 +750,201 @@ const TampilPengajuan = () => {
                 </Form.Group>
               </Col>
             </Row>
+            <Box sx={spacingTop}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => navigate("/daftarApproval")}
+                sx={{ marginRight: 2 }}
+              >
+                {"< Kembali"}
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<SaveIcon />}
+                type="submit"
+              >
+                Simpan
+              </Button>
+            </Box>
           </Card.Body>
         </Card>
       </Form>
-      <Box sx={tableContainer}>
-        <ShowTableJaminan
-          id={id}
-          currentPosts={currentPosts}
-          pengajuanId={id}
-        />
-      </Box>
-      <Box sx={tableContainer}>
-        <Pagination
-          count={count}
-          page={page}
-          onChange={handleChange}
-          color="primary"
-          size={screenSize <= 600 ? "small" : "large"}
-        />
-      </Box>
+      {error && (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error" sx={alertBox}>
+            Data belum terisi semua!
+          </Alert>
+        </Snackbar>
+      )}
+      <Dialog
+        open={openPengajuan}
+        onClose={handleClosePengajuan}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{`Pilih Data Pengajuan`}</DialogTitle>
+        <DialogActions>
+          <Box sx={dialogContainer}>
+            <SearchBar setSearchTerm={setSearchTermPengajuan} />
+            <TableContainer component={Paper} sx={dialogWrapper}>
+              <Table aria-label="simple table">
+                <TableHead className={classes.root}>
+                  <TableRow>
+                    <TableCell
+                      sx={{ fontWeight: "bold" }}
+                      className={classes.tableRightBorder}
+                    >
+                      No. Aju
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontWeight: "bold" }}
+                      className={classes.tableRightBorder}
+                    >
+                      Tanggal
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Customer</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {tempPostsPengajuan
+                    .filter((val) => {
+                      if (searchTermPengajuan === "") {
+                        return val;
+                      } else if (
+                        val.noAju
+                          .toUpperCase()
+                          .includes(searchTermPengajuan.toUpperCase()) ||
+                        val.tanggalAju
+                          .toUpperCase()
+                          .includes(searchTermPengajuan.toUpperCase()) ||
+                        val.customer.namaCustomer
+                          .toUpperCase()
+                          .includes(searchTermPengajuan.toUpperCase())
+                      ) {
+                        return val;
+                      }
+                    })
+                    .map((user, index) => (
+                      <TableRow
+                        key={user._id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                          "&:hover": { bgcolor: Colors.grey300 },
+                          cursor: "pointer"
+                        }}
+                        onClick={() => {
+                          setAjuId(user.id);
+                          setNoAju(user.noAju);
+                          setTanggalAju(user.tanggalAju);
+                          setJenisResikoAju(user.jenisResikoAju);
+                          setKetResikoAju(user.ketResikoAju);
+                          setBungaPerBulanAju(user.bungaPerBulanAju);
+                          setPinjamanAju(user.pinjamanAju);
+                          setBiayaAdmAju(user.biayaAdmAju);
+                          setCifCustomer(user.customer.cifCustomer);
+                          setNikCustomer(user.customer.nikCustomer);
+                          setNamaCustomer(user.customer.namaCustomer);
+                          setTempatLahirCustomer(
+                            user.customer.tempatLahirCustomer
+                          );
+                          let newTglLahir = new Date(
+                            user.customer.tanggalLahirCustomer
+                          );
+                          let tempTglLahir = `${newTglLahir
+                            .getDate()
+                            .toLocaleString("en-US", {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false
+                            })}-${(newTglLahir.getMonth() + 1).toLocaleString(
+                            "en-US",
+                            {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false
+                            }
+                          )}-${newTglLahir.getFullYear()}`;
+                          setTanggalLahirCustomer(tempTglLahir);
+                          setJenisKelaminCustomer(
+                            user.customer.jenisKelaminCustomer
+                          );
+                          setNoTeleponCustomer(user.customer.noTeleponCustomer);
+                          setAlamatCustomer(user.customer.alamatCustomer);
+                          setKodeKelurahan(
+                            `${user.customer.kelurahan.id} - ${user.customer.kelurahan.namaKelurahan}`
+                          );
+                          setKodeKecamatan(
+                            `${user.customer.kecamatan.id} - ${user.customer.kecamatan.namaKecamatan}`
+                          );
+                          setKodeKabupaten(
+                            `${user.customer.kabupaten.id} - ${user.customer.kabupaten.namaKabupaten}`
+                          );
+                          setKodeProvinsi(
+                            `${user.customer.provinsis.id} - ${user.customer.provinsis.namaProvinsi}`
+                          );
+                          setKodePos(user.customer.kelurahan.kodePos);
+                          setStatusPerkawinanCustomer(
+                            user.customer.statusPerkawinanCustomer
+                          );
+                          setPekerjaanCustomer(user.customer.pekerjaanCustomer);
+                          setKewarganegaraanCustomer(
+                            user.customer.kewarganegaraanCustomer
+                          );
+
+                          setKodeMarketing(
+                            `${user.marketing.kodeMarketing} - ${user.marketing.namaMarketing}`
+                          );
+                          setKodeCOA(
+                            `${user.coa.kodeCOA} - ${user.coa.namaCOA}`
+                          );
+                          setJenisResikoAju(user.jenisResikoAju);
+                          setKetResikoAju(user.ketResikoAju);
+
+                          setNamaJenis(user.jenisjaminan.namaJenis);
+                          setLamaJatuhTempo(user.jenisjaminan.lamaJatuhTempo);
+                          let tempTglJtTempo = tglJtTempo.setDate(
+                            tglKontrak.getDate() +
+                              user.jenisjaminan.lamaJatuhTempo
+                          );
+                          setTglJtTempo(new Date(tempTglJtTempo));
+
+                          handleClosePengajuan();
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {user.noAju}
+                        </TableCell>
+                        <TableCell>{user.tanggalAju}</TableCell>
+                        <TableCell>{user.customer.namaCustomer}</TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
 
-export default TampilPengajuan;
+export default TambahApproval;
 
-const buttonModifierContainer = {
-  mt: 4,
-  mb: 4,
-  display: "flex",
-  flexWrap: "wrap",
-  justifyContent: "center"
+const spacingTop = {
+  mt: 4
 };
 
-const tableContainer = {
-  pt: 4,
+const alertBox = {
+  width: "100%"
+};
+
+const dialogContainer = {
   display: "flex",
-  justifyContent: "center"
+  flexDirection: "column",
+  padding: 4,
+  width: "800px"
+};
+
+const dialogWrapper = {
+  width: "100%",
+  marginTop: 2
 };

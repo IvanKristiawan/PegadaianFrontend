@@ -46,6 +46,7 @@ const DaftarUser = () => {
 
   // Akses Gadai
   const [pengajuan, setPengajuan] = useState(false);
+  const [approval, setApproval] = useState(false);
 
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
@@ -149,6 +150,7 @@ const DaftarUser = () => {
 
       // Akses Pengajuan
       setPengajuan(response.data.akses.pengajuan);
+      setApproval(response.data.akses.approval);
 
       // Akses Utility
       setProfilUser(response.data.akses.profilUser);
@@ -537,6 +539,14 @@ const DaftarUser = () => {
                       label="Pengajuan"
                       disabled
                       checked={pengajuan}
+                    />
+                  </Form>
+                  <Form>
+                    <Form.Check
+                      type="checkbox"
+                      label="Approval"
+                      disabled
+                      checked={approval}
                     />
                   </Form>
                 </Box>

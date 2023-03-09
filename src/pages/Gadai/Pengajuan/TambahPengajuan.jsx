@@ -229,7 +229,7 @@ const TambahPengajuan = () => {
         setLoading(false);
         navigate("/daftarPengajuan");
       } catch (err) {
-        console.log(err);
+        alert(err);
       }
       setLoading(false);
     } else {

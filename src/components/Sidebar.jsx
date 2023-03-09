@@ -138,6 +138,11 @@ const Sidebar = ({
                 Pengajuan <NavLink to="/daftarPengajuan" />
               </MenuItem>
             )}
+            {user.akses.approval === true && (
+              <MenuItem>
+                Approval <NavLink to="/daftarApproval" />
+              </MenuItem>
+            )}
           </SubMenu>
           <SubMenu title={"Utility"} icon={<FaUserCog />}>
             {user.akses.profilUser === true && (
