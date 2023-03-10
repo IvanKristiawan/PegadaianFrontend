@@ -183,25 +183,6 @@ const TampilBuktiPencairan = () => {
     setLoading(false);
   };
 
-  const deleteApproval = async (id) => {
-    setLoading(true);
-    try {
-      await axios.post(`${tempUrl}/updateApproval/${id}`, {
-        noSbg: null,
-        tglKontrak: null,
-        tglJtTempo: null,
-        userIdApproval: null,
-        tglApproval: null,
-        _id: user.id,
-        token: user.token
-      });
-      navigate("/daftarApproval");
-    } catch (error) {
-      alert(error);
-    }
-    setLoading(false);
-  };
-
   if (loading) {
     return <Loader />;
   }
@@ -247,14 +228,14 @@ const TampilBuktiPencairan = () => {
           >
             CETAK
           </Button>
-          <div style={cetakContainer} ref={reportTemplateRef}>
+          <div ref={reportTemplateRef} style={cetakContainer}>
             <p style={cetakCenter}>{setting.namaPerusahaan}</p>
-            <p style={cetakCenter}>{setting.alamatPerusahaan}</p>
-            <p style={cetakCenter}>({setting.kotaPerusahaan})</p>
+            <p style={cetakCenterMoreWordSpacing}>{setting.alamatPerusahaan}</p>
+            <p style={cetakCenterMoreWordSpacing}>({setting.kotaPerusahaan})</p>
             <p style={cetakCenter}>{setting.provinsiPerusahaan}</p>
             <p style={cetakCenter}>NO. TELP. {setting.teleponPerusahaan}</p>
             <hr />
-            <p style={cetakCenter}>BUKTI PEMBAYARAN GADAI</p>
+            <p style={cetakCenterMoreWordSpacing}>BUKTI PEMBAYARAN GADAI</p>
             <p style={cetakCenter}>{namaCustomer.split(" ")[0]}</p>
             <p style={cetakCenter}>Tanggal : {tanggalAju}</p>
             <p style={cetakCenter}>J. Tempo : {tglJtTempo}</p>
@@ -937,12 +918,21 @@ const cetakWrapperText = {
 const cetakCenter = {
   textAlign: "center",
   marginTop: "0px",
-  marginBottom: "0px"
+  marginBottom: "0px",
+  wordSpacing: "2px"
+};
+
+const cetakCenterMoreWordSpacing = {
+  textAlign: "center",
+  marginTop: "0px",
+  marginBottom: "0px",
+  wordSpacing: "8px"
 };
 
 const cetakCenterBold = {
   textAlign: "center",
   marginTop: "0px",
   marginBottom: "0px",
-  fontWeight: "700"
+  fontWeight: "700",
+  wordSpacing: "4px"
 };
