@@ -44,6 +44,7 @@ const UbahUser = () => {
   const [pengajuan, setPengajuan] = useState(false);
   const [approval, setApproval] = useState(false);
   const [buktiPencairan, setBuktiPencairan] = useState(false);
+  const [topup, setTopup] = useState(false);
 
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
@@ -122,7 +123,6 @@ const UbahUser = () => {
   const getUserById = async () => {
     setLoading(true);
     const response = await axios.post(`${tempUrl}/findUser/${id}`, {
-      tipeAdmin: user.tipeUser,
       _id: user.id,
       token: user.token
     });
@@ -138,6 +138,7 @@ const UbahUser = () => {
     setPengajuan(response.data.pengajuan);
     setApproval(response.data.approval);
     setBuktiPencairan(response.data.buktiPencairan);
+    setTopup(response.data.topup);
 
     // Akses Master
     setJaminan(response.data.akses.jaminan);
@@ -194,6 +195,7 @@ const UbahUser = () => {
               pengajuan,
               approval,
               buktiPencairan,
+              topup,
               tutupPeriode,
               gantiPeriode,
               profilUser,
@@ -510,6 +512,14 @@ const UbahUser = () => {
                       label="Bukti Pencairan"
                       checked={buktiPencairan}
                       onChange={() => setBuktiPencairan(!buktiPencairan)}
+                    />
+                  </Form>
+                  <Form>
+                    <Form.Check
+                      type="checkbox"
+                      label="Top-Up"
+                      checked={topup}
+                      onChange={() => setTopup(!topup)}
                     />
                   </Form>
                 </Box>

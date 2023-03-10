@@ -69,7 +69,12 @@ import {
   TampilApproval,
   UbahApproval,
   TampilDaftarBuktiPencairan,
-  TampilBuktiPencairan
+  TampilBuktiPencairan,
+  TampilDaftarTopup,
+  TambahTopup,
+  TampilTopup,
+  TampilOneTopup,
+  UbahTopup
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -233,6 +238,16 @@ const App = () => {
     const { user } = useContext(AuthContext);
 
     if (user.akses.buktiPencairan) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const TOPUPRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.topup) {
       return children;
     }
 
@@ -887,6 +902,47 @@ const App = () => {
               <BUKTIPENCAIRANRoute>
                 <TampilBuktiPencairan />
               </BUKTIPENCAIRANRoute>
+            }
+          />
+          {/* Topup */}
+          <Route
+            path="/daftarTopup"
+            element={
+              <TOPUPRoute>
+                <TampilDaftarTopup />
+              </TOPUPRoute>
+            }
+          />
+          <Route
+            path="/daftarTopup/topup/tambahTopup"
+            element={
+              <TOPUPRoute>
+                <TambahTopup />
+              </TOPUPRoute>
+            }
+          />
+          <Route
+            path="/daftarTopup/topup/:id"
+            element={
+              <TOPUPRoute>
+                <TampilTopup />
+              </TOPUPRoute>
+            }
+          />
+          <Route
+            path="/daftarTopup/topup/:id/:idTopup"
+            element={
+              <TOPUPRoute>
+                <TampilOneTopup />
+              </TOPUPRoute>
+            }
+          />
+          <Route
+            path="/daftarTopup/topup/:id/:idTopup/edit"
+            element={
+              <TOPUPRoute>
+                <UbahTopup />
+              </TOPUPRoute>
             }
           />
         </Routes>

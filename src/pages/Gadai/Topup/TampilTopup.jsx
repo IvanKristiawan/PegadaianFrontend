@@ -4,7 +4,7 @@ import axios from "axios";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { tempUrl, useStateContext } from "../../../contexts/ContextProvider";
 import { Loader, usePagination } from "../../../components";
-import { ShowTableApproval } from "../../../components/ShowTable";
+import { ShowTableTopup } from "../../../components/ShowTable";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
 import {
   Box,
@@ -20,7 +20,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const TampilApproval = () => {
+const TampilTopup = () => {
   const { screenSize } = useStateContext();
   const { user, setting } = useContext(AuthContext);
   const [noAju, setNoAju] = useState("");
@@ -51,11 +51,16 @@ const TampilApproval = () => {
   const [pekerjaanCustomer, setPekerjaanCustomer] = useState("");
   const [kewarganegaraanCustomer, setKewarganegaraanCustomer] = useState("");
 
+  // Topup
+  const [bayarPinjamanAju, setBayarPinjamanAju] = useState("");
+  const [nilaiTopup, setNilaiTopup] = useState("");
+  const [sisaSaldo, setSisaSaldo] = useState(0);
+
   const [kodeCOA, setKodeCOA] = useState("");
   const [kodeMarketing, setKodeMarketing] = useState("");
   const [namaJenis, setNamaJenis] = useState("");
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
-  const [jaminans, setJaminans] = useState([]);
+  const [topups, setTopups] = useState([]);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -75,10 +80,10 @@ const TampilApproval = () => {
   // Get current posts
   const indexOfLastPost = page * PER_PAGE;
   const indexOfFirstPost = indexOfLastPost - PER_PAGE;
-  const currentPosts = jaminans.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = topups.slice(indexOfFirstPost, indexOfLastPost);
 
-  const count = Math.ceil(jaminans.length / PER_PAGE);
-  const _DATA = usePagination(jaminans, PER_PAGE);
+  const count = Math.ceil(topups.length / PER_PAGE);
+  const _DATA = usePagination(topups, PER_PAGE);
 
   const handleChange = (e, p) => {
     setPage(p);
@@ -87,7 +92,7 @@ const TampilApproval = () => {
 
   useEffect(() => {
     getPengajuanById();
-    getJaminansPerPengajuan();
+    getTopupsPerPengajuan();
   }, []);
 
   const getPengajuanById = async () => {
@@ -169,36 +174,28 @@ const TampilApproval = () => {
     );
     setNamaJenis(response.data.jenisjaminan.namaJenis);
     setBungaPerBulanJenis(response.data.jenisjaminan.bungaPerBulanJenis);
+
+    setBayarPinjamanAju(response.data.bayarPinjamanAju);
+    setNilaiTopup(response.data.nilaiTopup);
+
+    const findSisaTopup = await axios.post(`${tempUrl}/checkTopupPengajuans`, {
+      noSbg: response.data.noSbg,
+      _id: user.id,
+      token: user.token,
+      kodeCabang: user.cabang.id
+    });
+    setSisaSaldo(findSisaTopup.data);
     setLoading(false);
   };
 
-  const getJaminansPerPengajuan = async () => {
+  const getTopupsPerPengajuan = async () => {
     setLoading(true);
-    const response = await axios.post(`${tempUrl}/jaminans`, {
+    const response = await axios.post(`${tempUrl}/topupsByPengajuanId`, {
       pengajuanId: id,
       _id: user.id,
       token: user.token
     });
-    setJaminans(response.data);
-    setLoading(false);
-  };
-
-  const deleteApproval = async (id) => {
-    setLoading(true);
-    try {
-      await axios.post(`${tempUrl}/updateApproval/${id}`, {
-        noSbg: null,
-        tglKontrak: null,
-        tglJtTempo: null,
-        userIdApproval: null,
-        tglApproval: null,
-        _id: user.id,
-        token: user.token
-      });
-      navigate("/daftarApproval");
-    } catch (error) {
-      alert(error);
-    }
+    setTopups(response.data);
     setLoading(false);
   };
 
@@ -218,54 +215,11 @@ const TampilApproval = () => {
       <Button
         variant="outlined"
         color="secondary"
-        onClick={() => navigate("/daftarApproval")}
-        sx={{ marginLeft: 2, marginTop: 4 }}
+        onClick={() => navigate("/daftarTopup")}
+        sx={{ marginLeft: 2, marginTop: 4, marginBottom: 4 }}
       >
         {"< Kembali"}
       </Button>
-      <Box sx={buttonModifierContainer}>
-        <ButtonGroup variant="contained">
-          {id && (
-            <>
-              <Button
-                color="primary"
-                startIcon={<EditIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={() => {
-                  navigate(`/daftarApproval/approval/${id}/edit`);
-                }}
-              >
-                Ubah
-              </Button>
-              <Button
-                color="error"
-                startIcon={<DeleteOutlineIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={handleClickOpen}
-              >
-                Hapus
-              </Button>
-            </>
-          )}
-        </ButtonGroup>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              {`Yakin ingin menghapus data ${noSbg}?`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => deleteApproval(id)}>Ok</Button>
-            <Button onClick={handleClose}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
       <Form>
         <Card>
           <Card.Header>Data Nasabah</Card.Header>
@@ -743,6 +697,66 @@ const TampilApproval = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="4" style={textRight}>
+                    Nilai Topup Rp. :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={nilaiTopup.toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Sisa Saldo Rp. :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={sisaSaldo.toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Bayar Rp. :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={bayarPinjamanAju.toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
                     Bunga / Bln Rp. :
                   </Form.Label>
                   <Col sm="8">
@@ -792,11 +806,7 @@ const TampilApproval = () => {
         </Card>
       </Form>
       <Box sx={tableContainer}>
-        <ShowTableApproval
-          id={id}
-          currentPosts={currentPosts}
-          pengajuanId={id}
-        />
+        <ShowTableTopup id={id} currentPosts={currentPosts} topupId={id} />
       </Box>
       <Box sx={tableContainer}>
         <Pagination
@@ -811,15 +821,7 @@ const TampilApproval = () => {
   );
 };
 
-export default TampilApproval;
-
-const buttonModifierContainer = {
-  mt: 4,
-  mb: 4,
-  display: "flex",
-  flexWrap: "wrap",
-  justifyContent: "center"
-};
+export default TampilTopup;
 
 const tableContainer = {
   pt: 4,

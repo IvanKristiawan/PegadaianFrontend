@@ -155,6 +155,7 @@ const TambahPengajuan = () => {
     });
     setCoas(response.data);
     setKodeCOA(response.data[0].kodeCOA);
+    setJenisResikoAju(jenisResikoOption[0]);
   };
 
   const getMarketingsData = async (kodeUnit) => {
@@ -217,9 +218,9 @@ const TambahPengajuan = () => {
           tanggalAju,
           jenisResikoAju,
           ketResikoAju,
-          bungaPerBulanAju,
+          bungaPerBulanAju: bungaPerBulanJenis,
           pinjamanAju: pinjamanAju.replace(/,/g, ""),
-          biayaAdmAju,
+          biayaAdmAju: setting.feeAdmGadai,
 
           kodeCabang: user.cabang.id,
           userIdInput: user.id,

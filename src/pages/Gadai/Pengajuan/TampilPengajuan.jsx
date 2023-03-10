@@ -30,7 +30,7 @@ const TampilPengajuan = () => {
   const [ketResikoAju, setKetResikoAju] = useState("");
   const [noSbg, setNoSbg] = useState("");
   const [tglKontrak, setTglKontrak] = useState("");
-  const [tglJtTempo, setTglJtTemp] = useState("");
+  const [tglJtTempo, setTglJtTempo] = useState("");
   const [bungaPerBulanAju, setBungaPerBulanAju] = useState(0);
   const [pinjamanAju, setPinjamanAju] = useState(0);
   const [biayaAdmAju, setBiayaAdmAju] = useState(0);
@@ -102,8 +102,27 @@ const TampilPengajuan = () => {
     setJenisResikoAju(response.data.jenisResikoAju);
     setKetResikoAju(response.data.ketResikoAju);
     setNoSbg(response.data.noSbg);
-    setTglKontrak(response.data.tglKontrak);
-    setTglJtTemp(response.data.tglJtTempo);
+
+    let newTglKontrak = new Date(response.data.tglKontrak);
+    let tempTglKontrak = `${newTglKontrak.getDate().toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${(newTglKontrak.getMonth() + 1).toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${newTglKontrak.getFullYear()}`;
+    setTglKontrak(tempTglKontrak);
+
+    let newTglJtTempo = new Date(response.data.tglJtTempo);
+    let tempTglJtTempo = `${newTglJtTempo.getDate().toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${(newTglJtTempo.getMonth() + 1).toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${newTglJtTempo.getFullYear()}`;
+    setTglJtTempo(tempTglJtTempo);
+
     setBungaPerBulanAju(response.data.bungaPerBulanAju);
     setPinjamanAju(response.data.pinjamanAju);
     setBiayaAdmAju(response.data.biayaAdmAju);

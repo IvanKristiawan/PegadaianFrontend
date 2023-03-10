@@ -148,6 +148,11 @@ const Sidebar = ({
                 Bukti Pencairan <NavLink to="/daftarBuktiPencairan" />
               </MenuItem>
             )}
+            {user.akses.topup === true && (
+              <MenuItem>
+                Topup <NavLink to="/daftarTopup" />
+              </MenuItem>
+            )}
           </SubMenu>
           <SubMenu title={"Utility"} icon={<FaUserCog />}>
             {user.akses.profilUser === true && (

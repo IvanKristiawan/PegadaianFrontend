@@ -48,6 +48,7 @@ const DaftarUser = () => {
   const [pengajuan, setPengajuan] = useState(false);
   const [approval, setApproval] = useState(false);
   const [buktiPencairan, setBuktiPencairan] = useState(false);
+  const [topup, setTopup] = useState(false);
 
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
@@ -129,7 +130,6 @@ const DaftarUser = () => {
   const getUserById = async () => {
     if (id) {
       const response = await axios.post(`${tempUrl}/findUser/${id}`, {
-        tipeAdmin: user.tipeUser,
         _id: user.id,
         token: user.token
       });
@@ -153,6 +153,7 @@ const DaftarUser = () => {
       setPengajuan(response.data.akses.pengajuan);
       setApproval(response.data.akses.approval);
       setBuktiPencairan(response.data.akses.buktiPencairan);
+      setTopup(response.data.akses.topup);
 
       // Akses Utility
       setProfilUser(response.data.akses.profilUser);
@@ -557,6 +558,14 @@ const DaftarUser = () => {
                       label="Bukti Pencairan"
                       disabled
                       checked={buktiPencairan}
+                    />
+                  </Form>
+                  <Form>
+                    <Form.Check
+                      type="checkbox"
+                      label="Top-Up"
+                      disabled
+                      checked={topup}
                     />
                   </Form>
                 </Box>

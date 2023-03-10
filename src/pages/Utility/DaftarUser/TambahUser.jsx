@@ -43,6 +43,7 @@ const TambahUser = () => {
   const [pengajuan, setPengajuan] = useState(false);
   const [approval, setApproval] = useState(false);
   const [buktiPencairan, setBuktiPencairan] = useState(false);
+  const [topup, setTopup] = useState(false);
 
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
@@ -232,6 +233,7 @@ const TambahUser = () => {
               pengajuan,
               approval,
               buktiPencairan,
+              topup,
               cabang,
               tutupPeriode,
               gantiPeriode,
@@ -561,6 +563,14 @@ const TambahUser = () => {
                         label="Bukti Pencairan"
                         checked={buktiPencairan}
                         onChange={() => setBuktiPencairan(!buktiPencairan)}
+                      />
+                    </Form>
+                    <Form>
+                      <Form.Check
+                        type="checkbox"
+                        label="Top-Up"
+                        checked={topup}
+                        onChange={() => setTopup(!topup)}
                       />
                     </Form>
                   </Form>

@@ -21,7 +21,7 @@ const TampilBuktiPencairan = () => {
   const [ketResikoAju, setKetResikoAju] = useState("");
   const [noSbg, setNoSbg] = useState("");
   const [tglKontrak, setTglKontrak] = useState("");
-  const [tglJtTempo, setTglJtTemp] = useState("");
+  const [tglJtTempo, setTglJtTempo] = useState("");
   const [bungaPerBulanAju, setBungaPerBulanAju] = useState(0);
   const [pinjamanAju, setPinjamanAju] = useState(0);
   const [nilaiTopup, setNilaiTopup] = useState(0);
@@ -100,8 +100,27 @@ const TampilBuktiPencairan = () => {
     setJenisResikoAju(response.data.jenisResikoAju);
     setKetResikoAju(response.data.ketResikoAju);
     setNoSbg(response.data.noSbg);
-    setTglKontrak(response.data.tglKontrak);
-    setTglJtTemp(response.data.tglJtTempo);
+
+    let newTglKontrak = new Date(response.data.tglKontrak);
+    let tempTglKontrak = `${newTglKontrak.getDate().toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${(newTglKontrak.getMonth() + 1).toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${newTglKontrak.getFullYear()}`;
+    setTglKontrak(tempTglKontrak);
+
+    let newTglJtTempo = new Date(response.data.tglJtTempo);
+    let tempTglJtTempo = `${newTglJtTempo.getDate().toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${(newTglJtTempo.getMonth() + 1).toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${newTglJtTempo.getFullYear()}`;
+    setTglJtTempo(tempTglJtTempo);
+
     setBungaPerBulanAju(response.data.bungaPerBulanAju);
     setPinjamanAju(response.data.pinjamanAju);
     setNilaiTopup(response.data.nilaiTopup);
@@ -239,7 +258,7 @@ const TampilBuktiPencairan = () => {
             <p style={cetakCenter}>{namaCustomer.split(" ")[0]}</p>
             <p style={cetakCenter}>Tanggal : {tanggalAju}</p>
             <p style={cetakCenter}>J. Tempo : {tglJtTempo}</p>
-            <p style={cetakCenter}>Lelang : </p>
+            <p style={cetakCenter}>Lelang : {tanggalAju}</p>
             <p style={cetakCenterBold}>SBG No. {noSbg}</p>
             <hr />
             <div style={cetakWrapper}>

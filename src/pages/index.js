@@ -80,3 +80,9 @@ export { default as UbahApproval } from "./Gadai/Approval/UbahApproval";
 // Gadai Bukti Pencairan
 export { default as TampilDaftarBuktiPencairan } from "./Gadai/BuktiPencairan/TampilDaftarBuktiPencairan";
 export { default as TampilBuktiPencairan } from "./Gadai/BuktiPencairan/TampilBuktiPencairan";
+// Gadai Topup
+export { default as TampilDaftarTopup } from "./Gadai/Topup/TampilDaftarTopup";
+export { default as TambahTopup } from "./Gadai/Topup/TambahTopup";
+export { default as TampilTopup } from "./Gadai/Topup/TampilTopup";
+export { default as TampilOneTopup } from "./Gadai/Topup/TampilOneTopup";
+export { default as UbahTopup } from "./Gadai/Topup/UbahTopup";

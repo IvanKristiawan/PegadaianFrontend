@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import { AuthContext } from "../../../contexts/AuthContext";
@@ -15,6 +15,8 @@ import {
   Paper,
   Dialog,
   DialogTitle,
+  DialogContent,
+  DialogContentText,
   DialogActions,
   Table,
   TableBody,
@@ -41,20 +43,22 @@ const useStyles = makeStyles({
   }
 });
 
-const UbahPengajuan = () => {
+const TambahTopup = () => {
   const { screenSize } = useStateContext();
-  const { user, setting } = useContext(AuthContext);
+  const { user, dispatch, setting } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [ajuId, setAjuId] = useState("");
   const [noAju, setNoAju] = useState("");
-  const [tanggalAju, setTanggalAju] = useState(new Date());
+  const [tanggalAju, setTanggalAju] = useState();
   const [jenisResikoAju, setJenisResikoAju] = useState("");
   const [ketResikoAju, setKetResikoAju] = useState("");
   const [noSbg, setNoSbg] = useState("");
   const [tglKontrak, setTglKontrak] = useState("");
-  const [tglJtTempo, setTglJtTemp] = useState("");
+  const [tglJtTempo, setTglJtTempo] = useState("");
   const [bungaPerBulanAju, setBungaPerBulanAju] = useState("");
   const [pinjamanAju, setPinjamanAju] = useState("");
+  const [bayarPinjamanAju, setBayarPinjamanAju] = useState("");
   const [biayaAdmAju, setBiayaAdmAju] = useState("");
 
   const [cifCustomer, setCifCustomer] = useState("");
@@ -77,27 +81,39 @@ const UbahPengajuan = () => {
   const [kodeCOA, setKodeCOA] = useState("");
   const [kodeMarketing, setKodeMarketing] = useState("");
   const [namaJenis, setNamaJenis] = useState("");
-  const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
+  const [lamaJatuhTempo, setLamaJatuhTempo] = useState(0);
+  const [sisaSaldo, setSisaSaldo] = useState(0);
 
-  const [customers, setCustomers] = useState([]);
+  // Topup
+  const [noKwitansi, setNoKwitansi] = useState(user.noTerakhir);
+  const [nilaiTopup, setNilaiTopup] = useState("");
+  const [tglTopup, setTglTopup] = useState(new Date());
+
+  const [pengajuans, setPengajuans] = useState([]);
   const [coas, setCoas] = useState([]);
-  const [marketings, setMarketings] = useState([]);
-  const [jenisJaminans, setJenisJaminans] = useState([]);
   const [error, setError] = useState(false);
-  const [searchTermCustomer, setSearchTermCustomer] = useState("");
-  const [openCustomer, setOpenCustomer] = useState(false);
+  const [searchTermPengajuan, setSearchTermPengajuan] = useState("");
+  const [openPengajuan, setOpenPengajuan] = useState(false);
   const navigate = useNavigate();
-  const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [openSaldo, setOpenSaldo] = useState(false);
+
+  const handleClickOpenSaldo = () => {
+    setOpenSaldo(true);
+  };
+
+  const handleCloseSaldo = () => {
+    setOpenSaldo(false);
+  };
 
   const classes = useStyles();
 
-  const handleClickOpenCustomer = () => {
-    setOpenCustomer(true);
+  const handleClickOpenPengajuan = () => {
+    setOpenPengajuan(true);
   };
 
-  const handleCloseCustomer = () => {
-    setOpenCustomer(false);
+  const handleClosePengajuan = () => {
+    setOpenPengajuan(false);
   };
 
   const handleClose = (event, reason) => {
@@ -107,188 +123,130 @@ const UbahPengajuan = () => {
     setOpen(false);
   };
 
-  const tempPostsCustomer = customers.filter((val) => {
-    if (searchTermCustomer === "") {
+  const tempPostsPengajuan = pengajuans.filter((val) => {
+    if (searchTermPengajuan === "") {
       return val;
     } else if (
-      val.namaCustomer
+      val.noAju.toUpperCase().includes(searchTermPengajuan.toUpperCase()) ||
+      val.tanggalAju
         .toUpperCase()
-        .includes(searchTermCustomer.toUpperCase()) ||
-      val.alamatCustomer
+        .includes(searchTermPengajuan.toUpperCase()) ||
+      val.customer.namaCustomer
         .toUpperCase()
-        .includes(searchTermCustomer.toUpperCase()) ||
-      val.noTeleponCustomer
-        .toUpperCase()
-        .includes(searchTermCustomer.toUpperCase())
+        .includes(searchTermPengajuan.toUpperCase())
     ) {
       return val;
     }
   });
 
-  const jenisResikoOption = ["RENDAH", "SEDANG", "TINGGI"];
-
   useEffect(() => {
-    getPengajuanById();
-    getCustomersData();
+    if (user.tipeUser === "ADMIN") {
+      getPengajuansDataAdmin();
+    } else {
+      getPengajuansDataManager();
+    }
     getCoasData();
-    getMarketingsData();
-    getJenisJaminansData();
   }, []);
 
-  const getPengajuanById = async () => {
-    setLoading(true);
-    const response = await axios.post(
-      `${tempUrl}/pengajuansNoFormatDate/${id}`,
-      {
-        _id: user.id,
-        token: user.token
-      }
-    );
-    setNoAju(response.data.noAju);
-    setTanggalAju(new Date(response.data.tanggalAju));
-    setJenisResikoAju(response.data.jenisResikoAju);
-    setKetResikoAju(response.data.ketResikoAju);
-    setNoSbg(response.data.noSbg);
-    setTglKontrak(response.data.tglKontrak);
-    setTglJtTemp(response.data.tglJtTempo);
-    setBungaPerBulanAju(response.data.bungaPerBulanAju);
-    setPinjamanAju(response.data.pinjamanAju.toLocaleString());
-    setBiayaAdmAju(response.data.biayaAdmAju);
-
-    setCifCustomer(response.data.customer.cifCustomer);
-    setNikCustomer(response.data.customer.nikCustomer);
-    setNamaCustomer(response.data.customer.namaCustomer);
-    setTempatLahirCustomer(response.data.customer.tempatLahirCustomer);
-    let newTglLahir = new Date(response.data.customer.tanggalLahirCustomer);
-    let tempTglLahir = `${newTglLahir.getDate().toLocaleString("en-US", {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    })}-${(newTglLahir.getMonth() + 1).toLocaleString("en-US", {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    })}-${newTglLahir.getFullYear()}`;
-    setTanggalLahirCustomer(tempTglLahir);
-    setJenisKelaminCustomer(response.data.customer.jenisKelaminCustomer);
-    setNoTeleponCustomer(response.data.customer.noTeleponCustomer);
-    setAlamatCustomer(response.data.customer.alamatCustomer);
-
-    const findCustomer = await axios.post(
-      `${tempUrl}/customers/${response.data.customer.id}`,
-      {
-        _id: user.id,
-        token: user.token,
-        kodeCabang: user.cabang.id
-      }
-    );
-
-    setKodeKelurahan(
-      `${findCustomer.data.kelurahan.id} - ${findCustomer.data.kelurahan.namaKelurahan}`
-    );
-    setKodeKecamatan(
-      `${findCustomer.data.kecamatan.id} - ${findCustomer.data.kecamatan.namaKecamatan}`
-    );
-    setKodeKabupaten(
-      `${findCustomer.data.kabupaten.id} - ${findCustomer.data.kabupaten.namaKabupaten}`
-    );
-    setKodeProvinsi(
-      `${findCustomer.data.provinsis.id} - ${findCustomer.data.provinsis.namaProvinsi}`
-    );
-    setKodePos(findCustomer.data.kelurahan.kodePos);
-
-    setStatusPerkawinanCustomer(
-      response.data.customer.statusPerkawinanCustomer
-    );
-    setPekerjaanCustomer(response.data.customer.pekerjaanCustomer);
-    setKewarganegaraanCustomer(response.data.customer.kewarganegaraanCustomer);
-
-    setKodeCOA(response.data.coa.kodeCOA);
-    setKodeMarketing(response.data.marketing.kodeMarketing);
-    setNamaJenis(response.data.jenisjaminan.namaJenis);
-    setBungaPerBulanJenis(response.data.jenisjaminan.bungaPerBulanJenis);
-    setLoading(false);
+  const getPengajuansDataManager = async (kodeUnit) => {
+    setCifCustomer("");
+    const response = await axios.post(`${tempUrl}/pengajuansApproved`, {
+      _id: user.id,
+      token: user.token
+    });
+    setPengajuans(response.data);
   };
 
-  const getCustomersData = async (kodeUnit) => {
+  const getPengajuansDataAdmin = async (kodeUnit) => {
+    setCifCustomer("");
     const response = await axios.post(
-      `${tempUrl}/customersPerCabangSorByNama`,
+      `${tempUrl}/pengajuansPerCabangApproved`,
       {
         _id: user.id,
         token: user.token,
         kodeCabang: user.cabang.id
       }
     );
-    setCustomers(response.data);
+    setPengajuans(response.data);
   };
 
   const getCoasData = async (kodeUnit) => {
+    setKodeCOA("");
     const response = await axios.post(`${tempUrl}/COAs`, {
       _id: user.id,
       token: user.token
     });
     setCoas(response.data);
+    setKodeCOA(response.data[0].kodeCOA);
   };
 
-  const getMarketingsData = async (kodeUnit) => {
-    const response = await axios.post(`${tempUrl}/marketings`, {
-      _id: user.id,
-      token: user.token,
-      kodeCabang: user.cabang.id
-    });
-    setMarketings(response.data);
-  };
-
-  const getJenisJaminansData = async (kodeUnit) => {
-    const response = await axios.post(`${tempUrl}/jenisJaminans`, {
-      _id: user.id,
-      token: user.token,
-      kodeCabang: user.cabang.id
-    });
-    setJenisJaminans(response.data);
-  };
-
-  const changeJenisJaminan = async (namaJenis) => {
-    const response = await axios.post(`${tempUrl}/jenisJaminanByNama`, {
-      namaJenis,
-      _id: user.id,
-      token: user.token,
-      kodeCabang: user.cabang.id
-    });
-    setNamaJenis(namaJenis);
-    setBungaPerBulanJenis(response.data.bungaPerBulanJenis);
-  };
-
-  const updatePengajuan = async (e) => {
+  const saveTopup = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const form = e.currentTarget;
-    if (form.checkValidity() && cifCustomer.length !== 0) {
-      setLoading(true);
-      try {
-        setLoading(true);
-        await axios.post(`${tempUrl}/updatePengajuan/${id}`, {
-          cifCustomer,
-          kodeCOA,
-          kodeMarketing,
-          namaJenis,
-
-          tanggalAju,
-          jenisResikoAju,
-          ketResikoAju,
-          bungaPerBulanAju: bungaPerBulanJenis,
-          pinjamanAju: pinjamanAju.replace(/,/g, ""),
-          biayaAdmAju,
-
-          kodeCabang: user.cabang.id,
-          userIdInput: user.id,
+    if (form.checkValidity() && noAju.length !== 0) {
+      const findSisaTopup = await axios.post(
+        `${tempUrl}/checkTopupPengajuans`,
+        {
+          noSbg,
           _id: user.id,
-          token: user.token
-        });
-        setLoading(false);
-        navigate("/daftarPengajuan");
-      } catch (err) {
-        console.log(err);
+          token: user.token,
+          kodeCabang: user.cabang.id
+        }
+      );
+      if (findSisaTopup.data > 0) {
+        if (findSisaTopup.data < parseInt(nilaiTopup.replace(/,/g, ""))) {
+          // Cannot Topup
+          setSisaSaldo(findSisaTopup.data);
+          handleClickOpenSaldo();
+        } else {
+          // Can Topup
+          setLoading(true);
+          try {
+            await axios.post(`${tempUrl}/saveTopup`, {
+              noKwitansi,
+              nilaiTopup: nilaiTopup.replace(/,/g, ""),
+              tglTopup,
+              biayaAdmAju,
+              noSbg,
+              kodeCOA,
+
+              kodeCabang: user.cabang.id,
+              _id: user.id,
+              token: user.token
+            });
+
+            // Change noTerakhir User
+            const findSetting = await axios.post(`${tempUrl}/lastSetting`, {
+              _id: user.id,
+              token: user.token,
+              kodeCabang: user.cabang.id
+            });
+            const gantiPeriodeUser = await axios.post(
+              `${tempUrl}/updateUserThenLogin/${user.id}`,
+              {
+                _id: user.id,
+                token: user.token,
+                kodeCabang: user.cabang.id
+              }
+            );
+            dispatch({
+              type: "LOGIN_SUCCESS",
+              payload: gantiPeriodeUser.data.details,
+              setting: findSetting.data
+            });
+
+            navigate("/daftarTopup");
+          } catch (err) {
+            alert(err);
+          }
+          setLoading(false);
+        }
+      } else {
+        // Cannot Topup
+        setSisaSaldo(0);
+        handleClickOpenSaldo();
       }
-      setLoading(false);
     } else {
       setError(true);
       setOpen(!open);
@@ -307,9 +265,9 @@ const UbahPengajuan = () => {
   return (
     <Container>
       <h3>Gadai</h3>
-      <h5 style={{ fontWeight: 400 }}>Ubah Pengajuan</h5>
+      <h5 style={{ fontWeight: 400 }}>Tambah Topup</h5>
       <hr />
-      <Form noValidate validated={validated} onSubmit={updatePengajuan}>
+      <Form noValidate validated={validated} onSubmit={saveTopup}>
         <Card>
           <Card.Header>Data Nasabah</Card.Header>
           <Card.Body>
@@ -324,7 +282,14 @@ const UbahPengajuan = () => {
                     No. Pengajuan :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control required value={noAju} disabled readOnly />
+                    <Form.Control
+                      required
+                      value={noAju}
+                      readOnly
+                      placeholder="Pilih..."
+                      onClick={() => handleClickOpenPengajuan()}
+                      isInvalid={noAju.length === 0 && true}
+                    />
                   </Col>
                 </Form.Group>
               </Col>
@@ -359,11 +324,7 @@ const UbahPengajuan = () => {
                     Tanggal :
                   </Form.Label>
                   <Col sm="8">
-                    <DatePicker
-                      dateFormat="dd/MM/yyyy"
-                      selected={tanggalAju}
-                      onChange={(date) => setTanggalAju(date)}
-                    />
+                    <Form.Control value={tanggalAju} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -393,23 +354,10 @@ const UbahPengajuan = () => {
                     NIK / CIF :
                   </Form.Label>
                   <Col sm="4">
-                    <Form.Control
-                      type="number"
-                      value={nikCustomer}
-                      disabled
-                      readOnly
-                    />
+                    <Form.Control value={nikCustomer} disabled readOnly />
                   </Col>
                   <Col sm="4">
-                    <Form.Control
-                      required
-                      type="number"
-                      value={cifCustomer}
-                      readOnly
-                      placeholder="Pilih..."
-                      onClick={() => handleClickOpenCustomer()}
-                      isInvalid={cifCustomer.length === 0 && true}
-                    />
+                    <Form.Control value={cifCustomer} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -629,19 +577,7 @@ const UbahPengajuan = () => {
                     Marketing :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Select
-                      required
-                      value={kodeMarketing}
-                      onChange={(e) => {
-                        setKodeMarketing(e.target.value);
-                      }}
-                    >
-                      {marketings.map((marketing, index) => (
-                        <option value={marketing.kodeMarketing}>
-                          {marketing.kodeMarketing} - {marketing.namaMarketing}
-                        </option>
-                      ))}
-                    </Form.Select>
+                    <Form.Control value={kodeMarketing} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -683,17 +619,7 @@ const UbahPengajuan = () => {
                     Jenis Resiko :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Select
-                      required
-                      value={jenisResikoAju}
-                      onChange={(e) => {
-                        setJenisResikoAju(e.target.value);
-                      }}
-                    >
-                      {jenisResikoOption.map((jenisResiko) => (
-                        <option value={jenisResiko}>{jenisResiko}</option>
-                      ))}
-                    </Form.Select>
+                    <Form.Control value={jenisResikoAju} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -710,12 +636,7 @@ const UbahPengajuan = () => {
                     Keterangan :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Control
-                      value={ketResikoAju}
-                      onChange={(e) =>
-                        setKetResikoAju(e.target.value.toUpperCase())
-                      }
-                    />
+                    <Form.Control value={ketResikoAju} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -725,6 +646,22 @@ const UbahPengajuan = () => {
         <Card style={{ marginTop: 10 }}>
           <Card.Header>Data Pinjaman</Card.Header>
           <Card.Body>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    No. Kwitansi :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control value={noKwitansi} disabled readOnly />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
             <Row>
               <Col sm={6}>
                 <Form.Group
@@ -784,39 +721,7 @@ const UbahPengajuan = () => {
                     Jenis Jaminan :
                   </Form.Label>
                   <Col sm="8">
-                    <Form.Select
-                      required
-                      value={namaJenis}
-                      onChange={(e) => {
-                        changeJenisJaminan(e.target.value);
-                      }}
-                    >
-                      {jenisJaminans.map((jenisJaminan) => (
-                        <option value={jenisJaminan.namaJenis}>
-                          {jenisJaminan.namaJenis}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={6}>
-                <Form.Group
-                  as={Row}
-                  className="mb-3"
-                  controlId="formPlaintextPassword"
-                >
-                  <Form.Label column sm="4" style={textRight}>
-                    Bunga / Bln (%) :
-                  </Form.Label>
-                  <Col sm="8">
-                    <Form.Control
-                      value={`${bungaPerBulanJenis} %`}
-                      disabled
-                      readOnly
-                    />
+                    <Form.Control value={namaJenis} disabled readOnly />
                   </Col>
                 </Form.Group>
               </Col>
@@ -833,8 +738,89 @@ const UbahPengajuan = () => {
                   </Form.Label>
                   <Col sm="8">
                     <Form.Control
+                      value={pinjamanAju.toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Bayar / Cicilan Rp. :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={bayarPinjamanAju.toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Sisa Pinjaman Rp. :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={(pinjamanAju - bayarPinjamanAju).toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Tgl. Top-Up :
+                  </Form.Label>
+                  <Col sm="8">
+                    <DatePicker
                       required
-                      value={pinjamanAju}
+                      dateFormat="dd/MM/yyyy"
+                      selected={tglTopup}
+                      onChange={(date) => setTglTopup(date)}
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Top-UP Rp. :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      required
+                      value={nilaiTopup}
                       onChange={(e) => {
                         let tempNum;
                         let isNumNan = isNaN(
@@ -848,8 +834,35 @@ const UbahPengajuan = () => {
                             10
                           ).toLocaleString();
                         }
-                        setPinjamanAju(tempNum);
+                        setNilaiTopup(tempNum);
                       }}
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Total Pinjaman Rp. :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={
+                        nilaiTopup === ""
+                          ? 0
+                          : (
+                              parseInt(pinjamanAju - bayarPinjamanAju) +
+                              parseInt(nilaiTopup.replace(/,/g, ""))
+                            ).toLocaleString()
+                      }
+                      disabled
+                      readOnly
                     />
                   </Col>
                 </Form.Group>
@@ -865,10 +878,17 @@ const UbahPengajuan = () => {
                   <Form.Label column sm="4" style={textRight}>
                     Bunga / Bln Rp. :
                   </Form.Label>
-                  <Col sm="8">
+                  <Col sm="4">
+                    <Form.Control
+                      value={`${bungaPerBulanAju} %`}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                  <Col sm="4">
                     <Form.Control
                       value={(
-                        (bungaPerBulanJenis * pinjamanAju.replace(/,/g, "")) /
+                        (bungaPerBulanAju * pinjamanAju) /
                         100
                       ).toLocaleString()}
                       disabled
@@ -898,7 +918,7 @@ const UbahPengajuan = () => {
                   <Col sm="4">
                     <Form.Control
                       value={(
-                        (biayaAdmAju * pinjamanAju.replace(/,/g, "")) /
+                        (biayaAdmAju * pinjamanAju) /
                         100
                       ).toLocaleString()}
                       disabled
@@ -912,7 +932,7 @@ const UbahPengajuan = () => {
               <Button
                 variant="outlined"
                 color="secondary"
-                onClick={() => navigate(`/daftarPengajuan/pengajuan/${id}`)}
+                onClick={() => navigate("/daftarTopup")}
                 sx={{ marginRight: 2 }}
               >
                 {"< Kembali"}
@@ -936,15 +956,31 @@ const UbahPengajuan = () => {
         </Snackbar>
       )}
       <Dialog
-        open={openCustomer}
-        onClose={handleCloseCustomer}
+        open={openSaldo}
+        onClose={handleCloseSaldo}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{`Pilih Data Customer`}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{`Tidak Bisa Topup ${noSbg}`}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            {`Sisa Saldo : ${sisaSaldo}`}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseSaldo}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openPengajuan}
+        onClose={handleClosePengajuan}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{`Pilih Data Pengajuan`}</DialogTitle>
         <DialogActions>
           <Box sx={dialogContainer}>
-            <SearchBar setSearchTerm={setSearchTermCustomer} />
+            <SearchBar setSearchTerm={setSearchTermPengajuan} />
             <TableContainer component={Paper} sx={dialogWrapper}>
               <Table aria-label="simple table">
                 <TableHead className={classes.root}>
@@ -953,34 +989,32 @@ const UbahPengajuan = () => {
                       sx={{ fontWeight: "bold" }}
                       className={classes.tableRightBorder}
                     >
-                      Nama
+                      No. Aju
                     </TableCell>
                     <TableCell
                       sx={{ fontWeight: "bold" }}
                       className={classes.tableRightBorder}
                     >
-                      Alamat
+                      Tanggal
                     </TableCell>
-                    <TableCell sx={{ fontWeight: "bold" }}>
-                      No. Telp / HP
-                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Customer</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {tempPostsCustomer
+                  {tempPostsPengajuan
                     .filter((val) => {
-                      if (searchTermCustomer === "") {
+                      if (searchTermPengajuan === "") {
                         return val;
                       } else if (
-                        val.namaCustomer
+                        val.noAju
                           .toUpperCase()
-                          .includes(searchTermCustomer.toUpperCase()) ||
-                        val.alamatCustomer
+                          .includes(searchTermPengajuan.toUpperCase()) ||
+                        val.tanggalAju
                           .toUpperCase()
-                          .includes(searchTermCustomer.toUpperCase()) ||
-                        val.noTeleponCustomer
+                          .includes(searchTermPengajuan.toUpperCase()) ||
+                        val.customer.namaCustomer
                           .toUpperCase()
-                          .includes(searchTermCustomer.toUpperCase())
+                          .includes(searchTermPengajuan.toUpperCase())
                       ) {
                         return val;
                       }
@@ -994,11 +1028,24 @@ const UbahPengajuan = () => {
                           cursor: "pointer"
                         }}
                         onClick={() => {
-                          setCifCustomer(user.cifCustomer);
-                          setNikCustomer(user.nikCustomer);
-                          setNamaCustomer(user.namaCustomer);
-                          setTempatLahirCustomer(user.tempatLahirCustomer);
-                          let newTglLahir = new Date(user.tanggalLahirCustomer);
+                          setAjuId(user.id);
+                          setNoAju(user.noAju);
+                          setTanggalAju(user.tanggalAju);
+                          setJenisResikoAju(user.jenisResikoAju);
+                          setKetResikoAju(user.ketResikoAju);
+                          setBungaPerBulanAju(user.bungaPerBulanAju);
+                          setPinjamanAju(user.pinjamanAju + user.nilaiTopup);
+                          setBayarPinjamanAju(user.bayarPinjamanAju);
+                          setBiayaAdmAju(user.biayaAdmAju);
+                          setCifCustomer(user.customer.cifCustomer);
+                          setNikCustomer(user.customer.nikCustomer);
+                          setNamaCustomer(user.customer.namaCustomer);
+                          setTempatLahirCustomer(
+                            user.customer.tempatLahirCustomer
+                          );
+                          let newTglLahir = new Date(
+                            user.customer.tanggalLahirCustomer
+                          );
                           let tempTglLahir = `${newTglLahir
                             .getDate()
                             .toLocaleString("en-US", {
@@ -1012,37 +1059,83 @@ const UbahPengajuan = () => {
                             }
                           )}-${newTglLahir.getFullYear()}`;
                           setTanggalLahirCustomer(tempTglLahir);
-                          setJenisKelaminCustomer(user.jenisKelaminCustomer);
-                          setNoTeleponCustomer(user.noTeleponCustomer);
-                          setAlamatCustomer(user.alamatCustomer);
+                          setJenisKelaminCustomer(
+                            user.customer.jenisKelaminCustomer
+                          );
+                          setNoTeleponCustomer(user.customer.noTeleponCustomer);
+                          setAlamatCustomer(user.customer.alamatCustomer);
                           setKodeKelurahan(
-                            `${user.kelurahan.id} - ${user.kelurahan.namaKelurahan}`
+                            `${user.customer.kelurahan.id} - ${user.customer.kelurahan.namaKelurahan}`
                           );
                           setKodeKecamatan(
-                            `${user.kecamatan.id} - ${user.kecamatan.namaKecamatan}`
+                            `${user.customer.kecamatan.id} - ${user.customer.kecamatan.namaKecamatan}`
                           );
                           setKodeKabupaten(
-                            `${user.kabupaten.id} - ${user.kabupaten.namaKabupaten}`
+                            `${user.customer.kabupaten.id} - ${user.customer.kabupaten.namaKabupaten}`
                           );
                           setKodeProvinsi(
-                            `${user.provinsis.id} - ${user.provinsis.namaProvinsi}`
+                            `${user.customer.provinsis.id} - ${user.customer.provinsis.namaProvinsi}`
                           );
-                          setKodePos(user.kelurahan.kodePos);
+                          setKodePos(user.customer.kelurahan.kodePos);
                           setStatusPerkawinanCustomer(
-                            user.statusPerkawinanCustomer
+                            user.customer.statusPerkawinanCustomer
                           );
-                          setPekerjaanCustomer(user.pekerjaanCustomer);
+                          setPekerjaanCustomer(user.customer.pekerjaanCustomer);
                           setKewarganegaraanCustomer(
-                            user.kewarganegaraanCustomer
+                            user.customer.kewarganegaraanCustomer
                           );
-                          handleCloseCustomer();
+
+                          setKodeMarketing(
+                            `${user.marketing.kodeMarketing} - ${user.marketing.namaMarketing}`
+                          );
+                          setKodeCOA(`${user.coa.kodeCOA}`);
+                          setJenisResikoAju(user.jenisResikoAju);
+                          setKetResikoAju(user.ketResikoAju);
+
+                          setNamaJenis(user.jenisjaminan.namaJenis);
+                          setLamaJatuhTempo(user.jenisjaminan.lamaJatuhTempo);
+
+                          // Approval
+                          setNoSbg(user.noSbg);
+
+                          let newTglKontrak = new Date(user.tglKontrak);
+                          let tempTglKontrak = `${newTglKontrak
+                            .getDate()
+                            .toLocaleString("en-US", {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false
+                            })}-${(newTglKontrak.getMonth() + 1).toLocaleString(
+                            "en-US",
+                            {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false
+                            }
+                          )}-${newTglKontrak.getFullYear()}`;
+                          setTglKontrak(tempTglKontrak);
+
+                          let newTglJtTempo = new Date(user.tglJtTempo);
+                          let tempTglJtTempo = `${newTglJtTempo
+                            .getDate()
+                            .toLocaleString("en-US", {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false
+                            })}-${(newTglJtTempo.getMonth() + 1).toLocaleString(
+                            "en-US",
+                            {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false
+                            }
+                          )}-${newTglJtTempo.getFullYear()}`;
+                          setTglJtTempo(tempTglJtTempo);
+
+                          handleClosePengajuan();
                         }}
                       >
                         <TableCell component="th" scope="row">
-                          {user.namaCustomer}
+                          {user.noAju}
                         </TableCell>
-                        <TableCell>{user.alamatCustomer}</TableCell>
-                        <TableCell>{user.noTeleponCustomer}</TableCell>
+                        <TableCell>{user.tanggalAju}</TableCell>
+                        <TableCell>{user.customer.namaCustomer}</TableCell>
                       </TableRow>
                     ))}
                 </TableBody>
@@ -1055,7 +1148,7 @@ const UbahPengajuan = () => {
   );
 };
 
-export default UbahPengajuan;
+export default TambahTopup;
 
 const spacingTop = {
   mt: 4
