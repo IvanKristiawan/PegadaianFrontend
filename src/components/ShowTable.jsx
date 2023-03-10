@@ -1364,13 +1364,13 @@ export function ShowTableDaftarApproval({ currentPosts, searchTerm }) {
               sx={{ fontWeight: "bold" }}
               className={classes.tableRightBorder}
             >
-              Atas Nama
+              Tgl. Approval
             </TableCell>
             <TableCell
               sx={{ fontWeight: "bold" }}
               className={classes.tableRightBorder}
             >
-              Alamat
+              Atas Nama
             </TableCell>
             <TableCell
               sx={{ fontWeight: "bold" }}
@@ -1378,13 +1378,7 @@ export function ShowTableDaftarApproval({ currentPosts, searchTerm }) {
             >
               Kode Kas
             </TableCell>
-            <TableCell
-              sx={{ fontWeight: "bold" }}
-              className={classes.tableRightBorder}
-            >
-              Pinjaman
-            </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }}>Kasir</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Pinjaman</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -1404,11 +1398,10 @@ export function ShowTableDaftarApproval({ currentPosts, searchTerm }) {
                 val.tanggalAju
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
-                val.customer.namaCustomer
-                  .toString()
+                val.tglApproval
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
-                val.customer.alamatCustomer
+                val.customer.namaCustomer
                   .toString()
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
@@ -1416,11 +1409,7 @@ export function ShowTableDaftarApproval({ currentPosts, searchTerm }) {
                   .toString()
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
-                val.pinjamanAju + val.nilaiTopup == searchTerm ||
-                val.user.username
-                  .toString()
-                  .toUpperCase()
-                  .includes(searchTerm.toUpperCase())
+                val.pinjamanAju + val.nilaiTopup == searchTerm
               ) {
                 return val;
               }
@@ -1442,13 +1431,12 @@ export function ShowTableDaftarApproval({ currentPosts, searchTerm }) {
                 </TableCell>
                 <TableCell>{user.noAju}</TableCell>
                 <TableCell>{user.tanggalAju}</TableCell>
+                <TableCell>{user.tglApproval}</TableCell>
                 <TableCell>{user.customer.namaCustomer}</TableCell>
-                <TableCell>{user.customer.alamatCustomer}</TableCell>
                 <TableCell>{user.coa.kodeCOA}</TableCell>
                 <TableCell>
                   {(user.pinjamanAju + user.nilaiTopup).toLocaleString()}
                 </TableCell>
-                <TableCell>{user.user.username}</TableCell>
               </TableRow>
             ))}
         </TableBody>

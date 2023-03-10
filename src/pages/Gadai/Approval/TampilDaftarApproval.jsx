@@ -34,11 +34,8 @@ const TampilDaftarApproval = () => {
       val.noSbg.toString().toUpperCase().includes(searchTerm.toUpperCase()) ||
       val.noAju.toString().toUpperCase().includes(searchTerm.toUpperCase()) ||
       val.tanggalAju.toUpperCase().includes(searchTerm.toUpperCase()) ||
+      val.tglApproval.toUpperCase().includes(searchTerm.toUpperCase()) ||
       val.customer.namaCustomer
-        .toString()
-        .toUpperCase()
-        .includes(searchTerm.toUpperCase()) ||
-      val.customer.alamatCustomer
         .toString()
         .toUpperCase()
         .includes(searchTerm.toUpperCase()) ||
@@ -46,11 +43,7 @@ const TampilDaftarApproval = () => {
         .toString()
         .toUpperCase()
         .includes(searchTerm.toUpperCase()) ||
-      val.pinjamanAju + val.nilaiTopup == searchTerm ||
-      val.user.username
-        .toString()
-        .toUpperCase()
-        .includes(searchTerm.toUpperCase())
+      val.pinjamanAju + val.nilaiTopup == searchTerm
     ) {
       return val;
     }
