@@ -1250,7 +1250,7 @@ export function ShowTableDaftarPengajuan({ currentPosts, searchTerm }) {
                   .toString()
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
-                val.pinjamanAju == searchTerm ||
+                val.pinjamanAju + val.nilaiTopup == searchTerm ||
                 val.user.username
                   .toString()
                   .toUpperCase()
@@ -1278,7 +1278,9 @@ export function ShowTableDaftarPengajuan({ currentPosts, searchTerm }) {
                 <TableCell>{user.customer.namaCustomer}</TableCell>
                 <TableCell>{user.customer.alamatCustomer}</TableCell>
                 <TableCell>{user.coa.kodeCOA}</TableCell>
-                <TableCell>{user.pinjamanAju.toLocaleString()}</TableCell>
+                <TableCell>
+                  {(user.pinjamanAju + user.nilaiTopup).toLocaleString()}
+                </TableCell>
                 <TableCell>{user.user.username}</TableCell>
               </TableRow>
             ))}
@@ -1414,7 +1416,7 @@ export function ShowTableDaftarApproval({ currentPosts, searchTerm }) {
                   .toString()
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
-                val.pinjamanAju == searchTerm ||
+                val.pinjamanAju + val.nilaiTopup == searchTerm ||
                 val.user.username
                   .toString()
                   .toUpperCase()
@@ -1443,7 +1445,9 @@ export function ShowTableDaftarApproval({ currentPosts, searchTerm }) {
                 <TableCell>{user.customer.namaCustomer}</TableCell>
                 <TableCell>{user.customer.alamatCustomer}</TableCell>
                 <TableCell>{user.coa.kodeCOA}</TableCell>
-                <TableCell>{user.pinjamanAju.toLocaleString()}</TableCell>
+                <TableCell>
+                  {(user.pinjamanAju + user.nilaiTopup).toLocaleString()}
+                </TableCell>
                 <TableCell>{user.user.username}</TableCell>
               </TableRow>
             ))}
@@ -1572,7 +1576,7 @@ export function ShowTableDaftarBuktiPencairan({ currentPosts, searchTerm }) {
                   .toString()
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
-                val.pinjamanAju == searchTerm ||
+                val.pinjamanAju + val.nilaiTopup == searchTerm ||
                 val.user.username
                   .toString()
                   .toUpperCase()
@@ -1601,7 +1605,9 @@ export function ShowTableDaftarBuktiPencairan({ currentPosts, searchTerm }) {
                 <TableCell>{user.customer.namaCustomer}</TableCell>
                 <TableCell>{user.customer.alamatCustomer}</TableCell>
                 <TableCell>{user.coa.kodeCOA}</TableCell>
-                <TableCell>{user.pinjamanAju.toLocaleString()}</TableCell>
+                <TableCell>
+                  {(user.pinjamanAju + user.nilaiTopup).toLocaleString()}
+                </TableCell>
                 <TableCell>{user.user.username}</TableCell>
               </TableRow>
             ))}
@@ -1814,7 +1820,7 @@ export function ShowTableDaftarApprovalTopUp({ currentPosts, searchTerm }) {
                   .toString()
                   .toUpperCase()
                   .includes(searchTerm.toUpperCase()) ||
-                val.pinjamanAju == searchTerm ||
+                val.pinjamanAju + val.nilaiTopup == searchTerm ||
                 val.user.username
                   .toString()
                   .toUpperCase()
@@ -1843,7 +1849,9 @@ export function ShowTableDaftarApprovalTopUp({ currentPosts, searchTerm }) {
                 <TableCell>{user.customer.namaCustomer}</TableCell>
                 <TableCell>{user.customer.alamatCustomer}</TableCell>
                 <TableCell>{user.coa.kodeCOA}</TableCell>
-                <TableCell>{user.pinjamanAju.toLocaleString()}</TableCell>
+                <TableCell>
+                  {(user.pinjamanAju + user.nilaiTopup).toLocaleString()}
+                </TableCell>
                 <TableCell>{user.user.username}</TableCell>
               </TableRow>
             ))}

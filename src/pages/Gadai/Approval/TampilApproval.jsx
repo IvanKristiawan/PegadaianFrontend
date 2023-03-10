@@ -32,6 +32,7 @@ const TampilApproval = () => {
   const [tglJtTempo, setTglJtTempo] = useState("");
   const [bungaPerBulanAju, setBungaPerBulanAju] = useState(0);
   const [pinjamanAju, setPinjamanAju] = useState(0);
+  const [nilaiTopup, setNilaiTopup] = useState(0);
   const [biayaAdmAju, setBiayaAdmAju] = useState(0);
 
   const [cifCustomer, setCifCustomer] = useState("");
@@ -124,6 +125,7 @@ const TampilApproval = () => {
 
     setBungaPerBulanAju(response.data.bungaPerBulanAju);
     setPinjamanAju(response.data.pinjamanAju);
+    setNilaiTopup(response.data.nilaiTopup);
     setBiayaAdmAju(response.data.biayaAdmAju);
 
     setCifCustomer(response.data.customer.cifCustomer);
@@ -703,26 +705,6 @@ const TampilApproval = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="4" style={textRight}>
-                    Bunga / Bln (%) :
-                  </Form.Label>
-                  <Col sm="8">
-                    <Form.Control
-                      value={`${bungaPerBulanJenis} %`}
-                      disabled
-                      readOnly
-                    />
-                  </Col>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={6}>
-                <Form.Group
-                  as={Row}
-                  className="mb-3"
-                  controlId="formPlaintextPassword"
-                >
-                  <Form.Label column sm="4" style={textRight}>
                     Pinjaman Rp. :
                   </Form.Label>
                   <Col sm="8">
@@ -743,9 +725,56 @@ const TampilApproval = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="4" style={textRight}>
-                    Bunga / Bln Rp. :
+                    Top-Up Rp. :
                   </Form.Label>
                   <Col sm="8">
+                    <Form.Control
+                      value={nilaiTopup.toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Total Pinjaman :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={(pinjamanAju + nilaiTopup).toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Bunga / Bln (%) :
+                  </Form.Label>
+                  <Col sm="4">
+                    <Form.Control
+                      value={`${bungaPerBulanJenis} %`}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                  <Col sm="4">
                     <Form.Control
                       value={(
                         (bungaPerBulanJenis * pinjamanAju) /
@@ -780,6 +809,30 @@ const TampilApproval = () => {
                       value={(
                         (biayaAdmAju * pinjamanAju) /
                         100
+                      ).toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Total Pencairan Rp. :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={(
+                        pinjamanAju +
+                        nilaiTopup -
+                        (biayaAdmAju * pinjamanAju) / 100
                       ).toLocaleString()}
                       disabled
                       readOnly

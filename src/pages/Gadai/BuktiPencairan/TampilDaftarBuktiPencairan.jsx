@@ -40,7 +40,7 @@ const TampilDaftarBuktiPencairan = () => {
         .toString()
         .toUpperCase()
         .includes(searchTerm.toUpperCase()) ||
-      val.pinjamanAju == searchTerm ||
+      val.pinjamanAju + val.nilaiTopup == searchTerm ||
       val.user.username
         .toString()
         .toUpperCase()
