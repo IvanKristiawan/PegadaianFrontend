@@ -760,7 +760,7 @@ const TampilPengajuan = () => {
                   </Form.Label>
                   <Col sm="4">
                     <Form.Control
-                      value={`${setting.feeAdmGadai} %`}
+                      value={`${biayaAdmAju} %`}
                       disabled
                       readOnly
                     />
@@ -768,7 +768,7 @@ const TampilPengajuan = () => {
                   <Col sm="4">
                     <Form.Control
                       value={(
-                        (setting.feeAdmGadai * pinjamanAju) /
+                        (biayaAdmAju * pinjamanAju) /
                         100
                       ).toLocaleString()}
                       disabled

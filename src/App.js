@@ -67,7 +67,9 @@ import {
   TampilDaftarApproval,
   TambahApproval,
   TampilApproval,
-  UbahApproval
+  UbahApproval,
+  TampilDaftarBuktiPencairan,
+  TampilBuktiPencairan
 } from "./pages/index";
 import { FaBars } from "react-icons/fa";
 
@@ -221,6 +223,16 @@ const App = () => {
     const { user } = useContext(AuthContext);
 
     if (user.akses.approval) {
+      return children;
+    }
+
+    return <Navigate to="/unauthorized" />;
+  };
+
+  const BUKTIPENCAIRANRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user.akses.buktiPencairan) {
       return children;
     }
 
@@ -858,6 +870,23 @@ const App = () => {
               <APPROVALRoute>
                 <UbahApproval />
               </APPROVALRoute>
+            }
+          />
+          {/* Bukti Pencairan */}
+          <Route
+            path="/daftarBuktiPencairan"
+            element={
+              <BUKTIPENCAIRANRoute>
+                <TampilDaftarBuktiPencairan />
+              </BUKTIPENCAIRANRoute>
+            }
+          />
+          <Route
+            path="/daftarBuktiPencairan/buktiPencairan/:id"
+            element={
+              <BUKTIPENCAIRANRoute>
+                <TampilBuktiPencairan />
+              </BUKTIPENCAIRANRoute>
             }
           />
         </Routes>

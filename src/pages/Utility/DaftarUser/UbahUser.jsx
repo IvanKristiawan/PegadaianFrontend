@@ -43,6 +43,7 @@ const UbahUser = () => {
   // Akses Gadai
   const [pengajuan, setPengajuan] = useState(false);
   const [approval, setApproval] = useState(false);
+  const [buktiPencairan, setBuktiPencairan] = useState(false);
 
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
@@ -136,6 +137,7 @@ const UbahUser = () => {
     // Akses Gadai
     setPengajuan(response.data.pengajuan);
     setApproval(response.data.approval);
+    setBuktiPencairan(response.data.buktiPencairan);
 
     // Akses Master
     setJaminan(response.data.akses.jaminan);
@@ -191,6 +193,7 @@ const UbahUser = () => {
               cabang,
               pengajuan,
               approval,
+              buktiPencairan,
               tutupPeriode,
               gantiPeriode,
               profilUser,
@@ -499,6 +502,14 @@ const UbahUser = () => {
                       label="Approval"
                       checked={approval}
                       onChange={() => setApproval(!approval)}
+                    />
+                  </Form>
+                  <Form>
+                    <Form.Check
+                      type="checkbox"
+                      label="Bukti Pencairan"
+                      checked={buktiPencairan}
+                      onChange={() => setBuktiPencairan(!buktiPencairan)}
                     />
                   </Form>
                 </Box>

@@ -77,3 +77,6 @@ export { default as TampilDaftarApproval } from "./Gadai/Approval/TampilDaftarAp
 export { default as TambahApproval } from "./Gadai/Approval/TambahApproval";
 export { default as TampilApproval } from "./Gadai/Approval/TampilApproval";
 export { default as UbahApproval } from "./Gadai/Approval/UbahApproval";
+// Gadai Bukti Pencairan
+export { default as TampilDaftarBuktiPencairan } from "./Gadai/BuktiPencairan/TampilDaftarBuktiPencairan";
+export { default as TampilBuktiPencairan } from "./Gadai/BuktiPencairan/TampilBuktiPencairan";

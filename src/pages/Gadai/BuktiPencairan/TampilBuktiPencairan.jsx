@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../contexts/AuthContext";
@@ -6,22 +6,14 @@ import { tempUrl, useStateContext } from "../../../contexts/ContextProvider";
 import { Loader, usePagination } from "../../../components";
 import { ShowTableApproval } from "../../../components/ShowTable";
 import { Container, Card, Form, Row, Col } from "react-bootstrap";
-import {
-  Box,
-  ButtonGroup,
-  Button,
-  Pagination,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Box, ButtonGroup, Button, Pagination } from "@mui/material";
+import jsPDF from "jspdf";
+import SearchIcon from "@mui/icons-material/Search";
+import PrintIcon from "@mui/icons-material/Print";
 
-const TampilApproval = () => {
+const TampilBuktiPencairan = () => {
   const { screenSize } = useStateContext();
+  const reportTemplateRef = useRef(null);
   const { user, setting } = useContext(AuthContext);
   const [noAju, setNoAju] = useState("");
   const [tanggalAju, setTanggalAju] = useState(new Date());
@@ -32,6 +24,7 @@ const TampilApproval = () => {
   const [tglJtTempo, setTglJtTemp] = useState("");
   const [bungaPerBulanAju, setBungaPerBulanAju] = useState(0);
   const [pinjamanAju, setPinjamanAju] = useState(0);
+  const [nilaiTopup, setNilaiTopup] = useState(0);
   const [biayaAdmAju, setBiayaAdmAju] = useState(0);
 
   const [cifCustomer, setCifCustomer] = useState("");
@@ -57,20 +50,12 @@ const TampilApproval = () => {
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
   const [jaminans, setJaminans] = useState([]);
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [previewPdf, setPreviewPdf] = useState(false);
 
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   let [page, setPage] = useState(1);
   const PER_PAGE = 20;
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   // Get current posts
   const indexOfLastPost = page * PER_PAGE;
@@ -83,6 +68,20 @@ const TampilApproval = () => {
   const handleChange = (e, p) => {
     setPage(p);
     _DATA.jump(p);
+  };
+
+  const handleGeneratePdf = () => {
+    const doc = new jsPDF({
+      format: "a4",
+      unit: "px"
+    });
+
+    doc.html(reportTemplateRef.current, {
+      async callback(doc) {
+        await doc.save("BuktiPencairan");
+      },
+      html2canvas: { scale: 0.5 }
+    });
   };
 
   useEffect(() => {
@@ -105,6 +104,7 @@ const TampilApproval = () => {
     setTglJtTemp(response.data.tglJtTempo);
     setBungaPerBulanAju(response.data.bungaPerBulanAju);
     setPinjamanAju(response.data.pinjamanAju);
+    setNilaiTopup(response.data.nilaiTopup);
     setBiayaAdmAju(response.data.biayaAdmAju);
 
     setCifCustomer(response.data.customer.cifCustomer);
@@ -194,7 +194,7 @@ const TampilApproval = () => {
   return (
     <Container>
       <h3>Gadai</h3>
-      <h5 style={{ fontWeight: 400 }}>Data Approval</h5>
+      <h5 style={{ fontWeight: 400 }}>Bukti Pencairan</h5>
       <hr />
       <Button
         variant="outlined"
@@ -204,49 +204,81 @@ const TampilApproval = () => {
       >
         {"< Kembali"}
       </Button>
-      <Box sx={buttonModifierContainer}>
-        <ButtonGroup variant="contained">
-          {id && (
-            <>
-              <Button
-                color="primary"
-                startIcon={<EditIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={() => {
-                  navigate(`/daftarApproval/approval/${id}/edit`);
-                }}
-              >
-                Ubah
-              </Button>
-              <Button
-                color="error"
-                startIcon={<DeleteOutlineIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={handleClickOpen}
-              >
-                Hapus
-              </Button>
-            </>
-          )}
+
+      <Box sx={downloadButtons}>
+        <ButtonGroup variant="outlined" color="secondary">
+          <Button
+            color="primary"
+            startIcon={<SearchIcon />}
+            onClick={() => {
+              setPreviewPdf(!previewPdf);
+            }}
+          >
+            PDF
+          </Button>
         </ButtonGroup>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              {`Yakin ingin menghapus data ${noSbg}?`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => deleteApproval(id)}>Ok</Button>
-            <Button onClick={handleClose}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
       </Box>
+
+      {previewPdf && (
+        <div>
+          <Button
+            variant="outlined"
+            startIcon={<PrintIcon />}
+            onClick={handleGeneratePdf}
+          >
+            CETAK
+          </Button>
+          <div style={cetakContainer} ref={reportTemplateRef}>
+            <p style={cetakCenter}>{setting.namaPerusahaan}</p>
+            <p style={cetakCenter}>{setting.alamatPerusahaan}</p>
+            <p style={cetakCenter}>({setting.kotaPerusahaan})</p>
+            <p style={cetakCenter}>{setting.provinsiPerusahaan}</p>
+            <p style={cetakCenter}>NO. TELP. {setting.teleponPerusahaan}</p>
+            <hr />
+            <p style={cetakCenter}>BUKTI PEMBAYARAN GADAI</p>
+            <p style={cetakCenter}>{namaCustomer.split(" ")[0]}</p>
+            <p style={cetakCenter}>Tanggal : {tanggalAju}</p>
+            <p style={cetakCenter}>J. Tempo : {tglJtTempo}</p>
+            <p style={cetakCenter}>Lelang : </p>
+            <p style={cetakCenterBold}>SBG No. {noSbg}</p>
+            <hr />
+            <div style={cetakWrapper}>
+              <p>Keterangan</p>
+              <p>Nominal</p>
+            </div>
+            <hr />
+            <div style={cetakWrapper}>
+              <p>Pencairan pinjaman</p>
+              <p>{(pinjamanAju + nilaiTopup).toLocaleString()}</p>
+            </div>
+            <div style={cetakWrapper}>
+              <p>Potongan adm.</p>
+              <p>{((biayaAdmAju * pinjamanAju) / 100).toLocaleString()}</p>
+            </div>
+            <hr />
+            <div style={cetakWrapperTotal}>
+              <p>Total.</p>
+              <p>
+                {(
+                  pinjamanAju +
+                  nilaiTopup -
+                  (biayaAdmAju * pinjamanAju) / 100
+                ).toLocaleString()}
+              </p>
+            </div>
+            <div style={cetakWrapperText}>
+              <p>Customer,</p>
+              <p>{setting.namaPerusahaan} ,</p>
+            </div>
+            <div style={{ height: "40px" }}></div>
+            <div style={{ display: "flex" }}>
+              <p style={{ marginLeft: "20px" }}>{namaCustomer.split(" ")[0]}</p>
+              <p style={{ marginLeft: "90px" }}>{user.username}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Form>
         <Card>
           <Card.Header>Data Nasabah</Card.Header>
@@ -684,26 +716,6 @@ const TampilApproval = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="4" style={textRight}>
-                    Bunga / Bln (%) :
-                  </Form.Label>
-                  <Col sm="8">
-                    <Form.Control
-                      value={`${bungaPerBulanJenis} %`}
-                      disabled
-                      readOnly
-                    />
-                  </Col>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={6}>
-                <Form.Group
-                  as={Row}
-                  className="mb-3"
-                  controlId="formPlaintextPassword"
-                >
-                  <Form.Label column sm="4" style={textRight}>
                     Pinjaman Rp. :
                   </Form.Label>
                   <Col sm="8">
@@ -724,9 +736,56 @@ const TampilApproval = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="4" style={textRight}>
-                    Bunga / Bln Rp. :
+                    Top-Up Rp. :
                   </Form.Label>
                   <Col sm="8">
+                    <Form.Control
+                      value={nilaiTopup.toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Total Pinjaman :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={(pinjamanAju + nilaiTopup).toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Bunga / Bln (%) :
+                  </Form.Label>
+                  <Col sm="4">
+                    <Form.Control
+                      value={`${bungaPerBulanJenis} %`}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                  <Col sm="4">
                     <Form.Control
                       value={(
                         (bungaPerBulanJenis * pinjamanAju) /
@@ -769,6 +828,30 @@ const TampilApproval = () => {
                 </Form.Group>
               </Col>
             </Row>
+            <Row>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRight}>
+                    Total Pencairan Rp. :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={(
+                        pinjamanAju +
+                        nilaiTopup -
+                        (biayaAdmAju * pinjamanAju) / 100
+                      ).toLocaleString()}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+            </Row>
           </Card.Body>
         </Card>
       </Form>
@@ -792,9 +875,15 @@ const TampilApproval = () => {
   );
 };
 
-export default TampilApproval;
+export default TampilBuktiPencairan;
 
-const buttonModifierContainer = {
+const tableContainer = {
+  pt: 4,
+  display: "flex",
+  justifyContent: "center"
+};
+
+const downloadButtons = {
   mt: 4,
   mb: 4,
   display: "flex",
@@ -802,8 +891,39 @@ const buttonModifierContainer = {
   justifyContent: "center"
 };
 
-const tableContainer = {
-  pt: 4,
+const cetakContainer = {
+  width: "300px",
+  fontSize: "16px"
+};
+
+const cetakWrapper = {
   display: "flex",
-  justifyContent: "center"
+  justifyContent: "space-between",
+  marginTop: "-10px",
+  marginBottom: "-20px"
+};
+
+const cetakWrapperTotal = {
+  display: "flex",
+  justifyContent: "space-between",
+  marginTop: "-10px",
+  marginBottom: "10px"
+};
+
+const cetakWrapperText = {
+  display: "flex",
+  justifyContent: "space-around"
+};
+
+const cetakCenter = {
+  textAlign: "center",
+  marginTop: "0px",
+  marginBottom: "0px"
+};
+
+const cetakCenterBold = {
+  textAlign: "center",
+  marginTop: "0px",
+  marginBottom: "0px",
+  fontWeight: "700"
 };

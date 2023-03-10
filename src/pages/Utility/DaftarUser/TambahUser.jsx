@@ -42,6 +42,7 @@ const TambahUser = () => {
   // Akses Gadai
   const [pengajuan, setPengajuan] = useState(false);
   const [approval, setApproval] = useState(false);
+  const [buktiPencairan, setBuktiPencairan] = useState(false);
 
   // Akses Utility
   const [profilUser, setProfilUser] = useState(false);
@@ -230,6 +231,7 @@ const TambahUser = () => {
               customer,
               pengajuan,
               approval,
+              buktiPencairan,
               cabang,
               tutupPeriode,
               gantiPeriode,
@@ -551,6 +553,14 @@ const TambahUser = () => {
                         label="Approval"
                         checked={approval}
                         onChange={() => setApproval(!approval)}
+                      />
+                    </Form>
+                    <Form>
+                      <Form.Check
+                        type="checkbox"
+                        label="Bukti Pencairan"
+                        checked={buktiPencairan}
+                        onChange={() => setBuktiPencairan(!buktiPencairan)}
                       />
                     </Form>
                   </Form>
