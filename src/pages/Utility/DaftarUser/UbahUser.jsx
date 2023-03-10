@@ -135,10 +135,10 @@ const UbahUser = () => {
     setKodeCabang(response.data.cabang.id);
 
     // Akses Gadai
-    setPengajuan(response.data.pengajuan);
-    setApproval(response.data.approval);
-    setBuktiPencairan(response.data.buktiPencairan);
-    setTopup(response.data.topup);
+    setPengajuan(response.data.akses.pengajuan);
+    setApproval(response.data.akses.approval);
+    setBuktiPencairan(response.data.akses.buktiPencairan);
+    setTopup(response.data.akses.topup);
 
     // Akses Master
     setJaminan(response.data.akses.jaminan);

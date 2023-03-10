@@ -249,7 +249,7 @@ const TambahUser = () => {
           navigate("/daftarUser");
         }
       } catch (err) {
-        console.log(err);
+        alert(err);
       }
       setLoading(false);
     } else {

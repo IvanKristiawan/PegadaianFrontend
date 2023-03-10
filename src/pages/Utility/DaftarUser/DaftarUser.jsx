@@ -141,6 +141,12 @@ const DaftarUser = () => {
       setKodeCabang(response.data.cabang);
       setCoaKasir(response.data.coaKasir);
 
+      // Akses Gadai
+      setPengajuan(response.data.akses.pengajuan);
+      setApproval(response.data.akses.approval);
+      setBuktiPencairan(response.data.akses.buktiPencairan);
+      setTopup(response.data.akses.topup);
+
       // Akses Master
       setJaminan(response.data.akses.jaminan);
       setMarketing(response.data.akses.marketing);
