@@ -17,6 +17,7 @@ const TampilSetting = () => {
   const [kotaPerusahaan, setKotaPerusahaan] = useState("");
   const [provinsiPerusahaan, setProvinsiPerusahaan] = useState("");
   const [subGroupCoaKas, setSubGroupCoaKas] = useState("");
+  const [lamaJtTempo, setLamaJtTempo] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -38,6 +39,7 @@ const TampilSetting = () => {
       setKotaPerusahaan(response.data.kotaPerusahaan);
       setProvinsiPerusahaan(response.data.provinsiPerusahaan);
       setSubGroupCoaKas(response.data.subGroupCoaKas);
+      setLamaJtTempo(response.data.lamaJtTempo);
     } catch (error) {
       alert(error);
     }
@@ -150,6 +152,24 @@ const TampilSetting = () => {
                 </Form.Label>
                 <Col sm="8">
                   <Form.Control value={subGroupCoaKas} disabled readOnly />
+                </Col>
+              </Form.Group>
+            </Col>
+            <Col sm={6}>
+              <Form.Group
+                as={Row}
+                className="mb-3"
+                controlId="formPlaintextPassword"
+              >
+                <Form.Label column sm="4" style={textRightSmall}>
+                  Lama Jatuh Tempo :
+                </Form.Label>
+                <Col sm="8">
+                  <Form.Control
+                    value={`${lamaJtTempo} hari`}
+                    disabled
+                    readOnly
+                  />
                 </Col>
               </Form.Group>
             </Col>

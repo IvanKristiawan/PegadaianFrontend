@@ -18,6 +18,7 @@ const UbahSetting = () => {
   const [kotaPerusahaan, setKotaPerusahaan] = useState("");
   const [provinsiPerusahaan, setProvinsiPerusahaan] = useState("");
   const [subGroupCoaKas, setSubGroupCoaKas] = useState("");
+  const [lamaJtTempo, setLamaJtTempo] = useState("");
 
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ const UbahSetting = () => {
     setKotaPerusahaan(response.data.kotaPerusahaan);
     setProvinsiPerusahaan(response.data.provinsiPerusahaan);
     setSubGroupCoaKas(response.data.subGroupCoaKas);
+    setLamaJtTempo(response.data.lamaJtTempo);
     setLoading(false);
   };
 
@@ -65,6 +67,7 @@ const UbahSetting = () => {
             kotaPerusahaan,
             provinsiPerusahaan,
             subGroupCoaKas,
+            lamaJtTempo,
             userIdUpdate: user.id,
             _id: user.id,
             token: user.token
@@ -225,6 +228,25 @@ const UbahSetting = () => {
                       value={subGroupCoaKas}
                       onChange={(e) =>
                         setSubGroupCoaKas(e.target.value.toUpperCase())
+                      }
+                    />
+                  </Col>
+                </Form.Group>
+              </Col>
+              <Col sm={6}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextPassword"
+                >
+                  <Form.Label column sm="4" style={textRightSmall}>
+                    Lama Jatuh Tempo :
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      value={lamaJtTempo}
+                      onChange={(e) =>
+                        setLamaJtTempo(e.target.value.toUpperCase())
                       }
                     />
                   </Col>

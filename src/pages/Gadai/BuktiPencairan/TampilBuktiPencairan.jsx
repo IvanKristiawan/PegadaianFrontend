@@ -22,6 +22,7 @@ const TampilBuktiPencairan = () => {
   const [noSbg, setNoSbg] = useState("");
   const [tglKontrak, setTglKontrak] = useState("");
   const [tglJtTempo, setTglJtTempo] = useState("");
+  const [tglLelang, setTglLelang] = useState("");
   const [bungaPerBulanAju, setBungaPerBulanAju] = useState(0);
   const [pinjamanAju, setPinjamanAju] = useState(0);
   const [nilaiTopup, setNilaiTopup] = useState(0);
@@ -120,6 +121,22 @@ const TampilBuktiPencairan = () => {
       useGrouping: false
     })}-${newTglJtTempo.getFullYear()}`;
     setTglJtTempo(tempTglJtTempo);
+
+    let tempDateLelang = new Date(response.data.tglJtTempo);
+    let tempTglLelang = tempDateLelang.setDate(
+      tempDateLelang.getDate() + setting.lamaJtTempo
+    );
+    let newTempTglLelang = new Date(tempTglLelang);
+    let tempTglLelangFormatted = `${newTempTglLelang
+      .getDate()
+      .toLocaleString("en-US", {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+      })}-${(newTempTglLelang.getMonth() + 1).toLocaleString("en-US", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    })}-${newTempTglLelang.getFullYear()}`;
+    setTglLelang(tempTglLelangFormatted);
 
     setBungaPerBulanAju(response.data.bungaPerBulanAju);
     setPinjamanAju(response.data.pinjamanAju);
@@ -239,7 +256,7 @@ const TampilBuktiPencairan = () => {
             <p style={cetakCenter}>{namaCustomer.split(" ")[0]}</p>
             <p style={cetakCenter}>Tanggal : {tanggalAju}</p>
             <p style={cetakCenter}>J. Tempo : {tglJtTempo}</p>
-            <p style={cetakCenter}>Lelang : {tanggalAju}</p>
+            <p style={cetakCenter}>Lelang : {tglLelang}</p>
             <p style={cetakCenterBold}>SBG No. {noSbg}</p>
             <hr />
             <div style={cetakWrapper}>

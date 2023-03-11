@@ -668,26 +668,6 @@ const TambahApproval = () => {
                   controlId="formPlaintextPassword"
                 >
                   <Form.Label column sm="4" style={textRight}>
-                    Bunga / Bln (%) :
-                  </Form.Label>
-                  <Col sm="8">
-                    <Form.Control
-                      value={`${bungaPerBulanJenis} %`}
-                      disabled
-                      readOnly
-                    />
-                  </Col>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={6}>
-                <Form.Group
-                  as={Row}
-                  className="mb-3"
-                  controlId="formPlaintextPassword"
-                >
-                  <Form.Label column sm="4" style={textRight}>
                     Pinjaman Rp. :
                   </Form.Label>
                   <Col sm="8">
@@ -710,9 +690,19 @@ const TambahApproval = () => {
                   <Form.Label column sm="4" style={textRight}>
                     Bunga / Bln Rp. :
                   </Form.Label>
-                  <Col sm="8">
+                  <Col sm="4">
                     <Form.Control
-                      value={bungaPerBulanAju.toLocaleString()}
+                      value={`${bungaPerBulanAju} %`}
+                      disabled
+                      readOnly
+                    />
+                  </Col>
+                  <Col sm="4">
+                    <Form.Control
+                      value={(
+                        (bungaPerBulanAju * pinjamanAju) /
+                        100
+                      ).toLocaleString()}
                       disabled
                       readOnly
                     />
