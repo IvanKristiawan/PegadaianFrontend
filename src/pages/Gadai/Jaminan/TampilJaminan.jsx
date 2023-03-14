@@ -28,6 +28,7 @@ const TampilJaminan = () => {
   const [isFetchError] = useState(false);
   const [ketJam, setKetJam] = useState("");
   const [hargaTafsirJam, setHargaTafsirJam] = useState("");
+  const [isPost, setIsPost] = useState("");
 
   const navigate = useNavigate();
 
@@ -55,6 +56,7 @@ const TampilJaminan = () => {
       });
       setKetJam(response.data.ketJam);
       setHargaTafsirJam(response.data.hargaTafsirJam);
+      setIsPost(response.data.isPost);
     }
   };
 
@@ -101,43 +103,49 @@ const TampilJaminan = () => {
         {"< Kembali"}
       </Button>
       <Box sx={buttonModifierContainer}>
-        <ButtonGroup variant="contained">
-          <Button
-            color="primary"
-            startIcon={<EditIcon />}
-            sx={{ textTransform: "none" }}
-            onClick={() => {
-              navigate(`/daftarPengajuan/pengajuan/${id}/${idJaminan}/edit`);
-            }}
-          >
-            Ubah
-          </Button>
-          <Button
-            color="error"
-            startIcon={<DeleteOutlineIcon />}
-            sx={{ textTransform: "none" }}
-            onClick={handleClickOpen}
-          >
-            Hapus
-          </Button>
-        </ButtonGroup>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              {`Yakin ingin menghapus data ${ketJam}?`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => deleteJaminan(id)}>Ok</Button>
-            <Button onClick={handleClose}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
+        {isPost === false && (
+          <>
+            <ButtonGroup variant="contained">
+              <Button
+                color="primary"
+                startIcon={<EditIcon />}
+                sx={{ textTransform: "none" }}
+                onClick={() => {
+                  navigate(
+                    `/daftarPengajuan/pengajuan/${id}/${idJaminan}/edit`
+                  );
+                }}
+              >
+                Ubah
+              </Button>
+              <Button
+                color="error"
+                startIcon={<DeleteOutlineIcon />}
+                sx={{ textTransform: "none" }}
+                onClick={handleClickOpen}
+              >
+                Hapus
+              </Button>
+            </ButtonGroup>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  {`Yakin ingin menghapus data ${ketJam}?`}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => deleteJaminan(id)}>Ok</Button>
+                <Button onClick={handleClose}>Cancel</Button>
+              </DialogActions>
+            </Dialog>
+          </>
+        )}
       </Box>
       <Container>
         <hr />

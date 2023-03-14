@@ -57,6 +57,7 @@ const TampilPengajuan = () => {
   const [kodeMarketing, setKodeMarketing] = useState("");
   const [namaJenis, setNamaJenis] = useState("");
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
+  const [isPost, setIsPost] = useState("");
   const [jaminans, setJaminans] = useState([]);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -172,6 +173,7 @@ const TampilPengajuan = () => {
     );
     setNamaJenis(response.data.jenisjaminan.namaJenis);
     setBungaPerBulanJenis(response.data.jenisjaminan.bungaPerBulanJenis);
+    setIsPost(response.data.isPost);
     setLoading(false);
   };
 
@@ -224,58 +226,62 @@ const TampilPengajuan = () => {
         {"< Kembali"}
       </Button>
       <Box sx={buttonModifierContainer}>
-        <ButtonGroup variant="contained">
-          <Button
-            color="success"
-            sx={{ bgcolor: "success.light", textTransform: "none" }}
-            startIcon={<AddCircleOutlineIcon />}
-            size="small"
-            onClick={() => {
-              navigate(`/daftarPengajuan/pengajuan/${id}/tambahJaminan`);
-            }}
-          >
-            Agunan
-          </Button>
-          {id && (
-            <>
+        {!noSbg && isPost === false && (
+          <>
+            <ButtonGroup variant="contained">
               <Button
-                color="primary"
-                startIcon={<EditIcon />}
-                sx={{ textTransform: "none" }}
+                color="success"
+                sx={{ bgcolor: "success.light", textTransform: "none" }}
+                startIcon={<AddCircleOutlineIcon />}
+                size="small"
                 onClick={() => {
-                  navigate(`/daftarPengajuan/pengajuan/${id}/edit`);
+                  navigate(`/daftarPengajuan/pengajuan/${id}/tambahJaminan`);
                 }}
               >
-                Ubah
+                Agunan
               </Button>
-              <Button
-                color="error"
-                startIcon={<DeleteOutlineIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={handleClickOpen}
-              >
-                Hapus
-              </Button>
-            </>
-          )}
-        </ButtonGroup>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              {`Yakin ingin menghapus data ${noAju}?`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => deletePengajuan(id)}>Ok</Button>
-            <Button onClick={handleClose}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
+              {id && (
+                <>
+                  <Button
+                    color="primary"
+                    startIcon={<EditIcon />}
+                    sx={{ textTransform: "none" }}
+                    onClick={() => {
+                      navigate(`/daftarPengajuan/pengajuan/${id}/edit`);
+                    }}
+                  >
+                    Ubah
+                  </Button>
+                  <Button
+                    color="error"
+                    startIcon={<DeleteOutlineIcon />}
+                    sx={{ textTransform: "none" }}
+                    onClick={handleClickOpen}
+                  >
+                    Hapus
+                  </Button>
+                </>
+              )}
+            </ButtonGroup>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  {`Yakin ingin menghapus data ${noAju}?`}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => deletePengajuan(id)}>Ok</Button>
+                <Button onClick={handleClose}>Cancel</Button>
+              </DialogActions>
+            </Dialog>
+          </>
+        )}
       </Box>
       <Form>
         <Card>

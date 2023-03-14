@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../contexts/AuthContext";
@@ -18,20 +18,27 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import jsPDF from "jspdf";
 import "jspdf-autotable";
+import SearchIcon from "@mui/icons-material/Search";
+import PrintIcon from "@mui/icons-material/Print";
 
 const TampilOneTopup = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setting } = useContext(AuthContext);
   const { id, idTopup } = useParams();
   const { screenSize } = useStateContext();
+  const reportTemplateRef = useRef(null);
 
   const [isFetchError] = useState(false);
   const [noKwitansi, setNoKwitansi] = useState("");
   const [nilaiTopup, setNilaiTopup] = useState("");
   const [tglTopup, setTglTopup] = useState("");
+  const [namaCustomer, setNamaCustomer] = useState("");
   const [noSbg, setNoSbg] = useState("");
+  const [isPost, setIsPost] = useState("");
 
   const navigate = useNavigate();
+  const [previewPdf, setPreviewPdf] = useState(false);
 
   const [open, setOpen] = useState(false);
 
@@ -45,7 +52,22 @@ const TampilOneTopup = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const handleGeneratePdf = () => {
+    const doc = new jsPDF({
+      format: "a4",
+      unit: "px"
+    });
+
+    doc.html(reportTemplateRef.current, {
+      async callback(doc) {
+        await doc.save("BuktiTopup");
+      },
+      html2canvas: { scale: 0.5 }
+    });
+  };
+
   useEffect(() => {
+    getPengajuanById();
     getTopupById();
   }, []);
 
@@ -68,7 +90,18 @@ const TampilOneTopup = () => {
       })}-${newTglTopup.getFullYear()}`;
       setTglTopup(tempTglTopup);
       setNoSbg(response.data.pengajuan.noSbg);
+      setIsPost(response.data.isPost);
     }
+  };
+
+  const getPengajuanById = async () => {
+    setLoading(true);
+    const response = await axios.post(`${tempUrl}/pengajuans/${id}`, {
+      _id: user.id,
+      token: user.token
+    });
+    setNamaCustomer(response.data.customer.namaCustomer);
+    setLoading(false);
   };
 
   const deleteTopup = async (id) => {
@@ -114,44 +147,112 @@ const TampilOneTopup = () => {
       >
         {"< Kembali"}
       </Button>
-      <Box sx={buttonModifierContainer}>
-        <ButtonGroup variant="contained">
+
+      <Box sx={downloadButtons}>
+        <ButtonGroup variant="outlined" color="secondary">
           <Button
             color="primary"
-            startIcon={<EditIcon />}
-            sx={{ textTransform: "none" }}
+            startIcon={<SearchIcon />}
             onClick={() => {
-              navigate(`/daftarTopup/topup/${id}/${idTopup}/edit`);
+              setPreviewPdf(!previewPdf);
             }}
           >
-            Ubah
-          </Button>
-          <Button
-            color="error"
-            startIcon={<DeleteOutlineIcon />}
-            sx={{ textTransform: "none" }}
-            onClick={handleClickOpen}
-          >
-            Hapus
+            PDF
           </Button>
         </ButtonGroup>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              {`Yakin ingin menghapus data ${noKwitansi}?`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => deleteTopup(id)}>Ok</Button>
-            <Button onClick={handleClose}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
+      </Box>
+
+      {previewPdf && (
+        <div>
+          <Button
+            variant="outlined"
+            startIcon={<PrintIcon />}
+            onClick={handleGeneratePdf}
+          >
+            CETAK
+          </Button>
+          <div ref={reportTemplateRef} style={cetakContainer}>
+            <p style={cetakCenter}>{setting.namaPerusahaan}</p>
+            <p style={cetakCenterMoreWordSpacing}>{setting.alamatPerusahaan}</p>
+            <p style={cetakCenterMoreWordSpacing}>({setting.kotaPerusahaan})</p>
+            <p style={cetakCenter}>{setting.provinsiPerusahaan}</p>
+            <p style={cetakCenter}>NO. TELP. {setting.teleponPerusahaan}</p>
+            <hr />
+            <p style={cetakCenterMoreWordSpacing}>BUKTI PEMBAYARAN GADAI</p>
+            <p style={cetakCenter}>{namaCustomer.split(" ")[0]}</p>
+            <p style={cetakCenter}>No. Kwitansi : {noKwitansi}</p>
+            <p style={cetakCenter}>Tgl. Topup : {tglTopup}</p>
+            <p style={cetakCenterBold}>SBG No. {noSbg}</p>
+            <hr />
+            <div style={cetakWrapper}>
+              <p>Keterangan</p>
+              <p>Nominal</p>
+            </div>
+            <hr />
+            <div style={cetakWrapper}>
+              <p>Topup Rp.</p>
+              <p>{nilaiTopup.toLocaleString()}</p>
+            </div>
+            <hr />
+            <div style={cetakWrapperTotal}>
+              <p>Total.</p>
+              <p>{nilaiTopup.toLocaleString()}</p>
+            </div>
+            <div style={cetakWrapperText}>
+              <p>Customer,</p>
+              <p>{setting.namaPerusahaan} ,</p>
+            </div>
+            <div style={{ height: "40px" }}></div>
+            <div style={{ display: "flex" }}>
+              <p style={{ marginLeft: "20px" }}>{namaCustomer.split(" ")[0]}</p>
+              <p style={{ marginLeft: "90px" }}>{user.username}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <Box sx={buttonModifierContainer}>
+        {isPost === false && (
+          <>
+            <ButtonGroup variant="contained">
+              <Button
+                color="primary"
+                startIcon={<EditIcon />}
+                sx={{ textTransform: "none" }}
+                onClick={() => {
+                  navigate(`/daftarTopup/topup/${id}/${idTopup}/edit`);
+                }}
+              >
+                Ubah
+              </Button>
+              <Button
+                color="error"
+                startIcon={<DeleteOutlineIcon />}
+                sx={{ textTransform: "none" }}
+                onClick={handleClickOpen}
+              >
+                Hapus
+              </Button>
+            </ButtonGroup>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  {`Yakin ingin menghapus data ${noKwitansi}?`}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => deleteTopup(id)}>Ok</Button>
+                <Button onClick={handleClose}>Cancel</Button>
+              </DialogActions>
+            </Dialog>
+          </>
+        )}
       </Box>
       <Container>
         <hr />
@@ -238,4 +339,58 @@ const buttonModifierContainer = {
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "center"
+};
+
+const downloadButtons = {
+  mt: 4,
+  mb: 4,
+  display: "flex",
+  flexWrap: "wrap",
+  justifyContent: "center"
+};
+
+const cetakContainer = {
+  width: "300px",
+  fontSize: "16px"
+};
+
+const cetakWrapper = {
+  display: "flex",
+  justifyContent: "space-between",
+  marginTop: "-10px",
+  marginBottom: "-20px"
+};
+
+const cetakWrapperTotal = {
+  display: "flex",
+  justifyContent: "space-between",
+  marginTop: "-10px",
+  marginBottom: "10px"
+};
+
+const cetakWrapperText = {
+  display: "flex",
+  justifyContent: "space-around"
+};
+
+const cetakCenter = {
+  textAlign: "center",
+  marginTop: "0px",
+  marginBottom: "0px",
+  wordSpacing: "2px"
+};
+
+const cetakCenterMoreWordSpacing = {
+  textAlign: "center",
+  marginTop: "0px",
+  marginBottom: "0px",
+  wordSpacing: "8px"
+};
+
+const cetakCenterBold = {
+  textAlign: "center",
+  marginTop: "0px",
+  marginBottom: "0px",
+  fontWeight: "700",
+  wordSpacing: "4px"
 };

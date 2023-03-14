@@ -212,6 +212,7 @@ const TambahTopup = () => {
               kodeCOA,
 
               kodeCabang: user.cabang.id,
+              userIdInput: user.id,
               _id: user.id,
               token: user.token
             });

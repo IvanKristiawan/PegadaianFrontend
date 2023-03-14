@@ -1460,7 +1460,7 @@ export function ShowTableApproval({ currentPosts, pengajuanId }) {
             >
               Nama Jaminan
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }}>Harga Rp.</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Harga Tafsiran Rp.</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

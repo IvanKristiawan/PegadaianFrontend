@@ -56,6 +56,7 @@ const TampilApproval = () => {
   const [kodeMarketing, setKodeMarketing] = useState("");
   const [namaJenis, setNamaJenis] = useState("");
   const [bungaPerBulanJenis, setBungaPerBulanJenis] = useState("");
+  const [isPost, setIsPost] = useState("");
   const [jaminans, setJaminans] = useState([]);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -171,6 +172,7 @@ const TampilApproval = () => {
     );
     setNamaJenis(response.data.jenisjaminan.namaJenis);
     setBungaPerBulanJenis(response.data.jenisjaminan.bungaPerBulanJenis);
+    setIsPost(response.data.isPost);
     setLoading(false);
   };
 
@@ -226,47 +228,51 @@ const TampilApproval = () => {
         {"< Kembali"}
       </Button>
       <Box sx={buttonModifierContainer}>
-        <ButtonGroup variant="contained">
-          {id && (
-            <>
-              <Button
-                color="primary"
-                startIcon={<EditIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={() => {
-                  navigate(`/daftarApproval/approval/${id}/edit`);
-                }}
-              >
-                Ubah
-              </Button>
-              <Button
-                color="error"
-                startIcon={<DeleteOutlineIcon />}
-                sx={{ textTransform: "none" }}
-                onClick={handleClickOpen}
-              >
-                Hapus
-              </Button>
-            </>
-          )}
-        </ButtonGroup>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              {`Yakin ingin menghapus data ${noSbg}?`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => deleteApproval(id)}>Ok</Button>
-            <Button onClick={handleClose}>Cancel</Button>
-          </DialogActions>
-        </Dialog>
+        {isPost === false && (
+          <>
+            <ButtonGroup variant="contained">
+              {id && (
+                <>
+                  <Button
+                    color="primary"
+                    startIcon={<EditIcon />}
+                    sx={{ textTransform: "none" }}
+                    onClick={() => {
+                      navigate(`/daftarApproval/approval/${id}/edit`);
+                    }}
+                  >
+                    Ubah
+                  </Button>
+                  <Button
+                    color="error"
+                    startIcon={<DeleteOutlineIcon />}
+                    sx={{ textTransform: "none" }}
+                    onClick={handleClickOpen}
+                  >
+                    Hapus
+                  </Button>
+                </>
+              )}
+            </ButtonGroup>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{`Hapus Data`}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  {`Yakin ingin menghapus data ${noSbg}?`}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => deleteApproval(id)}>Ok</Button>
+                <Button onClick={handleClose}>Cancel</Button>
+              </DialogActions>
+            </Dialog>
+          </>
+        )}
       </Box>
       <Form>
         <Card>
