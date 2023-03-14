@@ -160,7 +160,7 @@ const TampilKategoriJaminan = () => {
     doc.text(`Daftar Kategori jaminan`, 80, 30);
     doc.setFontSize(10);
     doc.text(
-      `Dicetak Oleh: ${user.bungaPerBulanKategori} | Tanggal : ${current_date} | Jam : ${current_time}`,
+      `Dicetak Oleh: ${user.username} | Tanggal : ${current_date} | Jam : ${current_time}`,
       15,
       290
     );

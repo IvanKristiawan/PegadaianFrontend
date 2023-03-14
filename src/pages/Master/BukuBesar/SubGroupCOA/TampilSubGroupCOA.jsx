@@ -180,7 +180,7 @@ const TampilSubGroupCOA = () => {
     doc.text(`Daftar Group Sub COA`, 85, 30);
     doc.setFontSize(10);
     doc.text(
-      `Dicetak Oleh: ${user.namaSubGroupCOA} | Tanggal : ${current_date} | Jam : ${current_time}`,
+      `Dicetak Oleh: ${user.username} | Tanggal : ${current_date} | Jam : ${current_time}`,
       15,
       290
     );

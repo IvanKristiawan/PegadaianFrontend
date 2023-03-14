@@ -178,7 +178,7 @@ const TampilKecamatan = () => {
     doc.text(`Daftar Kecamatan`, 90, 30);
     doc.setFontSize(10);
     doc.text(
-      `Dicetak Oleh: ${user.namaKecamatan} | Tanggal : ${current_date} | Jam : ${current_time}`,
+      `Dicetak Oleh: ${user.username} | Tanggal : ${current_date} | Jam : ${current_time}`,
       15,
       290
     );

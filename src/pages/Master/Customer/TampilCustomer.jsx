@@ -204,7 +204,7 @@ const TampilCustomer = () => {
     doc.text(`Daftar Customer`, 90, 30);
     doc.setFontSize(10);
     doc.text(
-      `Dicetak Oleh: ${user.nikCustomer} | Tanggal : ${current_date} | Jam : ${current_time}`,
+      `Dicetak Oleh: ${user.username} | Tanggal : ${current_date} | Jam : ${current_time}`,
       15,
       290
     );

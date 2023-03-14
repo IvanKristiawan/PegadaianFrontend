@@ -189,12 +189,12 @@ const TampilCOA = () => {
     const doc = new jsPDF();
     doc.setFontSize(12);
     doc.text(`${setting.namaPerusahaan} - ${setting.kotaPerusahaan}`, 15, 10);
-    doc.text(`${setting.lokasiPerusahaan}`, 15, 15);
+    doc.text(`${setting.alamatPerusahaan}`, 15, 15);
     doc.setFontSize(16);
     doc.text(`Daftar COA`, 75, 30);
     doc.setFontSize(10);
     doc.text(
-      `Dicetak Oleh: ${user.namaCOA} | Tanggal : ${current_date} | Jam : ${current_time}`,
+      `Dicetak Oleh: ${user.username} | Tanggal : ${current_date} | Jam : ${current_time}`,
       15,
       290
     );
